@@ -30,6 +30,8 @@ $(function () {
         },
 
 
+
+
         renderCharacter: function (character) {
             var $view = $(ViewModel.tmpl.getRawTemplate('character'));
 
@@ -38,6 +40,8 @@ $(function () {
             }
 
             $view.find('.character_name').html(character.name);
+
+            $view.find('.character_image').addClass(character.name);
 
 
             this.$view.append($view);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hex game</title>
+    <title>Memes dungeon</title>
     <link rel="stylesheet" href="src/css/dungeon.css"/>
     <script type="text/javascript" src="src/js/lib/jquery-1.11.2.js"></script>
     <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
@@ -25,6 +25,7 @@
     <div data-bind="template: character">
         <div class="character_view">
             <div class="character_name">Brigand</div>
+            <div class="character_image"></div>
             <div class="cv_stats">
                 <div class="health_bar"></div>
             </div>
@@ -35,6 +36,12 @@
 </div>
 
 <div class="battlefield">
+
+    <div class="hit_animation">
+        <div class="left_character"></div>
+        <div class="right_character"></div>
+        <div class="damage"></div>
+    </div>
     <ul class="info_box">
         <li><label>Atack</label> 10</li>
         <li><label>Atack</label> 10</li>

@@ -50,16 +50,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .character_view {
     float: left;
-    width: 170px;
+    width: 130px;
     height: 300px;
-    border: 2px solid #5cff46;
+    border-bottom: 5px solid #5cff46;
     margin-right: 20px;
     text-align: center;
     position: relative;
 }
 
 .character_view.highlight {
-    box-shadow: 0 0 10px 0 #5cff46;
+    box-shadow: 0 6px 6px 0 #5cff46;
     cursor: pointer;
 }
 
@@ -68,19 +68,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .character_view.enemy.highlight {
-    box-shadow: 0 0 10px 0 #ee0000;
+    box-shadow: 0 6px 6px 0 #ee0000;
 }
 
 .character_view.current {
     border-color: #29c3ee;
-    box-shadow: 0 0 10px 0 #29c3ee;
+    box-shadow: 0 6px 6px 0 #29c3ee;
 }
 
 .cv_stats {
     position: absolute;
     bottom: 10px;
-    left: 10px;
-    right: 10px;
+    left: 0px;
+    right: 0px;
 }
 
 .health_bar {
@@ -131,19 +131,19 @@ h1, h2, h3, h4, h5, h6 {
     margin: 3px;
 }
 
-.turns_queue .enemy{
+.turns_queue .enemy {
     border: 2px solid #ee0000;
 }
 
-.turns_queue .current{
+.turns_queue .current {
     border: 2px solid #29c3ee;
 }
 
-.turns_queue .highlight{
+.turns_queue .highlight {
     color: #29c3ee;
 }
 
-.info_box{
+.info_box {
     position: absolute;
     left: 200px;
     top: 200px;
@@ -153,4 +153,55 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px;
     list-style-type: none;
     margin: 0;
+}
+
+.character_image {
+    width: 116px;
+    height: 100px;
+    background: url("img/coolface.png") -44px 0px;
+    position: absolute;
+    left: 5px;
+    top: 100px;
+}
+
+.brigand_scout {
+    background: url("img/frog.png") -58px 0;
+}
+
+.hit_animation {
+    position: absolute;
+    top: 195px;
+    left: 550px;
+    z-index: 3;
+    display: none;
+}
+
+.left_character {
+    background: url("img/coolface.png") 0 -171px;
+    width: 244px;
+    height: 201px;
+}
+
+.right_character {
+    background: url("img/frog.png") 0 -149px;
+    width: 239px;
+    height: 230px;
+    position: absolute;
+    left: 370px;
+    top: -25px;
+}
+
+.right_character.target.brigand_scout {
+    background-position: 0 -408px;
+}
+
+.left_character.target.brigand {
+    background-position: 0 -418px;
+}
+.hit_animation .damage{
+    position: absolute;
+    color: #ee0000;
+    font-size: 80px;
+    left: 250px;
+    top: -140px;
 }

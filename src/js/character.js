@@ -47,8 +47,8 @@ var Character = Model.extend({
         this.prop(this.statsBase);
         this.prop('health', this.prop('maxHealth'));
     },
-    enoughAP: function(spell_id){
-        return this.spells[spell_id].cost<=this.prop('actionPoints');
+    enoughAP: function (spell_id) {
+        return this.spells[spell_id].cost <= this.prop('actionPoints');
     },
     startTurn: function () {
 
@@ -90,21 +90,25 @@ var Character = Model.extend({
             var min = self._computeDamageOneType(value, res, pen);
             var max = self._computeDamageOneType(damageMax[damage_type], res, pen);
 
-            var damage = min + Math.round((max - min) * Math.random());
 
-            damage *= critMult;
+            var damage = min + (max - min) * Math.random();
 
-            totalDamage[damage_type] = value;
+            damage = Math.round(damage*critMult);
+
+
+            totalDamage[damage_type] = damage;
 
             health -= damage;
         });
 
         self.prop('health', health);
 
-        self.fire('damage', {
+        var damageEvent = {
             damage: totalDamage,
             crit: critMult != 1
-        });
+        };
+        self.fire('damage', damageEvent);
+        return damageEvent;
     }
 });
 
