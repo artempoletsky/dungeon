@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hex game</title>
+    <link rel="stylesheet" href="src/css/dungeon.css"/>
+    <script type="text/javascript" src="src/js/lib/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
+    <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
+
+
+    <script type="text/javascript" src="src/js/character_ai.js"></script>
+    <script type="text/javascript" src="src/js/character.js"></script>
+    <script type="text/javascript" src="src/js/monsters.js"></script>
+    <script type="text/javascript" src="src/js/spell.js"></script>
+    <script type="text/javascript" src="src/js/equipment.js"></script>
+    <script type="text/javascript" src="src/js/battlefield.js"></script>
+
+    <script type="text/javascript" src="src/js/game.js"></script>
+
+</head>
+<body>
+
+<div class="templates">
+
+    <div data-bind="template: character">
+        <div class="character_view">
+            <div class="character_name">Brigand</div>
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="battlefield">
+    <div class="battlefield_view clearfix">
+        <div class="character_view current">
+            Brigand
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+        <div class="character_view">
+            Brigand
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+        <div class="character_view enemy">
+            Brigand
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+        <div class="character_view highlight enemy">
+            Brigand
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+        <div class="character_view highlight">
+            Brigand
+            <div class="cv_stats">
+                <div class="health_bar" style="width: 30%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="turns_queue"></div>
+
+    <div class="controls_view">
+
+        <div class="action_points_bar">
+            <div class="action_point"></div>
+            <div class="action_point"></div>
+            <div class="action_point"></div>
+            <div class="action_point highlight"></div>
+        </div>
+        <div class="spells clearfix">
+            <div class="spell">1</div>
+            <div class="spell">2</div>
+            <div class="spell">3</div>
+            <div class="spell">4</div>
+            <div class="spell">5</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
