@@ -25,7 +25,8 @@ $(function () {
         shortcuts: {
             $view: '.battlefield_view',
             $queue: '.turns_queue',
-            $spells: '.spells'
+            $spells: '.spells',
+            $info: '.info_box'
         },
 
 
@@ -193,13 +194,32 @@ $(function () {
             }
         },
         onCharacterEnter: function (e) {
-            var index = $(e.currentTarget).index();
+            var $view=$(e.currentTarget);
+            var index = $view.index();
             var character = this.all[index];
             var queueIndex = this.queue.indexOf(character);
-            this.$queue.children().eq(queueIndex).addClass('highlight');
+            var $queueView = this.$queue.children().eq(queueIndex);
+
+
+            $queueView.addClass('highlight');
+
+            var propsToShow = ['res_physical', 'initiative', 'actionPoints'];
+            this.$info.empty().show().css({
+                left: $view.offset().left+'px',
+                top: $view.offset().top+'px'
+            });
+            this.$info.append(this.generateInfoRow('Health', character.prop('health') + '/' + character.prop('maxHealth')));
+            for (var i = 0; i < propsToShow.length; i++) {
+                this.$info.append(this.generateInfoRow(propsToShow[i], character.prop(propsToShow[i])));
+            }
+        },
+
+        generateInfoRow: function (name, value) {
+            return '<li><label>' + name + ':</label> ' + value + '</li>';
         },
         onCharacterLeave: function (e) {
             this.$queue.children().removeClass('highlight');
+            this.$info.hide();
         },
         events: {
             'click .character_spell': 'onSpellClick',

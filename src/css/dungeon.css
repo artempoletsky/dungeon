@@ -4,6 +4,26 @@ body {
     color: #333;
 }
 
+body, html, ul, li, dd, dt, dl, td, div, p, h1, h2, h3, h4, h5, h6, blockquote {
+    margin: 0;
+    padding: 0;
+}
+
+ul, li, ol {
+    list-style-type: none;
+}
+
+.clear {
+    clear: both;
+    width: 100%;
+    height: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-size: 100%;
+}
+
 .action_points_bar {
 
     /*background: #ccc;
@@ -121,4 +141,16 @@ body {
 
 .turns_queue .highlight{
     color: #29c3ee;
+}
+
+.info_box{
+    position: absolute;
+    left: 200px;
+    top: 200px;
+    z-index: 1;
+    border: 1px solid #545454;
+    background: #f7f7f7;
+    padding: 10px;
+    list-style-type: none;
+    margin: 0;
 }

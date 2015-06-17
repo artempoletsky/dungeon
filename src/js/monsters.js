@@ -1,7 +1,7 @@
 var Brigand = Character.extend({
     constructor: function (level) {
         this._super("brigand", {
-            res_physical: 20 * level - 20,
+            res_physical: 20 * level,
             res_fire: 10 * level - 10
         }, {
             weapon: new Weapon(level * 1)
