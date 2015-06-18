@@ -24,27 +24,25 @@ $(function () {
         index: 0,
         shortcuts: {
             $view: '.battlefield_view',
+            $playerParty: '.player_party',
+            $monstersParty: '.monsters_party',
             $queue: '.turns_queue',
             $spells: '.spells',
             $info: '.info_box'
         },
 
 
-
-
         renderCharacter: function (character) {
             var $view = $(ViewModel.tmpl.getRawTemplate('character'));
+            $view.find('.character_image').addClass(character.name);
 
             if (character.enemy) {
                 $view.addClass('enemy');
+                this.$monstersParty.append($view);
+            } else {
+                this.$playerParty.append($view);
             }
 
-            $view.find('.character_name').html(character.name);
-
-            $view.find('.character_image').addClass(character.name);
-
-
-            this.$view.append($view);
 
             var self = this;
             ViewModel.binds.style.call(ViewModel, $view.find('.health_bar'), '{width: healthBar}', character);
@@ -60,25 +58,49 @@ $(function () {
             });
         },
 
+        getView: function (character) {
+            var $cont = character.enemy ? this.$monstersParty : this.$playerParty;
+            return $cont.children().eq(this.getRank(character));
+        },
+
+        getRank: function (character) {
+            var party = character.enemy ? this.monstersParty : this.playerParty;
+            return party.indexOf(character);
+        },
+
+        getCharacter: function ($view) {
+            var index = $view.index();
+            var party = $view.hasClass('enemy') ? this.monstersParty : this.playerParty;
+            return party[index];
+        },
+
         kill: function (character) {
-            var positionIndex = this.all.indexOf(character);
+
             var queueIndex = this.queue.indexOf(character);
-            this.all.splice(positionIndex, 1);
-            this.$view.children().eq(positionIndex).remove();
+
+            this.getView(character).remove();
             this.queue.splice(queueIndex, 1);
             this.$queue.children().eq(queueIndex).remove();
 
-            if (character.enemy) {
-                this.monstersParty.splice(this.monstersParty.indexOf(character), 1);
-                if (this.monstersParty.length == 0) {
-                    this.endFight();
-                }
-            } else {
-                this.playerParty.splice(this.playerParty.indexOf(character), 1);
-                if (this.playerParty.length == 0) {
-                    this.endFight();
-                }
+            var party = character.enemy ? this.monstersParty : this.playerParty;
+
+            party.splice(party.indexOf(character), 1);
+            if (party.length == 0) {
+                this.endFight();
             }
+
+            /*
+             if (character.enemy) {
+             this.monstersParty.splice(this.monstersParty.indexOf(character), 1);
+             if (this.monstersParty.length == 0) {
+             this.endFight();
+             }
+             } else {
+             this.playerParty.splice(this.playerParty.indexOf(character), 1);
+             if (this.playerParty.length == 0) {
+             this.endFight();
+             }
+             }      */
         },
 
         loot: [],
@@ -98,12 +120,15 @@ $(function () {
             this.loot = [];
             this.playerParty = playerParty;
             this.monstersParty = monstersParty;
-            this.all = playerParty.concat(monstersParty);
+            var all = playerParty.concat(monstersParty);
             var self = this;
-            this.queue = _.sortBy(this.all, function (character) {
+
+            this.queue = _.sortBy(all, function (character) {
                 return -(character.prop('initiative') + Math.floor(Math.random() * 10));
             });
-            this.$view.empty();
+
+            this.$playerParty.empty();
+            this.$monstersParty.empty();
             _.each(playerParty, self.renderCharacter, self);
             _.each(monstersParty, function (character) {
                 self.renderCharacter(character);
@@ -138,8 +163,8 @@ $(function () {
 
             this.$queue.children().removeClass('current').eq(self.index).addClass('current');
 
-            var positionIndex = this.all.indexOf(character);
-            this.$view.children().removeClass('current').eq(positionIndex).addClass('current');
+            this.$view.find('.current').removeClass('current');
+            this.getView(character).addClass('current');
 
             this.currentCharacter = character;
 
@@ -152,25 +177,39 @@ $(function () {
                 //player turn
                 this.playerCharacter = character;
 
-
                 actionPointsBar.show(character.prop('actionPoints'));
 
                 var $spells = self.$spells.empty();
 
+                var rank = this.playerParty.indexOf(character) + 1;
+
                 _.each(character.spells, function (spell, index) {
-                    $spells.append('<div class="spell character_spell">' + spell.name + '</div>');
+                    var inactive = '';
+                    if (spell.posFrom.indexOf(rank) == -1) {
+                        inactive = ' inactive';
+                    }
+                    $spells.append('<div class="spell character_spell' + inactive + '">' + spell.name + '</div>');
                 });
                 $spells.append('<div class="spell end_turn">end</div>');
             }
         },
 
+        highlightRanks: function (isEnemy, ranks, aoe) {
+            var $cont = isEnemy ? this.$monstersParty : this.$playerParty;
+            _.each(ranks, function (rank) {
+                $cont.children().eq(rank - 1).addClass('highlight');
+            });
+        },
 
         onSpellClick: function (e) {
-            var index = $(e.currentTarget).index();
-            if (this.playerCharacter) {
+            var $button = $(e.currentTarget);
+            var index = $button.index();
+            if (this.playerCharacter && !$button.hasClass('inactive')) {
                 if (this.playerCharacter.enoughAP(index)) {
                     this.activeSpell = index;
-                    this.$view.find('.enemy').addClass('highlight');
+                    var spell = this.playerCharacter.spells[index];
+                    this.highlightRanks(spell.targetEnemy, spell.posTo, spell.aoe);
+                    //this.$view.find('.enemy').addClass('highlight');
                 }
             }
         },
@@ -187,8 +226,7 @@ $(function () {
             }
         },
         onSpellInvoke: function (e) {
-            var index = $(e.currentTarget).index();
-            var target = this.all[index];
+            var target = this.getCharacter($(e.currentTarget));
             this.playerCharacter.invokeSpell(this.activeSpell, target, function () {
             });
             actionPointsBar.show(this.playerCharacter.prop('actionPoints'));
@@ -198,9 +236,9 @@ $(function () {
             }
         },
         onCharacterEnter: function (e) {
-            var $view=$(e.currentTarget);
+            var $view = $(e.currentTarget);
             var index = $view.index();
-            var character = this.all[index];
+            var character = $view.hasClass('enemy') ? this.monstersParty[index] : this.playerParty[index];
             var queueIndex = this.queue.indexOf(character);
             var $queueView = this.$queue.children().eq(queueIndex);
 
@@ -209,8 +247,8 @@ $(function () {
 
             var propsToShow = ['res_physical', 'initiative', 'actionPoints'];
             this.$info.empty().show().css({
-                left: $view.offset().left+'px',
-                top: $view.offset().top+'px'
+                left: $view.offset().left + 'px',
+                top: $view.offset().top + 'px'
             });
             this.$info.append(this.generateInfoRow('Health', character.prop('health') + '/' + character.prop('maxHealth')));
             for (var i = 0; i < propsToShow.length; i++) {

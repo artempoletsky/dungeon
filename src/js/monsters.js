@@ -6,7 +6,7 @@ var Brigand = Character.extend({
         }, {
             weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
         });
-        this.spells = [Spells.hit];
+        this.spells = [Spells.hit, Spells.throwDagger];
     }
 });
 
@@ -19,6 +19,6 @@ var BrigandScout = Character.extend({
         }, {
             weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
         });
-        this.spells = [Spells.hit];
+        this.spells = [Spells.hit, Spells.throwDagger];
     }
 });

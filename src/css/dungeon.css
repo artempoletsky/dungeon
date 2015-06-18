@@ -52,28 +52,27 @@ h1, h2, h3, h4, h5, h6 {
     float: left;
     width: 130px;
     height: 300px;
-    border-bottom: 5px solid #5cff46;
+    border-bottom: 5px solid transparent;
     margin-right: 20px;
     text-align: center;
     position: relative;
 }
 
 .character_view.highlight {
-    box-shadow: 0 6px 6px 0 #5cff46;
+    border-color: #5cff46;
     cursor: pointer;
 }
 
 .character_view.enemy {
-    border-color: #ee0000;
+
 }
 
 .character_view.enemy.highlight {
-    box-shadow: 0 6px 6px 0 #ee0000;
+    border-color: #ee0000;
 }
 
 .character_view.current {
     border-color: #29c3ee;
-    box-shadow: 0 6px 6px 0 #29c3ee;
 }
 
 .cv_stats {
@@ -108,6 +107,11 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
 }
 
+.spell.inactive {
+    opacity: 0.75;
+    cursor: default;
+}
+
 .clearfix:after {
     content: '';
     display: block;
@@ -115,8 +119,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .battlefield_view {
-    padding-left: 300px;
-    padding-top: 150px;
+    margin: 150px 170px;
+    position: relative;
+}
+
+.player_party {
+    position: absolute;
+    left: 50%;
+    margin-left: -620px;
+    width: 600px;
+    height: 200px;
+}
+
+.player_party .character_view{
+    float: right;
+}
+
+.monsters_party {
+    position: absolute;
+    left: 50%;
+    margin-left: 20px;
+    width: 600px;
 }
 
 .turns_queue {
@@ -153,6 +176,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px;
     list-style-type: none;
     margin: 0;
+    display: none;
 }
 
 .character_image {
@@ -198,7 +222,8 @@ h1, h2, h3, h4, h5, h6 {
 .left_character.target.brigand {
     background-position: 0 -418px;
 }
-.hit_animation .damage{
+
+.hit_animation .damage {
     position: absolute;
     color: #ee0000;
     font-size: 80px;

@@ -5,6 +5,11 @@ var Spell = Class.extend({
     cost: 3,
     name: 'hit',
     description: 'spell_desc_hit',
+    targetEnemy: true,
+
+    aoe: false,
+    posFrom: [1, 2],
+    posTo: [1, 2],
 
     minDamage: function (caster_character, target_character) {
         //debugger;
@@ -22,7 +27,7 @@ var Spell = Class.extend({
     animate: function (caster_character, target_character, damage, callback) {
         var $view = $('.hit_animation');
         $view.show();
-        var $left = $view.find('.left_character');
+        /*var $left = $view.find('.left_character');
         var $right = $view.find('.right_character');
         var casterIndex = Battlefield.all.indexOf(caster_character);
         var targetIndex = Battlefield.all.indexOf(target_character);
@@ -38,15 +43,15 @@ var Spell = Class.extend({
             $right.addClass('target');
         }
         $left.addClass(leftChar.name);
-        $right.addClass(rightChar.name);
+        $right.addClass(rightChar.name);*/
 
 
         $view.find('.damage').html(damage.damage.physical);
 
 
         setTimeout(function () {
-            $left.removeClass('caster target ' + leftChar.name);
-            $right.removeClass('caster target ' + rightChar.name);
+            /*$left.removeClass('caster target ' + leftChar.name);
+            $right.removeClass('caster target ' + rightChar.name);*/
             $view.hide();
             setTimeout(callback, 500);
         }, 1000);
@@ -55,7 +60,13 @@ var Spell = Class.extend({
 
 
 var Spells = {
-    hit: Spell.create({})
+    hit: Spell.create({}),
+    throwDagger: Spell.create({
+        cost: 4,
+        posFrom: [3, 4],
+        posTo: [2, 3, 4],
+        name: 'throw_dagger'
+    })
 };
 
 
