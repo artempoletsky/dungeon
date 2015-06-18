@@ -7,6 +7,7 @@ var Character = Model.extend({
     name: undefined,
     enemy: true,
     ai: stupid,
+    lastUsedSpell: undefined,
 
     computeds: {
         healthBar: {
@@ -17,6 +18,8 @@ var Character = Model.extend({
         }
     },
     defaults: {
+        speedBack: 1,
+        speedForward: 2,
         maxHealth: 100,
         health: 100,
         res_physical: 0,

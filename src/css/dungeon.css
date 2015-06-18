@@ -58,7 +58,7 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
 }
 
-.character_view.highlight {
+.character_view.highlight, .character_view.move_highlight{
     border-color: #5cff46;
     cursor: pointer;
 }
