@@ -238,6 +238,7 @@ $(function () {
             var $button = $(e.currentTarget);
             var index = $button.index();
             if (this.playerCharacter && !$button.hasClass('inactive')) {
+                this.$playerParty.find('.move_highlight').removeClass('move_highlight');
                 if (this.playerCharacter.enoughAP(index)) {
                     this.activeSpell = index;
                     this.playerCharacter.lastUsedSpell = index;
@@ -303,6 +304,7 @@ $(function () {
         },
         onSwitchPosition: function () {
             if (this.playerCharacter) {
+                this.$view.find('.highlight').removeClass('highlight');
                 actionPointsBar.show(this.playerCharacter.prop('actionPoints'), 1);
 
                 var index = this.playerParty.indexOf(this.playerCharacter);
