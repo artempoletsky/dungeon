@@ -27,8 +27,8 @@
 
 
     var placeRoom = function (martix) {
-        var width = 3 + rand(2) * 2;
-        var height = 3 + rand(2) * 2;
+        var width = 3 + rand(2)*2;
+        var height = 3 + rand(2)*2;
 
         var checkIntersects = function (width, height, x, y) {
             if (x < 0) {
@@ -62,7 +62,7 @@
         for (var i = 0; i < 10; i++) {
             var x = 1 + rand((martix[0].length - width - 2) / 2) * 2;
             var y = 1 + rand((martix.length - height - 2) / 2) * 2;
-            if (!checkIntersects(width + 2, height + 2, x - 1, y - 1)) {
+            if (!checkIntersects(width + 4, height + 4, x - 2, y - 2)) {
                 room(width, height, x, y);
                 break;
             }
@@ -207,9 +207,10 @@
 
 
                 _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1) {
+                    if (merged.indexOf(region) != -1&& 0.2 < Math.random()) {
                         return;
                     }
+
                     merged.push(region);
                     var door = doors[rand(doors.length)];
                     door.content = 'door';
@@ -306,7 +307,7 @@
 
             //matrix[startY][startX].content = 'start';
 
-            var rooms=Math.floor(width*height/100);
+            var rooms = Math.floor(width * height / 100);
             for (var i = 0; i < rooms; i++) {
                 this.addRegion();
                 placeRoom(matrix);

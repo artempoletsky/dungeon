@@ -25,28 +25,7 @@ $(function () {
             return array[Math.floor(Math.random() * array.length)];
         }
 
-        var opDirs = {
-            up: 'down',
-            left: 'right',
-            right: 'left',
-            down: 'up'
-        };
 
-        var parts = [
-            function () {
-
-            }
-        ]
-
-        var drawMap = function (chain) {
-            var $map = $('.map');
-            $map.empty();
-            console.log(chain);
-            do {
-                $map.append('<div class="map_passage ' + chain.content + '"></div>')
-                chain = chain.next;
-            } while (chain)
-        }
 
 
 
