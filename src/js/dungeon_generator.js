@@ -27,8 +27,8 @@
 
 
     var placeRoom = function (martix) {
-        var width = 3 + rand(2)*2;
-        var height = 3 + rand(2)*2;
+        var width = 3 + rand(2) * 2;
+        var height = 3 + rand(2) * 2;
 
         var checkIntersects = function (width, height, x, y) {
             if (x < 0) {
@@ -62,7 +62,7 @@
         for (var i = 0; i < 10; i++) {
             var x = 1 + rand((martix[0].length - width - 2) / 2) * 2;
             var y = 1 + rand((martix.length - height - 2) / 2) * 2;
-            if (!checkIntersects(width + 4, height + 4, x - 2, y - 2)) {
+            if (!checkIntersects(width + 2, height + 2, x - 1, y - 1)) {
                 room(width, height, x, y);
                 break;
             }
@@ -125,14 +125,40 @@
             self.fill(x, y, 'passage');
 
 
-            this.eachRandom(this.neighbors(x, y, 2), function (cell) {
+            var walls = _.map(this.neighbors(x, y, 2), function(cell){
+                return {
+                    cell: cell,
+                    parent: current
+                }
+            });
 
+            this.eachRandom(walls, function (el) {
+                var cell=el.cell;
                 if (!cell.content) {
 
+                    var x = el.parent.x;
+                    var y = el.parent.y;
                     var wallX = (x + cell.x) / 2;
                     var wallY = (y + cell.y) / 2;
                     self.fill(wallX, wallY, 'passage');
-                    self.maze(cell.x, cell.y);
+                    self.fill(cell.x, cell.y, 'passage');
+
+                    current=cell;
+
+                    //x=cell.x;
+                    //y=cell.y;
+
+                    _.each(self.neighbors(cell.x, cell.y, 2), function (cell) {
+                        if (!cell.content) {
+                            //cell._x = x;
+                            // cell._y = y;
+                            walls.push({
+                                cell: cell,
+                                parent: current
+                            });
+                        }
+                    });
+                    //self.maze(cell.x, cell.y);
                 }
                 ///self.maze(x, y);
             });
@@ -207,7 +233,7 @@
 
 
                 _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1&& 0.2 < Math.random()) {
+                    if (merged.indexOf(region) != -1 && 0.2 < Math.random()) {
                         return;
                     }
 
