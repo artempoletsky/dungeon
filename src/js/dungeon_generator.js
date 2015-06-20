@@ -53,7 +53,7 @@
         var room = function (width, height, x, y) {
             for (var w = 0; w < width; w++) {
                 for (var h = 0; h < height; h++) {
-                    DungeonGenerator.fill(w+x,h+y, 'room');
+                    DungeonGenerator.fill(w + x, h + y, 'room');
                 }
             }
         }
@@ -98,20 +98,25 @@
             }
         },
 
+        neighbors: function (x, y, range) {
+            if (!range) {
+                range = 1;
+            }
+            var result = [];
+            var m = this.matrix;
+            if (m[y - range])
+                result.push(m[y - range][x]);
+            if (m[y + range])
+                result.push(m[y + range][x]);
+            if (m[y][x - range])
+                result.push(m[y][x - range]);
+            if (m[y][x + range])
+                result.push(m[y][x + range]);
+            return result;
+        },
+
         maze: function (x, y) {
             var self = this;
-            var neighbors = function (x, y) {
-                var result = [];
-                if (self.matrix[y - 2])
-                    result.push(self.matrix[y - 2][x]);
-                if (self.matrix[y + 2])
-                    result.push(self.matrix[y + 2][x]);
-                if (self.matrix[y][x - 2])
-                    result.push(self.matrix[y][x - 2]);
-                if (self.matrix[y][x + 2])
-                    result.push(self.matrix[y][x + 2]);
-                return result;
-            }
 
             var current = self.matrix[y][x];
             if (current.content) {
@@ -120,7 +125,7 @@
             self.fill(x, y, 'passage');
 
 
-            this.eachRandom(neighbors(x, y), function (cell) {
+            this.eachRandom(this.neighbors(x, y, 2), function (cell) {
 
                 if (!cell.content) {
 
@@ -136,26 +141,115 @@
         },
 
         placeDoors: function () {
-
+            var self = this;
             var matrix = this.matrix;
-            eachMatrix(matrix, function (element, x, y) {
-                if (!element.content) {
-                    if (matrix[y][x - 1] && matrix[y][x + 1])
-                        if (matrix[y][x - 1].content && matrix[y][x + 1].content)
-                            if (matrix[y][x - 1].regionID && matrix[y][x + 1].regionID)
-                                if (matrix[y][x - 1].regionID != matrix[y][x + 1].regionID) {
-                                    element.content = 'door';
-                                }
+            var merged = [1];
 
-                    if (matrix[y - 1] && matrix[y + 1])
-                        if (matrix[y - 1][x].content && matrix[y + 1][x].content)
-                            if (matrix[y - 1][x].regionID && matrix[y + 1][x].regionID)
-                                if (matrix[y - 1][x].regionID != matrix[y + 1][x].regionID) {
-                                    element.content = 'door';
+            var canPlaceDoor = function (cell) {
+                if (!cell.content) {
+                    var x = cell.x;
+                    var y = cell.y;
+
+                    var notMerged = function (reg1, reg2) {
+                        if (reg1 && reg2 && reg1 != reg2) {
+                            if (merged.indexOf(reg1) == -1 || merged.indexOf(reg2) == -1) {
+                                if (merged.indexOf(reg1) == -1) {
+                                    cell.merge = reg1;
+                                } else {
+                                    cell.merge = reg2;
                                 }
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    //checks if neighbors not empty and different regions
+                    if (matrix[y][x - 1] && matrix[y][x + 1]) {
+                        if (notMerged(matrix[y][x - 1].regionID, matrix[y][x + 1].regionID)) {
+                            return true;
+                        }
+                    }
+
+                    if (matrix[y - 1] && matrix[y + 1]) {
+                        if (notMerged(matrix[y - 1][x].regionID, matrix[y + 1][x].regionID)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+
+            _.each(this.regions, function (cells, index) {
+
+
+                if (merged.indexOf(index) != -1 && index != 1) {
+                    return;
                 }
 
+
+                var doors = {};
+                _.each(cells, function (cell) {
+
+                    _.each(self.neighbors(cell.x, cell.y), function (cell) {
+                        if (canPlaceDoor(cell)) {
+                            if (!doors[cell.merge]) {
+                                doors[cell.merge] = [];
+                            }
+                            doors[cell.merge].push(cell);
+                            //cell.content = 'door';
+                        }
+                    });
+
+
+                });
+
+
+                _.each(doors, function (doors, region) {
+                    if (merged.indexOf(region) != -1) {
+                        return;
+                    }
+                    merged.push(region);
+                    var door = doors[rand(doors.length)];
+                    door.content = 'door';
+                });
             });
+        },
+
+        removeDeadEnds: function () {
+            var self = this;
+            var matrix = self.matrix;
+            var isDeadEnd = function (cell) {
+                if (!cell.content) {
+                    return false;
+                }
+                var x = cell.x, y = cell.y;
+                var walls = 0;
+                if (!matrix[y - 1] || !matrix[y - 1][x].content)
+                    walls++;
+
+                if (!matrix[y + 1] || !matrix[y + 1][x].content)
+                    walls++;
+
+                if (!matrix[y][x + 1] || !matrix[y][x + 1].content)
+                    walls++;
+
+                if (!matrix[y][x - 1] || !matrix[y][x - 1].content)
+                    walls++;
+
+                return walls > 2;
+            }
+            var found;
+            do {
+                found = false;
+                eachMatrix(matrix, function (cell, x, y) {
+                    if (isDeadEnd(cell)) {
+                        found = true;
+                        cell.content = undefined;
+                    }
+                });
+            } while (found)
         },
 
 
@@ -212,7 +306,8 @@
 
             //matrix[startY][startX].content = 'start';
 
-            for (var i = 0; i < 10; i++) {
+            var rooms=Math.floor(width*height/100);
+            for (var i = 0; i < rooms; i++) {
                 this.addRegion();
                 placeRoom(matrix);
             }
@@ -226,6 +321,8 @@
             }
 
             this.placeDoors();
+
+            this.removeDeadEnds();
 
             eachMatrix(matrix, function (element, x, y) {
                 $map.append('<div region="' + element.regionID + '" class="map_passage ' + element.content + '" style="left: ' + x * 20 + 'px; top:' + y * 20 + 'px;"></div>');
