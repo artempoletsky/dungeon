@@ -230,3 +230,42 @@ h1, h2, h3, h4, h5, h6 {
     left: 250px;
     top: -140px;
 }
+
+
+.map_passage{
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 1px;
+    border: 1px solid #000000;
+    position: absolute;
+    background: #484848;
+}
+
+.map_passage.room{
+    background: dodgerblue;
+}
+
+.map_passage.passage{
+    background: magenta;
+}
+
+.map_passage.wall{
+    background: #484848;
+}
+
+.map_passage.door{
+    background: red;
+}
+
+.map_passage.white{
+    background: white;
+}
+
+.map_passage.black {
+    background: black;
+}
+
+.map_passage.magenta {
+    background: magenta;
+}
