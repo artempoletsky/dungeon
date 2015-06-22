@@ -32,6 +32,9 @@ $(function () {
 
 
         window.Game = Model.create({
+            rand: function(max){
+                return Math.floor(Math.random() * max);
+            },
             language: 'ru',
             initialize: function () {
 
@@ -55,9 +58,10 @@ $(function () {
                 });
 
 
-                DungeonGenerator.generate(20, 20);
-                //drawMap(chain(4));
-                //console.log(chain(4));
+                var map=DungeonGenerator.generate(20, 20);
+
+
+                Dungeon.start(map);
 
                 $('.battlefield').hide();
 
