@@ -358,6 +358,5 @@
         }
     });
 
-    var goodFunction = DungeonGenerator.fill;
 }());
 
