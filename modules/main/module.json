@@ -1,0 +1,8 @@
+{
+    "js": ["monsters"],
+    "css": ["main"],
+    "dialogs": ["dialogs"],
+    "language": {
+        "ru_main": "ru"
+    }
+}

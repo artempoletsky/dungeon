@@ -1,49 +1,5 @@
-var d = {
-    npc: 'hello',
-    questID: 0,
-    questStage: 0,
-    exit: false,
-    answers: [
-        {
-            player: 'answer2',
-            npc: 'ok'
-        },
-        {
-            npc: '300',
-            player: 'say300',
-            answers: [
-                {
-                    player: 'joke300',
-                    npc: 'fu'
-                }
-            ]
-        },
-        {
-            player: 'tellAboutDragons',
-            npc: 'dragons1',
-            separate: true,
-            dontRemove: true,
-            answers: [
-                {
-                    player: 'continue',
-                    npc: 'dragons2'
-                },
-                {
-                    player: 'dragonsButtJoke',
-                    npc: 'dragons3'
-                }
-            ]
-        },
-        {
-            player: 'bye',
-            exit: true
-        }
-    ]
-};
-
-
 $(function () {
-    var Dialogs = ViewModel.create({
+    window.Dialogs = ViewModel.create({
         el: '.dialogs',
 
         shortcuts: {
@@ -115,8 +71,7 @@ $(function () {
             }, ''))
         }
     });
-    setTimeout(function () {
-        Dialogs.start(d);
-    }, 100);
+
+    Dialogs.list = {};
 
 });

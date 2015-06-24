@@ -22,3 +22,4 @@ var BrigandScout = Character.extend({
         this.spells = [Spells.hit];
     }
 });
+

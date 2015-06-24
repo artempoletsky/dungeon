@@ -123,3 +123,7 @@ Model.prototype.propMult = function (name, value) {
     this.prop(name, this.prop(name) * value);
 };
 
+var Human=Character.extend({
+
+});
+

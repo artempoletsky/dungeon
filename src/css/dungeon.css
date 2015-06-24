@@ -255,19 +255,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .map_passage.door{
-    background: red;
+    background: #ff7b36;
 }
 
 .map_passage.entry{
     background: green;
 }
 
-.map_passage.black {
-    background: black;
+.map_passage.monster {
+    background: #c93a00;
 }
 
-.map_passage.magenta {
-    background: magenta;
+.map_passage.bossMonster {
+    background: #000;
+}
+
+.map_passage.trap {
+    background: #ff4c86;
+}
+
+.map_passage.chest {
+    background: gold;
 }
 
 .team{
