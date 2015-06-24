@@ -121,7 +121,8 @@ $(function () {
 
         $('.battlefield').hide();
 
-        Dialogs.start(Dialogs.list.example);
+        /*
+        Dialogs.start(Dialogs.list.example);*/
     });
     //
 });

@@ -53,12 +53,6 @@ var Character = Model.extend({
     enoughAP: function (spell_id) {
         return this.spells[spell_id].cost <= this.prop('actionPoints');
     },
-    startTurn: function () {
-
-    },
-    applyStatuses: function () {
-
-    },
     _computeDamageOneType: function (value, resist, penetration) {
         var resist = resist * (1 - penetration / 100);
         return value * (1 - resist / 100);
@@ -96,7 +90,7 @@ var Character = Model.extend({
 
             var damage = min + (max - min) * Math.random();
 
-            damage = Math.round(damage*critMult);
+            damage = Math.round(damage * critMult);
 
 
             totalDamage[damage_type] = damage;
@@ -123,7 +117,11 @@ Model.prototype.propMult = function (name, value) {
     this.prop(name, this.prop(name) * value);
 };
 
-var Human=Character.extend({
-
+var Human = Character.extend({
+    reset: function () {
+        this.prop('maxHealth', this.prop('strength') * 5 + 10);
+        this.prop('dodge', this.prop('agility') * 2);
+        this._super();
+    }
 });
 
