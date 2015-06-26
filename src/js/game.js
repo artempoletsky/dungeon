@@ -43,7 +43,7 @@ $(function () {
                             load();
                         } else {
                             self.isLoading = false;
-                            if(!self.isReady){
+                            if (!self.isReady) {
                                 self.fire('ready');
                             }
                         }
@@ -77,10 +77,10 @@ $(function () {
         },
         language: 'ru',
 
-        ready: function(calback){
-            if(this.isReady){
+        ready: function (calback) {
+            if (this.isReady) {
                 calback.call(this);
-            }else {
+            } else {
                 this.one('ready', calback);
             }
         },
@@ -93,36 +93,57 @@ $(function () {
     });
 
 
-    Game.ready(function(){
+    Game.ready(function () {
+
+
+
         var playerParty = [];
-        var monstersParty = [];
+
 
         for (var i = 0; i < 4; i++) {
             var c = new Brigand(1);
             c.enemy = false;
             playerParty.push(c);
-            monstersParty.push(new BrigandScout(1));
         }
 
 
-        Battlefield.on('endFight', function (e) {
-            if (e.party.length > 0) {
-                alert('win!');
-            } else {
-                alert('defeat!');
+
+
+
+
+        var $form = $('.dungeon_generator');
+        $form.hide();
+
+        return;
+        $form.find('button').click(function () {
+            var formResult = _.foldl($form.serializeArray(), function (result, obj) {
+                result[obj.name] = obj.value;
+                return result;
+            }, {});
+
+            var size;
+
+            switch (formResult.size) {
+                case 'Small':
+                    size = 20;
+                    break;
+                case 'Medium':
+                    size = 35;
+                    break;
+                case 'Big':
+                    size = 50;
+                    break;
             }
+
+            var map = DungeonGenerator.generate(size, size);
+            $form.hide();
+            Dungeon.start(map, formResult.level, playerParty);
+
+            return false;
         });
 
-
-        var map = DungeonGenerator.generate(20, 20);
-
-
-        Dungeon.start(map);
-
-        $('.battlefield').hide();
-
         /*
-        Dialogs.start(Dialogs.list.example);*/
+         Dialogs.start(Dialogs.list.example);*/
     });
     //
 });

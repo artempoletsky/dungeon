@@ -1,3 +1,43 @@
+var MapCellMonster = MapCell.extend({
+    constructor: function (cell) {
+        this._super(cell);
+        this.monstersParty = this.getMonstersParty(Dungeon.dungeonLevel);
+        this.className = 'monster';
+        //this.monstersParty = dungeon.dungeonLevel;
+    },
+    getMonstersParty: function (level) {
+        var variants = _.compact(_.map(MapCellMonster.monsters, function (obj) {
+            if (!obj.minLevel || level >= obj.minLevel) {
+                if (!obj.maxLevel || level <= obj.maxLevel) {
+                    return obj;
+                }
+            }
+        }));
+        if (!variants.length) {
+            throw "Can't create monster cell";
+        }
+
+        return _.map(variants[rand(variants.length)].party, function (ClassName) {
+            return new ClassName(level);
+        });
+
+    },
+    monstersParty: undefined,
+    enter: function () {
+        this.className = this.type;
+        Dungeon.pauseKeyboardEvents = true;
+        Dungeon.$el.hide();
+        Battlefield.one('endFight', function (e) {
+            Dungeon.$el.show();
+            Dungeon.pauseKeyboardEvents = false;
+            console.log(e);
+        });
+        Battlefield.fight(Dungeon.playerParty, this.monstersParty);
+    }
+});
+
+Dungeon.mapObjects['1'].push(MapCellMonster);
+
 var Brigand = Character.extend({
     constructor: function (level) {
         this._super("brigand", {
@@ -23,3 +63,14 @@ var BrigandScout = Character.extend({
     }
 });
 
+
+MapCellMonster.monsters = {
+    brigands: {
+        minLevel: 1,
+        maxLevel: 18,
+        party: [Brigand, Brigand, BrigandScout, BrigandScout]
+    },
+    example: {
+        minLevel: 100
+    }
+};

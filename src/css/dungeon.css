@@ -118,6 +118,10 @@ h1, h2, h3, h4, h5, h6 {
     clear: both;
 }
 
+.battlefield {
+    display: none;
+}
+
 .battlefield_view {
     margin: 150px 170px;
     position: relative;

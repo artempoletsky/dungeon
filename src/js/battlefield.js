@@ -109,7 +109,7 @@ $(function () {
         monstersParty: undefined,
 
         endFight: function () {
-
+            this.$el.hide();
             this.fire('endFight', {
                 party: this.playerParty,
                 loot: this.loot
@@ -117,6 +117,7 @@ $(function () {
         },
 
         fight: function (playerParty, monstersParty) {
+            this.$el.show();
             this.loot = [];
             this.playerParty = playerParty;
             this.monstersParty = monstersParty;
