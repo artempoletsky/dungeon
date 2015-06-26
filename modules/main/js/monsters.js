@@ -1,7 +1,7 @@
 var MapCellMonster = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
-        this.monstersParty = this.getMonstersParty(Dungeon.dungeonLevel);
+        this.monstersParty = this.getMonstersParty(Dungeon.dungeonLevel||1);
         this.className = 'monster';
         //this.monstersParty = dungeon.dungeonLevel;
     },
@@ -38,15 +38,17 @@ var MapCellMonster = MapCell.extend({
 
 Dungeon.mapObjects['1'].push(MapCellMonster);
 
-var Brigand = Character.extend({
+var Brigand = Human.extend({
     constructor: function (level) {
         this._super("brigand", {
+            strength: 5+level*1,
+            agility: 5+level*1,
             res_physical: 20 * level,
             res_fire: 10 * level - 10
         }, {
             weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
         });
-        this.spells = [Spells.hit, Spells.throwDagger];
+        this.spells = [new Spells.Bite(20, 30), new Spells.MagicSpell(20, 30)];
     }
 });
 
@@ -54,12 +56,13 @@ var Brigand = Character.extend({
 var BrigandScout = Character.extend({
     constructor: function (level) {
         this._super("brigand_scout", {
+            maxHealth: 20,
             res_physical: 20 * level - 20,
             res_fire: 10 * level - 10
         }, {
             weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
         });
-        this.spells = [Spells.hit];
+        this.spells = [new Spells.Projectile()];
     }
 });
 

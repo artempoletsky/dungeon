@@ -112,9 +112,13 @@ $(function () {
 
 
         var $form = $('.dungeon_generator');
-        $form.hide();
+        /*$form.hide();
 
-        return;
+        var cell=new MapCellMonster({});
+
+        Battlefield.fight(playerParty, cell.monstersParty);
+
+        return;*/
         $form.find('button').click(function () {
             var formResult = _.foldl($form.serializeArray(), function (result, obj) {
                 result[obj.name] = obj.value;

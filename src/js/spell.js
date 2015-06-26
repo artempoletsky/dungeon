@@ -15,12 +15,12 @@ var Spell = Class.extend({
     canDodge: true,
     canParry: true,
     getAttack: function (caster_character) {
-        return caster_character.prop('agility') * 5 + 45 + this.level * 5;
+        return caster_character.prop('agility') * 5 + caster_character.equipment.prop('weapon').getAttack(caster_character) + this.level * 5;
     },
-    minDamage: function (caster_character, target_character) {
+    getMinDamage: function (caster_character, target_character) {
         return caster_character.equipment.prop('weapon').getMinDamage(caster_character, target_character);
     },
-    maxDamage: function (caster_character, target_character) {
+    getMaxDamage: function (caster_character, target_character) {
         return caster_character.equipment.prop('weapon').getMaxDamage(caster_character, target_character);
     },
     computeHitChance: function (caster_character, target_character, isFinal) {
@@ -39,6 +39,7 @@ var Spell = Class.extend({
 
         var attack = this.getAttack(caster_character);
 
+
         if (!isFinal) {
             if (attack > 100) {
                 return  attack - dodge;
@@ -48,6 +49,7 @@ var Spell = Class.extend({
             if (attack < 100) {
                 if (rand(100) < attack) {
                     if (dodge > rand(100)) {
+
                         return isParry ? 'parry' : 'dodge';
                     }
                     return 'hit';
@@ -68,10 +70,11 @@ var Spell = Class.extend({
     invoke: function (caster_character, target_character, callback) {
         var hitResult = this.computeHitChance(caster_character, target_character, true);
         var damage;
+
         if (hitResult == 'hit') {
-            damage = target_character.dealDamage(this.minDamage(caster_character, target_character), this.maxDamage(caster_character, target_character), caster_character, this.critChance);
+            damage = target_character.dealDamage(this.getMinDamage(caster_character, target_character), this.getMaxDamage(caster_character, target_character), caster_character, this.critChance);
         } else {
-            damage=hitResult;
+            damage = hitResult;
         }
         this.animate(caster_character, target_character, damage, callback);
     },
@@ -96,8 +99,11 @@ var Spell = Class.extend({
          $left.addClass(leftChar.name);
          $right.addClass(rightChar.name);*/
 
+        if (damage.damage) {
+            damage = damage.damage.physical;
+        }
 
-        $view.find('.damage').html(damage.damage.physical);
+        $view.find('.damage').html(damage);
 
 
         setTimeout(function () {
@@ -119,11 +125,15 @@ var Spells = {
         },
         minDamage: 0,
         maxDamage: 0,
+        attack: 90,
+        getAttack: function () {
+            return this.attack;
+        },
         getMinDamage: function () {
-            return this.minDamage;
+            return {physical: this.minDamage};
         },
         getMaxDamage: function () {
-            return this.maxDamage;
+            return {physical: this.maxDamage};
         },
         canParry: false
     }),
@@ -138,6 +148,8 @@ var Spells = {
 
 
 Spells.MagicSpell = Spells.Bite.extend({
+    posFrom: [3, 4],
+    posTo: [1, 2],
     name: 'fireball'
 });
 

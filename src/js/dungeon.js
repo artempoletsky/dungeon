@@ -10,6 +10,7 @@ $(function () {
         y: 0,
         sneak: 0,
         index: 0,
+        visited: false,
         constructor: function (props) {
             this.x = props.x;
             this.y = props.y;
@@ -113,7 +114,11 @@ $(function () {
             }
 
 
-            nextCell.enter();
+            if(!nextCell.visited){
+                nextCell.enter();
+            }
+            nextCell.visited=true;
+
 
             //if (nextCell.content != 'door' && nextCell.content != 'entry')
             //    nextCell.content = nextCell.lastContent;

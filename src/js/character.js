@@ -71,7 +71,7 @@ var Character = Model.extend({
         var self = this;
 
         var critMult = 1;
-        if (critChance / 100 < Math.random()) {
+        if (critChance / 100 > Math.random()) {
             critMult = 2;
         }
 
@@ -119,8 +119,8 @@ Model.prototype.propMult = function (name, value) {
 
 var Human = Character.extend({
     reset: function () {
-        this.prop('maxHealth', this.prop('strength') * 5 + 10);
-        this.prop('dodge', this.prop('agility') * 2);
+        this.prop('maxHealth', this.statsBase.strength * 5 + 10);
+        this.prop('dodge', this.statsBase.agility * 2);
         this._super();
     }
 });

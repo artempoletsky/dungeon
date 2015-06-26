@@ -41,6 +41,9 @@ var Weapon = Item.extend({
     maxDamage: {
         physical: 45
     },
+    getAttack: function(caster_character){
+        return 45;
+    },
     getMinDamage: function (caster_character, target_character) {
         return this.minDamage;
     },
