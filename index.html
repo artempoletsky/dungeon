@@ -19,10 +19,80 @@
 
     <script type="text/javascript" src="src/js/dialogue.js"></script>
     <script type="text/javascript" src="src/js/game.js"></script>
+    <script type="text/javascript" src="3d/babylon.2.1.js"></script>
+
 
 
 </head>
 <body>
+
+<canvas width="800" height="600" id="canvas"></canvas>
+<div id="fps"></div>
+<script type="text/javascript">
+    if (BABYLON.Engine.isSupported()) {
+        var canvas = document.getElementById("canvas");
+        var engine = new BABYLON.Engine(canvas, true);
+        var divFps = document.getElementById("fps");
+
+
+        //Use your file name at xxxxx
+        BABYLON.SceneLoader.Load("3d/", "1.babylon", engine, function (newScene) {
+            newScene.executeWhenReady(function () {
+
+                //change the value of cameraFlag to a value other than 1 to use the free camera from blender
+                var cameraFlag = 1;
+
+                // which camera is active Arc Rotate or Blender Free Camera
+
+                if (cameraFlag == 1){
+                    var myCamera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), newScene);
+                    myCamera.setPosition(new BABYLON.Vector3(0, 3, -4));
+                    myCamera.speed = .1;
+                    myCamera.wheelPrecision = 250;
+                    myCamera.fov = .8;
+
+                    newScene.activeCamera = myCamera;
+
+                }
+                else {
+                    var myCamera2 = newScene.getCameraByName("Camera");
+                    myCamera2.speed = .1;
+
+                    newScene.activeCamera = myCamera2;
+                }
+
+
+
+                // Then attach the activeCamera to the canvas.
+                newScene.activeCamera.attachControl(canvas);
+
+
+
+                //newScene.activeCamera.attachControl(canvas);
+                var skeleton = newScene.getSkeletonById(0);
+                //var myBone = skeleton.bones[28].name;
+                //console.log(myBone);
+                //change these parameters as necessary for start and end frames of animation, looping, and speed
+
+                newScene.beginAnimation(skeleton, 1, 25, true, 1);
+
+
+                // Once the scene is loaded, just register a render loop to render it
+                engine.runRenderLoop(function() {
+                   divFps.innerHTML = engine.getFps().toFixed() + " fps";
+                    newScene.render();
+                });
+            });
+        }, function (progress) {
+            // To do: give progress feedback to user
+        });
+    }
+
+    window.addEventListener("resize", function () {
+        engine.resize();
+    });
+</script>
+
 
 <div class="templates">
 
