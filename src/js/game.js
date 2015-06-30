@@ -96,7 +96,6 @@ $(function () {
     Game.ready(function () {
 
 
-
         var playerParty = [];
 
 
@@ -107,43 +106,20 @@ $(function () {
         }
 
 
-
-
-
-
         var $form = $('.dungeon_generator');
-        /*$form.hide();
 
-        var cell=new MapCellMonster({});
-
-        Battlefield.fight(playerParty, cell.monstersParty);
-
-        return;*/
-        $form.find('button').click(function () {
+        $form.find('button').click(function (e) {
+            e.preventDefault();
             var formResult = _.foldl($form.serializeArray(), function (result, obj) {
                 result[obj.name] = obj.value;
                 return result;
             }, {});
 
-            var size;
 
-            switch (formResult.size) {
-                case 'Small':
-                    size = 20;
-                    break;
-                case 'Medium':
-                    size = 35;
-                    break;
-                case 'Big':
-                    size = 50;
-                    break;
-            }
-
-            var map = DungeonGenerator.generate(size, size);
+            var map = DungeonGenerator.generate(formResult.size, formResult.level);
             $form.hide();
-            Dungeon.start(map, formResult.level, playerParty);
+            Dungeon.start(map, playerParty);
 
-            return false;
         });
 
         /*

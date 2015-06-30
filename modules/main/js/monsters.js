@@ -1,12 +1,12 @@
-var MapCellMonster = MapCell.extend({
+MapCellClasses.Monster = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
-        this.monstersParty = this.getMonstersParty(Dungeon.dungeonLevel||1);
+        this.monstersParty = this.getMonstersParty(this.dungeonLevel || 1);
         this.className = 'monster';
         //this.monstersParty = dungeon.dungeonLevel;
     },
     getMonstersParty: function (level) {
-        var variants = _.compact(_.map(MapCellMonster.monsters, function (obj) {
+        var variants = _.compact(_.map(MapCellClasses.Monster.monsters, function (obj) {
             if (!obj.minLevel || level >= obj.minLevel) {
                 if (!obj.maxLevel || level <= obj.maxLevel) {
                     return obj;
@@ -27,22 +27,25 @@ var MapCellMonster = MapCell.extend({
         this.className = this.type;
         Dungeon.pauseKeyboardEvents = true;
         Dungeon.$el.hide();
+        var className = Dungeon.map.backgroundClassName;
+        $('body').addClass(className);
         Battlefield.one('endFight', function (e) {
             Dungeon.$el.show();
             Dungeon.pauseKeyboardEvents = false;
-            console.log(e);
+            $('body').removeClass(className);
         });
         Battlefield.fight(Dungeon.playerParty, this.monstersParty);
     }
 });
 
-Dungeon.mapObjects['1'].push(MapCellMonster);
+
+DungeonGenerator.mapObjects['1'].push('Monster');
 
 var Brigand = Human.extend({
     constructor: function (level) {
         this._super("brigand", {
-            strength: 5+level*1,
-            agility: 5+level*1,
+            strength: 5 + level * 1,
+            agility: 5 + level * 1,
             res_physical: 20 * level,
             res_fire: 10 * level - 10
         }, {
@@ -67,7 +70,7 @@ var BrigandScout = Character.extend({
 });
 
 
-MapCellMonster.monsters = {
+MapCellClasses.Monster.monsters = {
     brigands: {
         minLevel: 1,
         maxLevel: 18,

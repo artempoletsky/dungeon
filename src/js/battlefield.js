@@ -114,9 +114,15 @@ $(function () {
                 party: this.playerParty,
                 loot: this.loot
             });
+            $('body').removeClass(this.backgroundClassName);
         },
 
-        fight: function (playerParty, monstersParty) {
+        fight: function (playerParty, monstersParty, backgrounds) {
+            if(backgrounds){
+                this.backgroundClassName=backgrounds[rand(backgrounds.length)];
+                $('body').addClass(this.backgroundClassName);
+            }
+
             this.$el.show();
             this.loot = [];
             this.playerParty = playerParty;

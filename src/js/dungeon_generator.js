@@ -1,362 +1,183 @@
-(function () {
+window.MapCell = Class.extend({
+    enter: function () {
 
-    window.rand = function (max) {
-        return Math.floor(Math.random() * max);
+    },
+    dungeonLevel: 0,
+    className: '',
+    type: '',
+    x: 0,
+    y: 0,
+    sneak: 0,
+    index: 0,
+    visited: false,
+    constructor: function (props) {
+        this.x = props.x;
+        this.y = props.y;
+        this.className = props.className || 'wall';
+        this.type = props.type;
+        this.index = props.index;
+        this.dungeonLevel = props.dungeonLevel;
     }
-
-
-    window.DungeonGenerator = Class.create({
-
-
-        roomSize: 2,
-        roomIntersectionPadding: 2,
-        roomPlacingAttempts: 10,
-        randomDoorChance: 0,
-
-
-        placeRoom: function () {
-            var width = 3 + rand(this.roomSize) * 2;
-            var height = 3 + rand(this.roomSize) * 2;
-            var self = this;
-            var matrix = this.matrix;
-            this.addRegion();
-
-            var checkIntersects = function (width, height, x, y) {
-                if (x < 0) {
-                    x = 0;
-                }
-                if (y < 0) {
-                    y = 0;
-                }
-                for (var w = 0; w < width; w++) {
-                    for (var h = 0; h < height; h++) {
-
-                        var el = matrix[h + y][w + x];
-                        if (el.content) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-
-            var room = function (width, height, x, y) {
-                for (var w = 0; w < width; w++) {
-                    for (var h = 0; h < height; h++) {
-                        self.fill(w + x, h + y, 'room');
-                    }
-                }
-            }
-
-
-            var padding = this.roomIntersectionPadding;
-            for (var i = 0; i < this.roomPlacingAttempts; i++) {
-                var x = 1 + rand((matrix[0].length - width - 2) / 2) * 2;
-                var y = 1 + rand((matrix.length - height - 2) / 2) * 2;
-                if (!checkIntersects(width + padding * 2, height + padding * 2, x - padding, y - padding)) {
-                    room(width, height, x, y);
-                    break;
-                }
-            }
-        },
-
-        eachMatrix: function (matrix, callback, thisArg) {
-            var height = matrix.length;
-            var width = matrix[0].length;
-
-            var br = false;
-
-            for (var i = 0; i < height; i++) {
-
-                for (var j = 0; j < width; j++) {
-                    if (callback.call(thisArg, matrix[i][j], j, i) === false) {
-                        br = true;
-                        break;
-                    }
-                }
-                if (br) {
-                    break;
-                }
-            }
-        },
-
-        eachRandom: function (array, callback) {
-            while (array.length) {
-                var index = rand(array.length);
-                callback(array[index]);
-                array.splice(index, 1);
-            }
-        },
-
-        neighbors: function (x, y, range) {
-            if (!range) {
-                range = 1;
-            }
-            var result = [];
-            var m = this.matrix;
-            if (m[y - range])
-                result.push(m[y - range][x]);
-            if (m[y + range])
-                result.push(m[y + range][x]);
-            if (m[y][x - range])
-                result.push(m[y][x - range]);
-            if (m[y][x + range])
-                result.push(m[y][x + range]);
-            return result;
-        },
-
-        maze: function (x, y) {
-            var self = this;
-
-            var current = self.matrix[y][x];
-            if (current.content) {
-                return;
-            }
-            self.fill(x, y, 'passage');
-
-
-            var walls = _.map(this.neighbors(x, y, 2), function (cell) {
-                return {
-                    cell: cell,
-                    parent: current
-                }
-            });
-
-            this.eachRandom(walls, function (el) {
-                var cell = el.cell;
-                if (!cell.content) {
-
-                    var x = el.parent.x;
-                    var y = el.parent.y;
-                    var wallX = (x + cell.x) / 2;
-                    var wallY = (y + cell.y) / 2;
-                    self.fill(wallX, wallY, 'passage');
-                    self.fill(cell.x, cell.y, 'passage');
-
-                    current = cell;
-
-                    _.each(self.neighbors(cell.x, cell.y, 2), function (cell) {
-                        if (!cell.content) {
-                            walls.push({
-                                cell: cell,
-                                parent: current
-                            });
-                        }
-                    });
-                }
-            });
-
-
-        },
-
-        placeDoors: function () {
-            var self = this;
-            var matrix = this.matrix;
-            var merged = [1];
-
-            var canPlaceDoor = function (cell) {
-                if (!cell.content) {
-                    var x = cell.x;
-                    var y = cell.y;
-
-                    var notMerged = function (reg1, reg2) {
-                        if (reg1 && reg2 && reg1 != reg2) {
-                            if (merged.indexOf(reg1) == -1 || merged.indexOf(reg2) == -1) {
-                                if (merged.indexOf(reg1) == -1) {
-                                    cell.merge = reg1;
-                                } else {
-                                    cell.merge = reg2;
-                                }
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    //checks if neighbors not empty and different regions
-                    if (matrix[y][x - 1] && matrix[y][x + 1]) {
-                        if (notMerged(matrix[y][x - 1].regionID, matrix[y][x + 1].regionID)) {
-                            return true;
-                        }
-                    }
-
-                    if (matrix[y - 1] && matrix[y + 1]) {
-                        if (notMerged(matrix[y - 1][x].regionID, matrix[y + 1][x].regionID)) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-
-            _.each(this.regions, function (cells, index) {
-
-
-                if (merged.indexOf(index) != -1 && index != 1) {
-                    return;
-                }
-
-
-                var doors = {};
-                _.each(cells, function (cell) {
-
-                    _.each(self.neighbors(cell.x, cell.y), function (cell) {
-                        if (canPlaceDoor(cell)) {
-                            if (!doors[cell.merge]) {
-                                doors[cell.merge] = [];
-                            }
-                            doors[cell.merge].push(cell);
-                            //cell.content = 'door';
-                        }
-                    });
-
-
-                });
-
-
-                _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1 ) {
-                        return;
-                    }
-
-                    merged.push(region);
-                    var door = doors[rand(doors.length)];
-                    door.content = 'door';
-                });
-            });
-        },
-
-        removeDeadEnds: function () {
-            var self = this;
-            var matrix = self.matrix;
-            var isDeadEnd = function (cell) {
-                if (!cell.content) {
-                    return false;
-                }
-                var x = cell.x, y = cell.y;
-                var walls = 0;
-                if (!matrix[y - 1] || !matrix[y - 1][x].content)
-                    walls++;
-
-                if (!matrix[y + 1] || !matrix[y + 1][x].content)
-                    walls++;
-
-                if (!matrix[y][x + 1] || !matrix[y][x + 1].content)
-                    walls++;
-
-                if (!matrix[y][x - 1] || !matrix[y][x - 1].content)
-                    walls++;
-
-                return walls > 2;
-            }
-            var found;
-            do {
-                found = false;
-                this.eachMatrix(matrix, function (cell, x, y) {
-                    if (isDeadEnd(cell)) {
-                        found = true;
-                        cell.content = undefined;
-                    }
-                });
-            } while (found)
-        },
-
-
-        findEmptySpace: function () {
-            var matrix = this.matrix;
-            var found = undefined;
-
-            var checkSiblings = function (x, y) {
-                var found = false;
-                _.each(self.neighbors(x, y), function (cell) {
-                    if (cell.content) {
-                        found = true;
-                        return false;
-                    }
-                });
-                return found;
-            };
-
-            var self = this;
-            this.eachMatrix(matrix, function (element, x, y) {
-
-                if (x % 2 && y % 2)
-                    if (!checkSiblings(x, y)) {
-                        found = element;
-                        return false;
-                    }
-            });
-            return found;
-        },
-
-        fill: function (x, y, content) {
-            var cell = this.matrix[y][x];
-            cell.content = content;
-            cell.regionID = this.regionID;
-            this.regions[this.regionID].push(cell);
-        },
-
-        addRegion: function () {
-
-            this.regionID++;
-            this.regions[this.regionID] = [];
-        },
-
-        generate: function (width, height) {
-            this.width = width;
-            this.height = height;
-
-            this.regions = [];
-            this.regionID = 0;
-
-            var matrix = [];
-            for (var i = 0; i < height; i++) {
-                var row = [];
-                for (var j = 0; j < width; j++) {
-                    row[j] = {
-                        x: j,
-                        y: i
-                    };
-                }
-                matrix[i] = row;
-            }
-            this.matrix = matrix;
-
-
-
-            //var startX = Math.floor(Math.random() * width);
-            //var startY = Math.floor(Math.random() * height);
-
-            //matrix[startY][startX].content = 'start';
-
-            var rooms = Math.floor(width * height / 100);
-            for (var i = 0; i < rooms + 3; i++) {
-                this.addRegion();
-                this.placeRoom();
-            }
-
-
-            var cell;
-            while (cell = this.findEmptySpace()) {
-                this.addRegion();
-                this.maze(cell.x, cell.y);
-            }
-
-            this.placeDoors();
-
-            this.removeDeadEnds();
-
-
-
-
-
-             return this.matrix;
-
-
+});
+
+var MapCellClasses = {};
+
+
+var Map = Class.extend({
+    /**
+     * Возвращает ячейку которая не является стеной или false
+     *
+     * @param x
+     * @param y
+     * @returns {*}
+     */
+    getMovableCell: function(x, y){
+        if (!this.matrix[y] || !this.matrix[y][x]) {
+            return false;
         }
-    });
+        var cell = this.matrix[y][x];
+        if (cell.className == 'wall') {
+            return false;
+        }
+        return cell;
+    },
+    matrix: undefined,
+    backgroundClassName: undefined,
+    entryX: 0,
+    entryY: 0,
+    /**
+     * Возвращает ячейки вокруг заданной
+     * @param x
+     * @param y
+     * @param range
+     * @returns {Array}
+     */
+    neighbors: function (x, y, range) {
+        var result = [];
+        for (var i = y - range; i < y + range; i++) {
+            for (var j = x - range; j < x + range; j++) {
+                if (i == y && j == x) {
+                    continue;
+                }
+                if (this.matrix[i] && this.matrix[i][j])
+                    result.push(this.matrix[i][j]);
+            }
+        }
+        return result;
+    },
+    eachCell: function (callback) {
+        _.eachMatrix(this.matrix, callback);
+    },
+    constructor: function (data) {
+        //this.matrix = data.matrix;
+        var newMatrix = [];
+        var i = 0;
+        _.eachMatrix(data.matrix, function (cell, x, y) {
 
-}());
+            if (!newMatrix[cell.y]) {
+                newMatrix[cell.y] = [];
+            }
+            var Class = MapCellClasses[cell.class] || MapCell;
 
+
+            newMatrix[cell.y][cell.x] = new Class({
+                x: x,
+                y: y,
+                type: cell.content,
+                className: cell.content,
+                dungeonLevel: data.dungeonLevel,
+                index: i
+            });
+
+            i++;
+        });
+        this.backgroundClassName = data.backgroundClassName;
+        this.entryX = data.entryX;
+        this.entryY = data.entryY;
+
+        var entry = newMatrix[data.entryY][data.entryX];
+        entry.className = 'entry';
+        newMatrix[entry.y][entry.x] = new MapCell(entry);
+
+        this.matrix = newMatrix;
+    }
+});
+
+
+var DungeonGenerator = Class.create({
+    backgroundImages: ['bg1', 'bg2'],
+    mapObjects: {
+        0: [undefined],//common
+        1: [],//uncommon
+        2: [],//rare
+        3: []//legendary
+    },
+    randomMapObject: function (minRarity, rarityHash) {
+        var random = Math.random();
+        var rarity = 0;
+        if (random < 0.001) {
+            rarity = 3;
+        } else if (random < 0.4 * 0.4) {
+            rarity = 2;
+        } else if (random < 0.4) {
+            rarity = 1;
+        }
+
+        if (rarity < minRarity) {
+            rarity = minRarity;
+        }
+
+        var array = rarityHash[rarity];
+        return array[rand(array.length)];
+    },
+    entry: undefined,
+
+
+    generate: function (size, level, quest) {
+
+        var self = this;
+        var numberSize = 20;
+
+        switch (size) {
+            case 'Small':
+                numberSize = 20;
+                break;
+            case 'Medium':
+                numberSize = 35;
+                break;
+            case 'Big':
+                numberSize = 50;
+                break;
+        }
+
+        var matrix = InitalMazeGenerator.generate(numberSize, numberSize);
+        var roomCells = [];
+
+        _.eachMatrix(matrix, function (cell) {
+            var Class;
+            if (cell.content && cell.content != 'door') {
+                Class = self.randomMapObject(0, self.mapObjects);
+            }
+            cell.class = Class;
+            if (cell.content == 'room') {
+                roomCells.push(cell);
+            }
+
+        });
+        var entry = roomCells[rand(roomCells.length)];
+
+        var map= new Map({
+            matrix: matrix,
+            backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
+            entryX: entry.x,
+            entryY: entry.y,
+            dungeonLevel: level
+        });
+
+        if(quest){
+            quest.prepareMap(map);
+        }
+
+        return map;
+    }
+});
