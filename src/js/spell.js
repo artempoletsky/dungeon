@@ -12,8 +12,9 @@ var Spell = Class.extend({
     posTo: [1, 2],
     level: 1,
     maxLevel: 5,
-    canDodge: true,
-    canParry: true,
+    canBeDodged: true,
+    canBeParried: true,
+    canBeBlocked: true,
     getAttack: function (caster_character) {
         return caster_character.prop('agility') * 5 + caster_character.equipment.prop('weapon').getAttack(caster_character) + this.level * 5;
     },

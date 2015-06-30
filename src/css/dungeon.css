@@ -30,7 +30,6 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 10px;
     border: 1px solid #555;*/
 
-    padding: 10px;
     height: 35px;
 }
 
@@ -91,10 +90,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .controls_view {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
+    bottom: 10px;
+    left: 50%;
+    width: 700px;
+    margin-left: -350px;
 }
 
 .spell {
@@ -148,26 +147,34 @@ h1, h2, h3, h4, h5, h6 {
 
 .turns_queue {
     position: absolute;
-    left: 20px;
-    top: 150px;
+    left: 50%;
+    width: 700px;
+    margin-left: -350px;
+    top: 10px;
+    text-align: center;
 }
 
-.turns_queue div {
+.queue_item {
     border: 2px solid #5cff46;
-    padding: 5px;
     margin: 3px;
+    width: 50px;
+    height: 50px;
+    opacity: 0.7;
+    display: inline-block;
 }
 
-.turns_queue .enemy {
+.queue_item.enemy {
     border: 2px solid #ee0000;
 }
 
-.turns_queue .current {
+.queue_item.current {
     border: 2px solid #29c3ee;
 }
 
-.turns_queue .highlight {
+.queue_item.highlight {
     color: #29c3ee;
+    opacity: 1;
+    box-shadow: 0 0 10px 0 #29c3ee;
 }
 
 .info_box {
@@ -184,12 +191,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .character_image {
-    width: 116px;
-    height: 100px;
+    width: 130px;
+    height: 300px;
     background: url("img/coolface.png") -44px 0px;
     position: absolute;
-    left: 5px;
-    top: 100px;
+    left: 0;
+    top: 0;
 }
 
 .brigand_scout {
@@ -204,7 +211,7 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
-.left_character {
+/*.left_character {
     background: url("img/coolface.png") 0 -171px;
     width: 244px;
     height: 201px;
@@ -217,7 +224,7 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     left: 370px;
     top: -25px;
-}
+} */
 
 .right_character.target.brigand_scout {
     background-position: 0 -408px;

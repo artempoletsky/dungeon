@@ -3,5 +3,21 @@
 }
 
 .bg2 {
-    background: url("background/bg1.jpg");
+    background: url("background/bg2.jpg");
+}
+
+.character_image.beast{
+    background: url("monsters/beast.png");
+}
+
+.queue_item.beast{
+    background: url("monsters/beast_small.png");
+}
+
+.character_image.spider{
+    background: url("monsters/spider.png");
+}
+
+.queue_item.spider{
+    background: url("monsters/spider_small.png");
 }

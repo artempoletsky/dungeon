@@ -100,11 +100,14 @@ $(function () {
 
 
         for (var i = 0; i < 4; i++) {
-            var c = new Brigand(1);
+            var c = new MonsterClasses.Brigand(1);
             c.enemy = false;
             playerParty.push(c);
         }
 
+
+        //Battlefield.fight(playerParty, MapCellClasses.Monster.makeParty(MonsterParties.smallSpidersParty.party,1));
+        //return;
 
         var $form = $('.dungeon_generator');
 

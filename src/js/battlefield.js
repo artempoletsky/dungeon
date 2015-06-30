@@ -118,8 +118,8 @@ $(function () {
         },
 
         fight: function (playerParty, monstersParty, backgrounds) {
-            if(backgrounds){
-                this.backgroundClassName=backgrounds[rand(backgrounds.length)];
+            if (backgrounds) {
+                this.backgroundClassName = backgrounds[rand(backgrounds.length)];
                 $('body').addClass(this.backgroundClassName);
             }
 
@@ -144,7 +144,7 @@ $(function () {
             this.$queue.empty();
             _.each(this.queue, function (character) {
                 character.prop('actionPoints', character.prop('startAP'));
-                self.$queue.append('<div class="' + (character.enemy ? 'enemy' : '') + '">' + character.name + '</div>');
+                self.$queue.append('<div class="queue_item ' + character.name + ' ' + (character.enemy ? 'enemy' : '') + '"></div>');
             });
             this.turn();
         },
@@ -344,7 +344,6 @@ $(function () {
             var party = character.enemy ? this.monstersParty : this.playerParty;
             var $cont = character.enemy ? this.$monstersParty : this.$playerParty;
             var oldIndex = party.indexOf(character);
-
 
 
             var $view = this.getView(character);
