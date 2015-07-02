@@ -15,8 +15,11 @@ var Spell = Class.extend({
     canBeDodged: true,
     canBeParried: true,
     canBeBlocked: true,
+    availableForPlayer: true,
+
     getAttack: function (caster_character) {
-        return caster_character.prop('agility') * 5 + caster_character.equipment.prop('weapon').getAttack(caster_character) + this.level * 5;
+        var spell = (10 + this.level) / 15;
+        return Math.round(caster_character.getBaseAttack()*spell);
     },
     getMinDamage: function (caster_character, target_character) {
         return caster_character.equipment.prop('weapon').getMinDamage(caster_character, target_character);
@@ -26,7 +29,7 @@ var Spell = Class.extend({
     },
     computeHitChance: function (caster_character, target_character, isFinal) {
         var dodge = 0;
-        if (this.canDodge) {
+        if (this.canBeDodged) {
             dodge = target_character.prop('dodge') || 0;
         }
         var isParry = false;
@@ -82,23 +85,6 @@ var Spell = Class.extend({
     animate: function (caster_character, target_character, damage, callback) {
         var $view = $('.hit_animation');
         $view.show();
-        /*var $left = $view.find('.left_character');
-         var $right = $view.find('.right_character');
-         var casterIndex = Battlefield.all.indexOf(caster_character);
-         var targetIndex = Battlefield.all.indexOf(target_character);
-         var leftChar = caster_character;
-         var rightChar = target_character;
-         if (casterIndex > targetIndex) {
-         leftChar = target_character;
-         rightChar = caster_character;
-         $left.addClass('target');
-         $right.addClass('caster');
-         } else {
-         $left.addClass('caster');
-         $right.addClass('target');
-         }
-         $left.addClass(leftChar.name);
-         $right.addClass(rightChar.name);*/
 
         if (damage.damage) {
             damage = damage.damage.physical;
@@ -117,9 +103,11 @@ var Spell = Class.extend({
 });
 
 
+
 var Spells = {
     Hit: Spell.extend({}),
     Bite: Spell.extend({
+        availableForPlayer: false,
         constructor: function (minDamage, maxDamage) {
             this.minDamage = minDamage;
             this.maxDamage = maxDamage;
@@ -143,7 +131,7 @@ var Spells = {
         posFrom: [3, 4],
         posTo: [2, 3, 4],
         name: 'proj',
-        canParry: false
+        canBeParried: false
     })
 };
 

@@ -327,11 +327,87 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 10px;
 }
 
-a {
+a, button {
     cursor: pointer;
 }
 
 
 .dungeon, .dialogs{
     display: none;
+}
+
+
+.character_editor{
+    position: absolute;
+    background: #000000;
+    color: #fff;
+    left: 50%;
+    width: 1200px;
+    margin-left: -600px;
+    top: 30px;
+    bottom: 30px;
+}
+
+.ce-wrap {
+    padding: 20px;
+}
+
+.ce-buttons{
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+
+.ce-value {
+    width: 30px;
+    color: #fff;
+    background: none;
+    font-size: 20px;
+    text-align: center;
+    border: 0;
+    vertical-align: middle;
+}
+
+.ce-dec, .ce-inc{
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    top: 3px;
+}
+.ce-dec{
+    left: 0;
+}
+.ce-inc{
+    right: 0;
+}
+.ce-num {
+    position: relative;
+    height: 26px;
+    display: inline-block;
+    width: 70px;
+    text-align: center;
+}
+
+.character_editor h1 {
+    font-size: 25px;
+    margin: 20px 0;
+}
+
+.character_editor label {
+    display: inline-block;
+    width: 150px;
+}
+
+.ce-attributes-wrap {
+    float: left;
+    width: 500px;
+}
+
+.ce-derived span{
+    font-size: 20px;
+    vertical-align: middle;
 }

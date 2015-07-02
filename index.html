@@ -19,9 +19,10 @@
     <script type="text/javascript" src="src/js/dungeon.js"></script>
 
     <script type="text/javascript" src="src/js/dialogue.js"></script>
+    <script type="text/javascript" src="src/js/player.js"></script>
+    <script type="text/javascript" src="src/js/character_editor.js"></script>
     <script type="text/javascript" src="src/js/game.js"></script>
     <script type="text/javascript" src="3d/babylon.2.1.js"></script>
-
 
 
 </head>
@@ -46,6 +47,44 @@
 
 
 </div>
+
+<form class="character_editor">
+    <div class="ce-wrap">
+        <div class="ce-name">
+            <label>Имя</label> <input type="text" value="Anonymous" name="name"/>
+        </div>
+        <div class="ce-attributes-wrap">
+            <h1>
+                Очков характеристик доступно: <span class="ce-exp_points"></span>
+            </h1>
+
+            <div class="ce-attributes">
+                <div class="ce-attribute">
+                    <label>Сила</label> <i class="ce-dec">-</i> <input class="ce-value" value="5" disabled="disabled"
+                                                                       type="text"/> <i
+                        class="ce-inc">+</i>
+                </div>
+            </div>
+
+            <h1>Производные величины</h1>
+            <div class="ce-derived">
+                <label>Базовая атака</label> <span class="ce-attack"></span>
+            </div>
+            <div class="ce-derived">
+                <label>Максимум здоровья</label> <span class="ce-health"></span>
+            </div>
+            <div class="ce-derived">
+                <label>Уворот</label> <span class="ce-dodge"></span>
+            </div>
+        </div>
+
+
+        <div class="ce-buttons">
+            <button class="ce-save">Сохранить</button>
+            <button class="ce-revert">Вернуть очки</button>
+        </div>
+    </div>
+</form>
 
 <form class="dungeon_generator">
     <label>Size</label>

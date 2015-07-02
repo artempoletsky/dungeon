@@ -105,9 +105,12 @@ $(function () {
             playerParty.push(c);
         }
 
+        Player.newGame();
+        CharacterEditor.show(Player.mainCharacter, true);
+
 
         //Battlefield.fight(playerParty, MapCellClasses.Monster.makeParty(MonsterParties.smallSpidersParty.party,1));
-        //return;
+        return;
 
         var $form = $('.dungeon_generator');
 
