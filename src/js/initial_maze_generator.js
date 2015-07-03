@@ -41,7 +41,7 @@
         roomSize: 2,
         roomIntersectionPadding: 2,
         roomPlacingAttempts: 10,
-        randomDoorChance: 0,
+        randomDoorChance: 0.1,
 
 
         placeRoom: function () {
@@ -155,7 +155,7 @@
         placeDoors: function () {
             var self = this;
             var matrix = this.matrix;
-            var merged = [1];
+            var merged = ["2"];
 
             var canPlaceDoor = function (cell) {
                 if (!cell.content) {
@@ -219,12 +219,13 @@
 
 
                 _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1) {
+                    if (merged.indexOf(region) != -1&&Math.random()>self.randomDoorChance) {
                         return;
                     }
 
                     merged.push(region);
                     var door = doors[rand(doors.length)];
+                    door.data=region;
                     door.content = 'door';
                 });
             });
@@ -306,6 +307,13 @@
             this.regions[this.regionID] = [];
         },
 
+        removeContentAttr: function(){
+            _.eachMatrix(this.matrix, function(cell){
+                cell.type=cell.className=cell.content;
+                delete cell.content;
+            });
+        },
+
         generate: function (width, height) {
             this.width = width;
             this.height = height;
@@ -348,6 +356,7 @@
             this.placeDoors();
 
             this.removeDeadEnds();
+            this.removeContentAttr();
 
 
             return this.matrix;

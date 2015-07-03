@@ -3,6 +3,7 @@ $(function () {
 
     window.Game = Model.create({
         modulesPath: 'modules/',
+        dungeonEditorMode: false,
         loadFile: function (moduleName, file, type) {
             if (type == 'js') {
                 $('head').append('<script src="' + this.modulesPath + moduleName + '/js/' + file + '.js' + '" type="text/javascript"></script>')
@@ -94,7 +95,9 @@ $(function () {
 
 
     Game.ready(function () {
-
+        if(Game.dungeonEditorMode){
+            return;
+        }
 
         var playerParty = [];
 
@@ -105,8 +108,8 @@ $(function () {
             playerParty.push(c);
         }
 
-        Player.newGame();
-        CharacterEditor.show(Player.mainCharacter, true);
+       // Player.newGame();
+        //CharacterEditor.show(Player.mainCharacter, true);
 
 
         //Battlefield.fight(playerParty, MapCellClasses.Monster.makeParty(MonsterParties.smallSpidersParty.party,1));

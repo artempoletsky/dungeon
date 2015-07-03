@@ -411,3 +411,7 @@ a, button {
     font-size: 20px;
     vertical-align: middle;
 }
+
+.dungeon_editor {
+    padding: 20px;
+}

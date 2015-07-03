@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memes dungeon</title>
+    <link rel="stylesheet" href="src/css/dungeon.css"/>
+    <script type="text/javascript" src="src/js/lib/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
+    <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
+
+
+    <script type="text/javascript" src="src/js/character_ai.js"></script>
+    <script type="text/javascript" src="src/js/character.js"></script>
+    <script type="text/javascript" src="src/js/spell.js"></script>
+    <script type="text/javascript" src="src/js/equipment.js"></script>
+    <script type="text/javascript" src="src/js/battlefield.js"></script>
+
+    <script type="text/javascript" src="src/js/initial_maze_generator.js"></script>
+    <script type="text/javascript" src="src/js/map.js"></script>
+    <script type="text/javascript" src="src/js/dungeon_generator.js"></script>
+    <script type="text/javascript" src="src/js/dungeon.js"></script>
+
+    <script type="text/javascript" src="src/js/dialogue.js"></script>
+    <script type="text/javascript" src="src/js/player.js"></script>
+    <script type="text/javascript" src="src/js/character_editor.js"></script>
+
+    <script type="text/javascript" src="src/js/game.js"></script>
+
+    <script type="text/javascript" src="src/js/dungeon_editor.js"></script>
+    <script type="text/javascript" src="3d/babylon.2.1.js"></script>
+
+
+</head>
+<body>
+
+<!--canvas width="800" height="600" id="canvas"></canvas>
+<div id="fps"></div>
+
+<button class="hit">hit</button-->
+
+<div class="dungeon_editor">
+
+    <button id="new_dungeon">New</button>
+    <button id="generate_dungeon">Generate</button>
+    <button id="to_json">To JSON</button>
+    <button id="from_json">From JSON</button>
+    <textarea name="map_json" id="map_json" cols="30" rows="10" style="vertical-align: top;"></textarea>
+    <br/>
+    <label>Width</label> <input id="dungeon_width" name="width" type="text" value="20"/> <br/>
+    <label>Height</label> <input id="dungeon_height" name="height" type="text" value="20"/>    <br/>
+</div>
+<hr/>
+<div class="cell_editor" style="float: left; margin-right: 20px;">
+    Class <select name="cell_class" id="cell_class"></select> <br/>
+    className <input type="text" name="className"/> <br/>
+    type <input type="text" name="type"/> <br/>
+    data <br/>
+    <textarea name="data" id="cell_data" cols="30" rows="10"></textarea> <br/>
+    <input type="checkbox" id="brush_mode"/> Brush mode <br/>
+    <button id="save_cell">Save Cell</button>
+</div>
+
+<div class="templates">
+
+    <div data-bind="template: character">
+        <div class="character_view">
+            <div class="character_image"></div>
+            <div class="cv_stats">
+                <div class="health_bar"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<form class="character_editor">
+    <div class="ce-wrap">
+        <div class="ce-name">
+            <label>Имя</label> <input type="text" value="Anonymous" name="name"/>
+        </div>
+        <div class="ce-attributes-wrap">
+            <h1>
+                Очков характеристик доступно: <span class="ce-exp_points"></span>
+            </h1>
+
+            <div class="ce-attributes">
+                <div class="ce-attribute">
+                    <label>Сила</label> <i class="ce-dec">-</i> <input class="ce-value" value="5" disabled="disabled"
+                                                                       type="text"/> <i
+                        class="ce-inc">+</i>
+                </div>
+            </div>
+
+            <h1>Производные величины</h1>
+            <div class="ce-derived">
+                <label>Базовая атака</label> <span class="ce-attack"></span>
+            </div>
+            <div class="ce-derived">
+                <label>Максимум здоровья</label> <span class="ce-health"></span>
+            </div>
+            <div class="ce-derived">
+                <label>Уворот</label> <span class="ce-dodge"></span>
+            </div>
+        </div>
+
+
+        <div class="ce-buttons">
+            <button class="ce-save">Сохранить</button>
+            <button class="ce-revert">Вернуть очки</button>
+        </div>
+    </div>
+</form>
+
+<form class="dungeon_generator">
+    <label>Size</label>
+    <select name="size">
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Big</option>
+    </select>
+    <label>Level</label> <input type="text" name="level" value="1"/>
+    <!--label>Quest</label><select name="quest"></select-->
+    <button>Start</button>
+</form>
+
+<div class="dungeon" style="float: left;">
+    <div class="team"></div>
+    <div class="map">
+        <div class="map_passage"></div>
+    </div>
+</div>
+
+<div class="dialogs">
+    <div class="cue"></div>
+    <ol class="answers"></ol>
+</div>
+
+
+<div class="battlefield">
+
+    <div class="hit_animation">
+        <div class="left_character"></div>
+        <div class="right_character"></div>
+        <div class="damage"></div>
+    </div>
+    <ul class="info_box">
+        <li><label>Atack</label> 10</li>
+        <li><label>Atack</label> 10</li>
+        <li><label>Atack</label> 10</li>
+    </ul>
+    <div class="battlefield_view clearfix">
+        <div class="player_party"></div>
+        <div class="monsters_party"></div>
+    </div>
+
+    <div class="turns_queue"></div>
+
+    <div class="controls_view">
+
+        <div class="action_points_bar">
+            <div class="action_point"></div>
+            <div class="action_point"></div>
+            <div class="action_point"></div>
+            <div class="action_point highlight"></div>
+        </div>
+        <div class="spells clearfix">
+            <div class="spell">1</div>
+            <div class="spell">2</div>
+            <div class="spell">3</div>
+            <div class="spell">4</div>
+            <div class="spell">5</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
