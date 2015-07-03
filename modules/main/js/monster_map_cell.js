@@ -1,7 +1,16 @@
 MapCellClasses.Monster = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
-        this.monstersParty = this.getMonstersParty(this.dungeonLevel || 1);
+        if (cell.data.party) {
+            var classes = MonsterParties[cell.data.party];
+            if (!classes) {
+                throw  'cell.data.party is wrong. "' + cell.data.party + '" expected';
+            }
+            this.monstersParty = this.makeParty(classes, this.dungeonLevel);
+        } else {
+            this.monstersParty = this.getMonstersParty(this.dungeonLevel || 1);
+        }
+
         this.className = 'monster';
         //this.monstersParty = dungeon.dungeonLevel;
     },
@@ -17,9 +26,14 @@ MapCellClasses.Monster = MapCell.extend({
             throw "Can't create monster cell";
         }
 
-        return MapCellClasses.Monster.makeParty(variants[rand(variants.length)].party, level);
+        return this.makeParty(variants[rand(variants.length)].party, level);
     },
     monstersParty: undefined,
+    makeParty: function (namesArray, level) {
+        return _.map(namesArray, function (ClassName) {
+            return new MonsterClasses[ClassName](level);
+        });
+    },
     enter: function () {
         this.className = this.type;
         Dungeon.pauseKeyboardEvents = true;
@@ -34,14 +48,6 @@ MapCellClasses.Monster = MapCell.extend({
         Battlefield.fight(Dungeon.playerParty, this.monstersParty, className);
     }
 });
-
-
-
-MapCellClasses.Monster.makeParty = function (namesArray, level) {
-    return _.map(namesArray, function (ClassName) {
-        return new MonsterClasses[ClassName](level);
-    });
-};
 
 
 DungeonGenerator.mapObjects['1'].push('Monster');
