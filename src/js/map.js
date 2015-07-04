@@ -106,6 +106,8 @@ var Map = Class.extend({
 
             i++;
         });
+        this.width=newMatrix[0].length;
+        this.height=newMatrix.length;
         this.location = data.location;
         this.backgroundClassName = data.backgroundClassName;
         this.entryX = data.entryX;

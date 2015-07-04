@@ -4,7 +4,8 @@ $(function () {
         el: '.dungeon',
         shortcuts: {
             $map: '.map',
-            $team: '.team'
+            $team: '.team',
+            $autoMap: '#auto_map'
         },
         keys: {
             82: 'up',
@@ -92,6 +93,7 @@ $(function () {
         finish: function () {
             $('body').off('keyup', this.onKeyUp);
         },
+        autoMapCellSize: 10,
         start: function (map, playerParty) {
             this.$el.show();
             this.map = map;
@@ -101,6 +103,11 @@ $(function () {
 
             this.x = map.entryX;
             this.y = map.entryY;
+
+            this.ctx=this.$autoMap[0].getContext('2d');
+            this.$autoMap[0].width=this.autoMapCellSize*this.map.width;
+            this.$autoMap[0].height=this.autoMapCellSize*this.map.height;
+
 
             this.render();
         },
@@ -193,6 +200,19 @@ $(function () {
                         }
                     });
 
+                    if(!noVision){
+                        if(className=='wall'){
+                            this.ctx.fillStyle="#666";
+                        }else if(className=="entry") {
+                            this.ctx.fillStyle="#0c0";
+                        }else {
+                            this.ctx.fillStyle="#fff";
+                        }
+                        if(x==self.x&&y==self.y){
+                            this.ctx.fillStyle="#FF9B62";
+                        }
+                        this.ctx.fillRect(this.autoMapCellSize*x,this.autoMapCellSize*y,this.autoMapCellSize, this.autoMapCellSize);
+                    }
 
                     //}
 
