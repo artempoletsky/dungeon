@@ -95,7 +95,7 @@ $(function () {
 
 
     Game.ready(function () {
-        if(Game.dungeonEditorMode){
+        if (Game.dungeonEditorMode) {
             return;
         }
 
@@ -108,12 +108,12 @@ $(function () {
             playerParty.push(c);
         }
 
-       // Player.newGame();
+        // Player.newGame();
         //CharacterEditor.show(Player.mainCharacter, true);
 
 
         //Battlefield.fight(playerParty, MapCellClasses.Monster.makeParty(MonsterParties.smallSpidersParty.party,1));
-        return;
+        //return;
 
         var $form = $('.dungeon_generator');
 
@@ -125,7 +125,7 @@ $(function () {
             }, {});
 
 
-            var map = DungeonGenerator.generate(formResult.size, formResult.level);
+            var map = DungeonGenerator.generate(formResult.size, 'default', formResult.level);
             $form.hide();
             Dungeon.start(map, playerParty);
 

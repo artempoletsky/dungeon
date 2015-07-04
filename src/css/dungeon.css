@@ -346,6 +346,7 @@ a, button {
     margin-left: -600px;
     top: 30px;
     bottom: 30px;
+    display: none;
 }
 
 .ce-wrap {
