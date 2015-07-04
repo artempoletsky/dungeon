@@ -35,6 +35,7 @@ MapCellClasses.Monster = MapCell.extend({
         });
     },
     enter: function () {
+        return;
         this.className = this.type;
         Dungeon.pauseKeyboardEvents = true;
         Dungeon.$el.hide();
