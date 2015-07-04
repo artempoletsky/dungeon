@@ -1,7 +1,7 @@
 MapCellClasses.Monster = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
-        if (cell.data.party) {
+        if (cell.data && cell.data.party) {
             var classes = MonsterParties[cell.data.party];
             if (!classes) {
                 throw  'cell.data.party is wrong. "' + cell.data.party + '" expected';

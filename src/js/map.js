@@ -16,7 +16,7 @@ window.MapCell = Class.extend({
         this.className = props.className || 'wall';
         this.type = props.type;
         this.index = props.index;
-        this.dungeonLevel = props.dungeonLevel;
+        this.map = props.map;
         this.data = props.data;
     },
     getClass: function () {
@@ -54,6 +54,7 @@ var Map = Class.extend({
         return cell;
     },
     matrix: undefined,
+    location: undefined,
     backgroundClassName: undefined,
     entryX: 0,
     entryY: 0,
@@ -98,13 +99,14 @@ var Map = Class.extend({
                 y: y,
                 type: cell.type,
                 className: cell.className,
-                dungeonLevel: data.dungeonLevel,
+                map: this,
                 data: cell.data,
                 index: i
             });
 
             i++;
         });
+        this.location = data.location;
         this.backgroundClassName = data.backgroundClassName;
         this.entryX = data.entryX;
         this.entryY = data.entryY;
@@ -136,6 +138,7 @@ var Map = Class.extend({
         return {
             width: this.matrix[0].length,
             height: this.matrix.length,
+            location: this.location,
             cells: cells
         }
     }
@@ -170,6 +173,7 @@ Map.fromJSON = function (data) {
 
     return new Map({
         matrix: matrix,
+        location: data.location,
         //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
         entryX: entryX,
         entryY: entryY

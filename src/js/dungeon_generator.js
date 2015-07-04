@@ -1,11 +1,16 @@
 var DungeonGenerator = Class.create({
-    backgroundImages: ['bg1', 'bg2'],
+
+
+    backgroundImages: {
+        default: ['bg1', 'bg2']
+    },
     mapObjects: {
         0: [undefined],//common
         1: [],//uncommon
         2: [],//rare
         3: []//legendary
     },
+
     randomMapObject: function (minRarity, rarityHash) {
         var random = Math.random();
         var rarity = 0;
@@ -26,10 +31,47 @@ var DungeonGenerator = Class.create({
     },
     entry: undefined,
 
-
-    generate: function (size, level, quest) {
-
+    generateFromMatrix: function (matrix, location, level, quest) {
         var self = this;
+
+        var roomCells = [];
+
+        location = location || 'default';
+
+        _.eachMatrix(matrix, function (cell) {
+            var Class;
+            if (cell.className && cell.className != 'door') {
+                Class = self.randomMapObject(0, self.mapObjects);
+            }
+            cell.class = Class;
+            if (cell.type == 'room') {
+                roomCells.push(cell);
+            }
+
+        });
+        var entry = roomCells[rand(roomCells.length)];
+
+        var bgImagesArray = self.backgroundImages[location];
+
+
+        var map = new Map({
+            matrix: matrix,
+            backgroundClassName: bgImagesArray[rand(bgImagesArray.length)],
+            location: location,
+            entryX: entry.x,
+            entryY: entry.y,
+            dungeonLevel: level
+        });
+
+        if (quest) {
+            quest.prepareMap(map);
+        }
+
+        return map;
+    },
+
+    generate: function (size, location, level, quest) {
+
         var numberSize = 20;
 
         switch (size) {
@@ -45,33 +87,6 @@ var DungeonGenerator = Class.create({
         }
 
         var matrix = InitalMazeGenerator.generate(numberSize, numberSize);
-        var roomCells = [];
-
-        _.eachMatrix(matrix, function (cell) {
-            var Class;
-            if (cell.content && cell.content != 'door') {
-                Class = self.randomMapObject(0, self.mapObjects);
-            }
-            cell.class = Class;
-            if (cell.content == 'room') {
-                roomCells.push(cell);
-            }
-
-        });
-        var entry = roomCells[rand(roomCells.length)];
-
-        var map = new Map({
-            matrix: matrix,
-            backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
-            entryX: entry.x,
-            entryY: entry.y,
-            dungeonLevel: level
-        });
-
-        if (quest) {
-            quest.prepareMap(map);
-        }
-
-        return map;
+        return this.generateFromMatrix(matrix, location, level, quest);
     }
 });

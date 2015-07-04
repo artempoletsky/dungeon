@@ -1,5 +1,5 @@
 {
-    "js": ["monster_map_cell", "monster_classes"],
+    "js": ["monster_map_cell", "monster_classes", "npc_map_cell"],
     "css": ["main"],
     "dialogs": ["dialogs"],
     "language": {

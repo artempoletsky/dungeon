@@ -25,7 +25,7 @@ $(function () {
                 'click #save_cell': 'saveCell',
                 'click #generate_dungeon': 'generate'
             },
-            toJSONClick: function(){
+            toJSONClick: function () {
                 this.$json.val(JSON.stringify(this.map.toJSON()));
             },
             saveCell: function (e) {
@@ -52,19 +52,18 @@ $(function () {
 
                 cell.data = data;
                 if (newClassName != cell.getClass()) {
-                    var newClass = MapCellClasses[newClassName];
+                    var newClass = MapCellClasses[newClassName]||MapCell;
                     cell = this.map.matrix[cell.y][cell.x] = new newClass(cell);
                 }
 
 
-                var $cell=this.$map.children().eq(cell.index).attr('class', 'map_passage ' + cell.className);
-                if(e){
+                var $cell = this.$map.children().eq(cell.index).attr('class', 'map_passage ' + cell.className);
+                if (e) {
                     $cell.click();
                 }
                 this.selectedCell = undefined;
             },
             edit: function (e) {
-
 
 
                 var $cell = $(e.currentTarget);
@@ -75,7 +74,7 @@ $(function () {
                 var x = index % w;
                 var cell = this.selectedCell = this.map.matrix[y][x];
 
-                if(this.$brushMode[0].checked){
+                if (this.$brushMode[0].checked) {
                     this.saveCell();
                     return;
                 }
@@ -110,12 +109,14 @@ $(function () {
 
                 this.render();
             },
-            fromJSONClick: function(){
-                this.map=Map.fromJSON(JSON.parse(this.$json.val()));
+            fromJSONClick: function () {
+                this.map = Map.fromJSON(JSON.parse(this.$json.val()));
                 this.render();
             },
             generate: function () {
-                this.createMap(InitalMazeGenerator.generate(this.$width.val() * 1, this.$height.val() * 1));
+                var matrix = InitalMazeGenerator.generate(this.$width.val() * 1, this.$height.val() * 1)
+                this.map=DungeonGenerator.generateFromMatrix(matrix, 'default', 1);
+                this.render();
             },
             newDungeon: function () {
                 this.createMap(Map.createMatrix(this.$width.val() * 1, this.$height.val() * 1));

@@ -41,7 +41,7 @@
         roomSize: 2,
         roomIntersectionPadding: 2,
         roomPlacingAttempts: 10,
-        randomDoorChance: 0.1,
+        randomDoorChance: 0,
 
 
         placeRoom: function () {
