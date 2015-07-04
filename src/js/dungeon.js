@@ -121,26 +121,37 @@ $(function () {
                 var result = [];
 
                 if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx > 0) {
-                        return line(x1, y1, x0, y0);
-                    }
+                    var stepX = -dx / Math.abs(dx);
 
-                    for (var x = x0; x <= x1; x += 1) {
-                        var y = Math.round(y1 + dy * (x - x1) / dx);
-                        //console.log(x0, x1);
+                    for (var x = x0; x != x1; x += stepX) {
+                        var y = y1 + dy * (x - x1) / dx;
+
+                        if (dy > 0) {
+                            y = Math.floor(y);
+                        } else {
+                            y = Math.ceil(y);
+                        }
+
                         if (matrix[y])
                             result.push(matrix[y][x]);
                         else
                             result.push(undefined);
                     }
                 } else {
-
-                    if (dy > 0) {
-                        return line(x1, y1, x0, y0);
+                    if(dy==0){
+                        return [];
                     }
+                    var stepY = -dy / Math.abs(dy);
 
-                    for (var y = y0; y <= y1; y += 1) {
-                        var x = Math.round(x1 + dx * (y - y1) / dy);
+
+                    for (var y = y0; y != y1; y += stepY) {
+                        var x = x1 + dx * (y - y1) / dy;
+
+                        if (dx > 0) {
+                            x = Math.floor(x);
+                        } else {
+                            x = Math.ceil(x);
+                        }
                         //console.log(x0, x1);
                         if (matrix[y])
                             result.push(matrix[y][x]);
@@ -149,8 +160,9 @@ $(function () {
                     }
                 }
 
+                //result.pop();
                 result.shift();
-                result.pop();
+
                 return result;
             };
             for (var i = 0; i < this.cellsVisible * 2 + 1; i++) {
