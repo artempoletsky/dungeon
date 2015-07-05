@@ -5,6 +5,7 @@ $(function () {
         shortcuts: {
             $map: '.map',
             $team: '.team',
+            $context: '.context',
             $autoMap: '#auto_map'
         },
         keys: {
@@ -16,6 +17,9 @@ $(function () {
             37: 'left',
             68: 'right',
             39: 'right'
+        },
+        events: {
+            'click .context button': 'onContextClick'
         },
         cellSize: 50,
         cellsVisible: 4,
@@ -60,7 +64,7 @@ $(function () {
             }
 
 
-            nextCell.enter();
+            var context=nextCell.enter();
 
             nextCell.visited = true;
 
@@ -68,8 +72,13 @@ $(function () {
                 nextCell.className = 'door opened';
             }
 
-            //if (nextCell.content != 'door' && nextCell.content != 'entry')
-            //    nextCell.content = nextCell.lastContent;
+
+            if(nextCell.className=='entry'){
+                context=this.entryContext;
+            }
+
+            this.setContext(context);
+
 
             this.x = x;
             this.y = y;
@@ -91,6 +100,8 @@ $(function () {
             }
         },
         finish: function () {
+            this.$el.hide();
+            this.fire('finish');
             $('body').off('keyup', this.onKeyUp);
         },
         autoMapCellSize: 10,
@@ -104,16 +115,35 @@ $(function () {
             this.x = map.entryX;
             this.y = map.entryY;
 
-            this.ctx=this.$autoMap[0].getContext('2d');
-            this.$autoMap[0].width=this.autoMapCellSize*this.map.width;
-            this.$autoMap[0].height=this.autoMapCellSize*this.map.height;
+            this.ctx = this.$autoMap[0].getContext('2d');
+            this.$autoMap[0].width = this.autoMapCellSize * this.map.width;
+            this.$autoMap[0].height = this.autoMapCellSize * this.map.height;
 
 
-            this.render();
+            this.move(this.x, this.y);
         },
         x: 0,
         y: 0,
         matrix: undefined,
+
+        entryContext: {
+            exit_from_dungeon: function(){
+                this.finish();
+            }
+        },
+        onContextClick: function (e) {
+            var name = $(e.currentTarget).data('name');
+            this.contextAction[name].call(this);
+        },
+        setContext: function (actions) {
+            var self = this;
+            var $context = self.$context.empty();
+            this.contextAction = actions;
+            _.each(actions, function (fn, name) {
+                $context.append('<button data-name="' + name + '">' + name + '</button>');
+            });
+        },
+
         render: function () {
             var $map = this.$map;
             $map.empty();
@@ -145,7 +175,7 @@ $(function () {
                             result.push(undefined);
                     }
                 } else {
-                    if(dy==0){
+                    if (dy == 0) {
                         return [];
                     }
                     var stepY = -dy / Math.abs(dy);
@@ -200,18 +230,18 @@ $(function () {
                         }
                     });
 
-                    if(!noVision){
-                        if(className=='wall'){
-                            this.ctx.fillStyle="#666";
-                        }else if(className=="entry") {
-                            this.ctx.fillStyle="#0c0";
-                        }else {
-                            this.ctx.fillStyle="#fff";
+                    if (!noVision) {
+                        if (className == 'wall') {
+                            this.ctx.fillStyle = "#666";
+                        } else if (className == "entry") {
+                            this.ctx.fillStyle = "#0c0";
+                        } else {
+                            this.ctx.fillStyle = "#fff";
                         }
-                        if(x==self.x&&y==self.y){
-                            this.ctx.fillStyle="#FF9B62";
+                        if (x == self.x && y == self.y) {
+                            this.ctx.fillStyle = "#FF9B62";
                         }
-                        this.ctx.fillRect(this.autoMapCellSize*x,this.autoMapCellSize*y,this.autoMapCellSize, this.autoMapCellSize);
+                        this.ctx.fillRect(this.autoMapCellSize * x, this.autoMapCellSize * y, this.autoMapCellSize, this.autoMapCellSize);
                     }
 
                     //}

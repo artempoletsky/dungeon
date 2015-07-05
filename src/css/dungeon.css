@@ -416,6 +416,12 @@ a, button {
     padding: 20px;
 }
 
+.context {
+    position: absolute;
+    left: 460px;
+    top: 10px;
+}
+
 .map_cell {
     position: absolute;
     display: block;
