@@ -33,14 +33,13 @@ var Character = Model.extend({
         apPerTurn: 5
     },
 
-    constructor: function (name, base_stats, equipment) {
+    constructor: function (name, base_stats) {
         this._super();
         this.prop(base_stats);
         this.statsBase = base_stats;
         this.spells = [];
         this.statuses = [];
         this.name = name;
-        this.equipment = new Equipment(equipment);
         this.reset();
     },
     getBaseAttack: function () {
@@ -137,10 +136,21 @@ Model.prototype.propMult = function (name, value) {
 };
 
 var Human = Character.extend({
+    constructor: function (name, base_stats, equipment) {
+        this._super(name, base_stats);
+        this.equipment = new Equipment(equipment);
+    },
     reset: function () {
         this.prop('maxHealth', this.prop('strength') * 5 + 10);
         this.prop('dodge',  this.prop('agility') * 2);
         this._super();
+    },
+    toJSON: function(){
+        return {
+            name: this.name,
+            attributes: this._super(),
+            equipment: this.equipment.toJSON()
+        }
     }
 });
 

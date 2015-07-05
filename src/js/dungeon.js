@@ -64,7 +64,7 @@ $(function () {
             }
 
 
-            var context=nextCell.enter();
+            var context = nextCell.enter();
 
             nextCell.visited = true;
 
@@ -73,8 +73,8 @@ $(function () {
             }
 
 
-            if(nextCell.className=='entry'){
-                context=this.entryContext;
+            if (nextCell.className == 'entry') {
+                context = this.entryContext;
             }
 
             this.setContext(context);
@@ -102,32 +102,63 @@ $(function () {
         finish: function () {
             this.$el.hide();
             this.fire('finish');
+            Player.currentDungeon = undefined;
             $('body').off('keyup', this.onKeyUp);
         },
         autoMapCellSize: 10,
-        start: function (map, playerParty) {
+        start: function (map) {
+            this.startFrom(map, map.entryX, map.entryY);
+        },
+        startFrom: function (map, x, y) {
             this.$el.show();
+            Player.currentDungeon = this;
             this.map = map;
             $('body').on('keyup', this.onKeyUp);
 
-            this.playerParty = playerParty;
+            this.playerParty = Player.party;
 
-            this.x = map.entryX;
-            this.y = map.entryY;
+            this.x = x;
+            this.y = y;
 
             this.ctx = this.$autoMap[0].getContext('2d');
             this.$autoMap[0].width = this.autoMapCellSize * this.map.width;
             this.$autoMap[0].height = this.autoMapCellSize * this.map.height;
 
-
+            this.automapSave = [];
             this.move(this.x, this.y);
         },
+        load: function (data) {
+            var map = Map.fromJSON(data.map);
+            $('body').off('keyup', this.onKeyUp);
+            this.startFrom(map, data.x, data.y);
+            var width = map.width;
+            var ctx = this.ctx;
+            var cellSize = this.autoMapCellSize;
+            _.each(data.automap, function (color, index) {
+                if (color) {
+                    var x = index % width;
+                    var y = index / width | 0;
+                    ctx.fillStyle = color;
+                    ctx.fillRect(cellSize * x, cellSize * y, cellSize, cellSize);
+                }
+            });
+            this.automapSave=data.automap;
+        },
+        save: function () {
+            return {
+                automap: this.automapSave,
+                map: this.map.toJSON(),
+                x: this.x,
+                y: this.y
+            }
+        },
+
         x: 0,
         y: 0,
         matrix: undefined,
 
         entryContext: {
-            exit_from_dungeon: function(){
+            exit_from_dungeon: function () {
                 this.finish();
             }
         },
@@ -144,6 +175,7 @@ $(function () {
             });
         },
 
+        automapSave: [],
         render: function () {
             var $map = this.$map;
             $map.empty();
@@ -241,6 +273,7 @@ $(function () {
                         if (x == self.x && y == self.y) {
                             this.ctx.fillStyle = "#FF9B62";
                         }
+                        this.automapSave[index] = this.ctx.fillStyle;
                         this.ctx.fillRect(this.autoMapCellSize * x, this.autoMapCellSize * y, this.autoMapCellSize, this.autoMapCellSize);
                     }
 

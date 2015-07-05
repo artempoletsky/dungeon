@@ -3,22 +3,28 @@ MapCellClasses.Monster = MapCell.extend({
         this._super(cell);
         if (cell.data && cell.data.party) {
             var classes = MonsterParties[cell.data.party];
+            this.data = cell.data;
             if (!classes) {
                 throw  'cell.data.party is wrong. "' + cell.data.party + '" expected';
             }
-            this.monstersParty = this.makeParty(classes, this.dungeonLevel);
+            this.monstersParty = this.makeParty(classes.party, this.dungeonLevel);
         } else {
-            this.monstersParty = this.getMonstersParty(this.dungeonLevel || 1);
+            if (cell.data) {
+                this.data = cell.data;
+            } else {
+                this.data = {};
+            }
+            this.monstersParty = this.getMonstersParty(this.map.dungeonLevel || 1);
         }
 
         this.className = 'monster';
         //this.monstersParty = dungeon.dungeonLevel;
     },
     getMonstersParty: function (level) {
-        var variants = _.compact(_.map(MonsterParties, function (obj) {
+        var variants = _.compact(_.map(MonsterParties, function (obj, name) {
             if (!obj.minLevel || level >= obj.minLevel) {
                 if (!obj.maxLevel || level <= obj.maxLevel) {
-                    return obj;
+                    return name;
                 }
             }
         }));
@@ -26,7 +32,10 @@ MapCellClasses.Monster = MapCell.extend({
             throw "Can't create monster cell";
         }
 
-        return this.makeParty(variants[rand(variants.length)].party, level);
+        var name = variants[rand(variants.length)];
+        var classes = MonsterParties[name];
+        this.data.party = name;
+        return this.makeParty(classes.party, level);
     },
     monstersParty: undefined,
     makeParty: function (namesArray, level) {

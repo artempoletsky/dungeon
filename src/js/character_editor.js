@@ -76,11 +76,11 @@ $(function () {
             });
             self.character.prop('attributesPoints', this.attributesPoints);
         },
-        attributesList: ['strength', 'agility', 'magic', 'perception', 'speed'],
+        attributesList: ['strength', 'agility', 'perception', 'speed'],
         show: function (character, isInitial) {
             this.character = character;
             this.$el.show();
-            console.log(Spells);
+            //console.log(Spells);
             this.renderAttributes();
             this.$name.val(character.name);
             this.revert();

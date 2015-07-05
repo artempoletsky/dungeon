@@ -108,7 +108,13 @@ $(function () {
             playerParty.push(c);
         }
 
-        // Player.newGame();
+        Player.party=playerParty;
+
+        //Player.newGame();
+
+        //Player.saveGame(0);
+        //Player.loadGame(0);
+        //Dungeon.start();
         //CharacterEditor.show(Player.mainCharacter, true);
 
 
@@ -127,8 +133,7 @@ $(function () {
 
             var map = DungeonGenerator.generate(formResult.size, 'default', formResult.level);
             $form.hide();
-            Dungeon.start(map, playerParty);
-
+            Dungeon.start(map);
         });
 
         /*

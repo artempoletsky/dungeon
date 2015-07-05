@@ -6,6 +6,8 @@ var Equipment = Model.extend({
 });
 
 var Item = Model.extend({
+    width: 1,
+    height: 1,
     applyStats: function (character) {
 
     }
