@@ -147,6 +147,8 @@ var Map = Class.extend({
 });
 
 
+Map.predefined={};
+
 Map.createMatrix = function (width, height) {
     var result = [];
     for (var y = 0; y < height; y++) {

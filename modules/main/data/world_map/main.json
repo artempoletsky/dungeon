@@ -1,0 +1,19 @@
+[
+    {
+        "median": {
+            "x": 120,
+            "y": 100
+        },
+        "id": "whiterun",
+        "map": "start",
+        "locationType": "default"
+    },
+    {
+        "median": {
+            "x": 177,
+            "y": 340
+        },
+        "id": "whiterun_neighborhood",
+        "locationType": "default"
+    }
+]

@@ -21,6 +21,12 @@ $(function () {
         events: {
             'click .context button': 'onContextClick'
         },
+        initialize: function(){
+            var self=this;
+            Player.on('load', function(){
+                $('body').off('keyup', this.onKeyUp);
+            });
+        },
         cellSize: 50,
         cellsVisible: 4,
         up: function () {
@@ -101,11 +107,39 @@ $(function () {
         },
         finish: function () {
             this.$el.hide();
-            this.fire('finish');
+            if (this.saveOnExit) {
+                this.setSave(this.saveOnExit, this.save());
+            }
+
             Player.currentDungeon = undefined;
             $('body').off('keyup', this.onKeyUp);
+            WorldMap.$el.show();
+
+            this.fire('finish');
         },
         autoMapCellSize: 10,
+
+        saveOnExit: false,
+        getSave: function (id) {
+            var saves = Player.currentSave.dungeons || {};
+            Player.currentSave.dungeons = saves;
+            return saves[id];
+        },
+        setSave: function (id, value) {
+            var saves = Player.currentSave.dungeons || {};
+            saves[id] = value;
+            Player.currentSave.dungeons = saves;
+        },
+        startPredefined: function (id) {
+            var save = this.getSave(id);
+            if (!save) {
+                this.start(Map.fromJSON(Map.predefined[id]));
+            } else {
+                this.load(save);
+            }
+            this.saveOnExit = id;
+        },
+
         start: function (map) {
             this.startFrom(map, map.entryX, map.entryY);
         },
@@ -126,6 +160,7 @@ $(function () {
 
             this.automapSave = [];
             this.move(this.x, this.y);
+            this.saveOnExit = false;
         },
         load: function (data) {
             var map = Map.fromJSON(data.map);
@@ -142,7 +177,7 @@ $(function () {
                     ctx.fillRect(cellSize * x, cellSize * y, cellSize, cellSize);
                 }
             });
-            this.automapSave=data.automap;
+            this.automapSave = data.automap;
         },
         save: function () {
             return {

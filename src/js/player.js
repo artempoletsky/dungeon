@@ -1,6 +1,5 @@
 var Player = Events.create({
     mainCharacter: undefined,
-    currentLocation: undefined,
     currentDungeon: undefined,
     party: [],
     newGame: function () {
@@ -15,31 +14,50 @@ var Player = Events.create({
         this.mainCharacter.prop('skillPoints', 2);
         this.party = [];
         this.party.push(this.mainCharacter);
+
+        this.currentSave = {
+            party: this.party
+        };
+
     },
 
+    currentSave: undefined,
+
     loadGame: function (index) {
+        this.fire('load');
         var save = JSON.parse(localStorage.saves)[index];
+        this.currentSave=save;
+
         var party = this.party = [];
         _.each(save.party, function (data) {
             party.push(new Human(data.name, data.attributes, data.equipment));
         });
+        save.party=party;
+
+        WorldMap.$el.hide();
+        Dungeon.$el.hide();
+
         if (save.dungeon) {
             Dungeon.load(save.dungeon);
+        }else {
+            WorldMap.$el.show();
         }
-        //console.log(saves);
+        console.log(save.currentLocation)
+        WorldMap.setLocation(save.currentLocation);
     },
     saveGame: function (index) {
         var saves = [];
         if (localStorage.saves) {
             saves = JSON.parse(localStorage.saves);
         }
-        var save = {};
+        var save = this.currentSave;
 
-        save.party = this.party;
 
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
+
+
 
 
         if (index !== undefined) {
