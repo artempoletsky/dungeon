@@ -61,7 +61,7 @@ window.Game = Model.create({
                         self.isLoading = false;
 
                         if (!self.isReady) {
-                            self.isReady=true;
+                            self.isReady = true;
                             self.fire('ready');
                         }
                     }
@@ -101,6 +101,9 @@ window.Game = Model.create({
     rand: function (max) {
         return Math.floor(Math.random() * max);
     },
+    getText: function (id) {
+        return  Text[this.language][id];
+    },
     language: 'ru',
 
     ready: function (callback) {
@@ -111,67 +114,18 @@ window.Game = Model.create({
             this.one('ready', callback);
         }
     },
+    config: undefined,
     initialize: function () {
         var self = this;
-        $(function(){
-            $.get('src/modules.json', function (data) {
-                _.each(data, self.loadModule, self);
+        $(function () {
+            $.get('src/config.json', function (data) {
+                self.config = data;
+                _.each(data.modules, self.loadModule, self);
             });
         });
     }
 });
 
-
-Game.ready(function () {
-    if (Game.dungeonEditorMode) {
-        return;
-    }
-
-    var playerParty = [];
-
-
-    for (var i = 0; i < 4; i++) {
-        var c = new MonsterClasses.Brigand(1);
-        c.enemy = false;
-        playerParty.push(c);
-    }
-
-    //
-
-    Player.newGame();
-
-    Player.party = playerParty;
-
-    //WorldMap.setLocation("whiterun");
-
-    //Player.saveGame(0);
-    //Player.loadGame(0);
-    //Dungeon.start();
-    //CharacterEditor.show(Player.mainCharacter, true);
-
-
-    //Battlefield.fight(playerParty, MapCellClasses.Monster.makeParty(MonsterParties.smallSpidersParty.party,1));
-    //return;
-
-    var $form = $('.dungeon_generator');
-
-    $form.find('button').click(function (e) {
-        e.preventDefault();
-        var formResult = _.foldl($form.serializeArray(), function (result, obj) {
-            result[obj.name] = obj.value;
-            return result;
-        }, {});
-
-
-        var map = DungeonGenerator.generate(formResult.size, 'default', formResult.level);
-        $form.hide();
-        Dungeon.start(map);
-    });
-
-    /*
-     Dialogs.start(Dialogs.list.example);*/
-});
-//
 
 
 var Text = {};

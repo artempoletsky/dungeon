@@ -487,5 +487,35 @@ path:hover {
     height: 100%;
     top: 0;
 }
-html, body{
+
+.main_menu {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    background: #000000;
+    display: none;
+}
+
+.main_menu_list{
+    font-size: 30px;
+    text-align: center;
+
+    position: absolute;
+    top: 50%;
+    width: 100%;
+
+    transform: translateY(-50%);
+}
+.main_menu_list li{
+    margin-bottom: 10px;
+}
+.main_menu_list a {
+    color: #fff;
+}
+
+.main_menu_list .exit{
+    display: none;
 }

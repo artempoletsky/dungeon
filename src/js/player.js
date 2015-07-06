@@ -25,39 +25,48 @@ var Player = Events.create({
 
     loadGame: function (index) {
         this.fire('load');
-        var save = JSON.parse(localStorage.saves)[index];
-        this.currentSave=save;
+
+        var save = this.getSaves()[index];
+        this.currentSave = save;
 
         var party = this.party = [];
         _.each(save.party, function (data) {
             party.push(new Human(data.name, data.attributes, data.equipment));
         });
-        save.party=party;
+        save.party = party;
 
         WorldMap.$el.hide();
         Dungeon.$el.hide();
 
         if (save.dungeon) {
             Dungeon.load(save.dungeon);
-        }else {
+        } else {
             WorldMap.$el.show();
         }
         console.log(save.currentLocation)
         WorldMap.setLocation(save.currentLocation);
     },
-    saveGame: function (index) {
-        var saves = [];
-        if (localStorage.saves) {
-            saves = JSON.parse(localStorage.saves);
+
+    saves: undefined,
+    getSaves: function () {
+        var saves = this.saves;
+        if (!saves) {
+            if (localStorage.saves)
+                saves = JSON.parse(localStorage.saves);
         }
+        if (!saves) {
+            saves = [];
+        }
+        this.saves = saves;
+        return saves;
+    },
+    saveGame: function (index) {
+        var saves = this.getSaves();
+
         var save = this.currentSave;
-
-
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
-
-
 
 
         if (index !== undefined) {

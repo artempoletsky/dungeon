@@ -59,14 +59,12 @@ $(function () {
             this.dialogDepth = 0;
             this.render(dialog.npc, this.answers[0]);
         },
-        getText: function (id) {
-            return  Text[Game.language][id];
-        },
+
         render: function (cue, answers) {
             var self = this;
             this.$cue.html(self.getText(cue));
             this.$answers.empty().append(_.foldl(answers, function (result, answerObject) {
-                result += '<li><a>' + self.getText(answerObject.player) + '</a></li>';
+                result += '<li><a>' + Game.getText(answerObject.player) + '</a></li>';
                 return result;
             }, ''))
         }
