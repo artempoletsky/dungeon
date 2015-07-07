@@ -117,11 +117,13 @@ $(function () {
             $('body').removeClass(this.backgroundClassName);
         },
 
-        fight: function (playerParty, monstersParty, backgrounds) {
+        fight: function (monstersParty, backgrounds) {
+            var playerParty=Player.party;
             if (backgrounds) {
                 this.backgroundClassName = backgrounds[rand(backgrounds.length)];
                 $('body').addClass(this.backgroundClassName);
             }
+
 
             this.$el.show();
             this.loot = [];

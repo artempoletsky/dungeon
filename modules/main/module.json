@@ -1,13 +1,10 @@
 {
-    "js": ["monster_map_cell", "monster_classes", "npc_map_cell"],
+    "js": ["monster_map_cell", "monster_classes", "npc_map_cell", "quests"],
     "css": ["main"],
     "dialogs": ["dialogs"],
     "maps": ["start"],
     "worldMap": ["main"],
     "language": {
         "ru_main": "ru"
-    },
-    "registry": {
-
     }
 }

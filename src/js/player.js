@@ -3,13 +3,23 @@ var Player = Events.create({
     currentDungeon: undefined,
     party: [],
     newGame: function () {
+        this.fire('newGame');
+
         this.mainCharacter = new Human('Anonymous', {
             strength: 5,
             agility: 5,
             magic: 0,
             speed: 5,
             perception: 5
+        },{
+            weapon: new Weapon(13, 20)
         });
+        this.mainCharacter.spells=[new Spells.Hit()];
+
+
+
+
+        this.mainCharacter.enemy = false;
         this.mainCharacter.prop('attributesPoints', 5);
         this.mainCharacter.prop('skillPoints', 2);
         this.party = [];
@@ -19,19 +29,24 @@ var Player = Events.create({
             party: this.party
         };
 
+        Quest.moveToStage(Game.config.startQuest, 'start');
     },
 
     currentSave: undefined,
 
     loadGame: function (index) {
-        this.fire('load');
+
 
         var save = this.getSaves()[index];
         this.currentSave = save;
 
+        this.fire('load');
+
         var party = this.party = [];
         _.each(save.party, function (data) {
-            party.push(new Human(data.name, data.attributes, data.equipment));
+            var char=new Human(data.name, data.attributes, data.equipment);
+                char.enemy = false;
+            party.push(char);
         });
         save.party = party;
 
@@ -43,11 +58,19 @@ var Player = Events.create({
         } else {
             WorldMap.$el.show();
         }
-        console.log(save.currentLocation)
+
         WorldMap.setLocation(save.currentLocation);
     },
 
     saves: undefined,
+
+    getSaveData: function (hash) {
+        if (!this.currentSave[hash]) {
+            this.currentSave[hash] = {};
+        }
+        return this.currentSave[hash];
+    },
+
     getSaves: function () {
         var saves = this.saves;
         if (!saves) {
@@ -60,14 +83,15 @@ var Player = Events.create({
         this.saves = saves;
         return saves;
     },
-    saveGame: function (index) {
+    saveGame: function (index, name) {
         var saves = this.getSaves();
 
-        var save = this.currentSave;
+        var save = JSON.parse(JSON.stringify(this.currentSave));
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
 
+        save.name = name;
 
         if (index !== undefined) {
             saves[index] = save;

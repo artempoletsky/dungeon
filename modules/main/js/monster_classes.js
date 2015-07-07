@@ -61,5 +61,8 @@ _.extend(MonsterParties, {
     },
     smallSpidersParty: {
         party: ['Spider', 'Spider']
+    },
+    rat: {
+        party: ['Beast']
     }
 });

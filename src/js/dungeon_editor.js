@@ -68,7 +68,7 @@ $(function () {
 
                 var $cell = $(e.currentTarget);
                 var index = $cell.index();
-                var w = this.$width.val() | 0;
+                var w = this.map.width;
                 //var h = this.$height.val() | 0;
                 var y = index / w | 0;
                 var x = index % w;
@@ -84,6 +84,7 @@ $(function () {
                 this.$cellEditor.find('input[type=text]').each(function () {
                     this.value = cell[this.name];
                 });
+
                 this.$cellClass.val(cell.getClass());
             },
             render: function () {

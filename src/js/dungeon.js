@@ -21,9 +21,9 @@ $(function () {
         events: {
             'click .context button': 'onContextClick'
         },
-        initialize: function(){
-            var self=this;
-            Player.on('load', function(){
+        initialize: function () {
+            var self = this;
+            Player.on('load newGame', function () {
                 $('body').off('keyup', this.onKeyUp);
             });
         },
@@ -121,19 +121,20 @@ $(function () {
 
         saveOnExit: false,
         getSave: function (id) {
-            var saves = Player.currentSave.dungeons || {};
-            Player.currentSave.dungeons = saves;
-            return saves[id];
+            return Player.getSaveData('dungeons')[id];
         },
         setSave: function (id, value) {
-            var saves = Player.currentSave.dungeons || {};
-            saves[id] = value;
-            Player.currentSave.dungeons = saves;
+            Player.getSaveData('dungeons')[id] = value;
         },
-        startPredefined: function (id) {
+        startPredefined: function (id, x, y) {
             var save = this.getSave(id);
             if (!save) {
-                this.start(Map.fromJSON(Map.predefined[id]));
+                var map = Map.fromJSON(Map.predefined[id]);
+                if (x) {
+                    this.startFrom(map, x, y);
+                } else {
+                    this.start(map);
+                }
             } else {
                 this.load(save);
             }
@@ -155,6 +156,7 @@ $(function () {
             this.y = y;
 
             this.ctx = this.$autoMap[0].getContext('2d');
+
             this.$autoMap[0].width = this.autoMapCellSize * this.map.width;
             this.$autoMap[0].height = this.autoMapCellSize * this.map.height;
 
@@ -164,11 +166,11 @@ $(function () {
         },
         load: function (data) {
             var map = Map.fromJSON(data.map);
-            $('body').off('keyup', this.onKeyUp);
             this.startFrom(map, data.x, data.y);
             var width = map.width;
             var ctx = this.ctx;
             var cellSize = this.autoMapCellSize;
+
             _.each(data.automap, function (color, index) {
                 if (color) {
                     var x = index % width;

@@ -128,8 +128,9 @@ var Map = Class.extend({
                     className: cell.className,
                     type: cell.type
                 };
-                if (MapCellClasses[cell.class]) {
-                    obj.class = cell.class;
+                var cellClass=cell.getClass();
+                if (MapCellClasses[cellClass]) {
+                    obj.class = cellClass;
                 }
                 if (cell.data) {
                     obj.data = cell.data;

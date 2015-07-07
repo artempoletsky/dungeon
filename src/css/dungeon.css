@@ -346,6 +346,7 @@ a, button {
     top: 30px;
     bottom: 30px;
     display: none;
+    z-index: 5;
 }
 
 .ce-wrap {
@@ -518,4 +519,50 @@ path:hover {
 
 .main_menu_list .exit{
     display: none;
+}
+
+.world_map {
+    display: none;
+}
+
+.saves_menu{
+    position: absolute;
+    padding: 20px;
+    background: #000000;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    display: none;
+    font-size: 20px;
+    color: #fff;
+}
+
+.saves {
+    overflow-y: scroll;
+    width: 600px;
+    height: 400px;
+}
+
+.save_mode .sm-load_game,
+.sm-save_game,
+.save_name {
+    display: none;
+}
+
+.save_mode .sm-save_game{
+    display: inline-block;
+}
+
+.save_mode .save_name{
+    display: block;
+}
+
+.save_name label{
+
+}
+
+.saves li {
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #fff;
 }

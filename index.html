@@ -24,6 +24,7 @@
     <script type="text/javascript" src="src/js/character_editor.js"></script>
     <script type="text/javascript" src="src/js/world_map.js"></script>
     <script type="text/javascript" src="src/js/main_menu.js"></script>
+    <script type="text/javascript" src="src/js/quest.js"></script>
     <script type="text/javascript" src="src/js/game.js"></script>
     <script type="text/javascript" src="3d/babylon.2.1.js"></script>
 
@@ -50,8 +51,13 @@
 </div>
 
 <div class="view_port">
+    <div class="scene_menu">
+        <button class="show_main_menu">Main menu</button>
+        <button class="show_character_menu">Character</button>
+        <button class="show_journal">Journal</button>
+    </div>
 
-    <div class="world_map">
+    <div class="world_map scene">
         <div class="team"></div>
         <svg
                 width="1000"
@@ -65,9 +71,19 @@
         <ul class="main_menu_list">
 
         </ul>
+        <div class="saves_menu save_mode">
+            <div class="save_name">
+                <label>Название</label> <input type="text"/>
+            </div>
+            <ul class="saves"></ul>
+            <div class="saves_buttons">
+                <button class="sm-save_game">Save game</button>
+                <button class="sm-cancel">Cancel</button>
+            </div>
+        </div>
     </div>
 
-    <form class="character_editor">
+    <div class="character_editor scene">
         <div class="ce-wrap">
             <div class="ce-name">
                 <label>Имя</label> <input type="text" value="Anonymous" name="name"/>
@@ -78,12 +94,7 @@
                 </h1>
 
                 <div class="ce-attributes">
-                    <div class="ce-attribute">
-                        <label>Сила</label> <i class="ce-dec">-</i> <input class="ce-value" value="5"
-                                                                           disabled="disabled"
-                                                                           type="text"/> <i
-                            class="ce-inc">+</i>
-                    </div>
+
                 </div>
 
                 <h1>Производные величины</h1>
@@ -103,12 +114,13 @@
             <div class="ce-buttons">
                 <button class="ce-save">Сохранить</button>
                 <button class="ce-revert">Вернуть очки</button>
+                <button class="ce-close">Закрыть</button>
             </div>
         </div>
-    </form>
+    </div>
 
 
-    <div class="dungeon">
+    <div class="dungeon scene">
         <canvas id="auto_map"></canvas>
         <div class="team"></div>
         <div class="map">
@@ -123,7 +135,7 @@
     </div>
 
 
-    <div class="battlefield">
+    <div class="battlefield scene">
 
         <div class="hit_animation">
             <div class="left_character"></div>

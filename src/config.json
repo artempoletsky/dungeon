@@ -1,3 +1,4 @@
 {
-    "modules": ["main"]
+    "modules": ["main"],
+    "startQuest": "toFreedom"
 }
