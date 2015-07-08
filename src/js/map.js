@@ -17,7 +17,12 @@ window.MapCell = Class.extend({
         this.type = props.type;
         this.index = props.index;
         this.map = props.map;
-        this.data = props.data;
+        if(props.data){
+            this.data = _.clone(props.data, true);
+        }else {
+            this.data={};
+        }
+
     },
     getClass: function () {
         var result = 'MapCell';

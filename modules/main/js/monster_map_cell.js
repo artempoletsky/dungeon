@@ -2,20 +2,15 @@ MapCellClasses.Monster = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
 
-        if (cell.data && cell.data.party) {
+
+
+        if (this.data.party) {
             var classes = MonsterParties[cell.data.party];
-            this.data = cell.data;
             if (!classes) {
                 throw  'cell.data.party is wrong. "' + cell.data.party + '" expected';
             }
             this.monstersParty = this.makeParty(classes.party, this.dungeonLevel);
         } else {
-
-            if (cell.data) {
-                this.data = cell.data;
-            } else {
-                this.data = {};
-            }
             this.monstersParty = this.getMonstersParty(this.map.dungeonLevel || 1);
         }
         if (this.data.monstersDefeated) {
