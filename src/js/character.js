@@ -29,6 +29,7 @@ var Character = Model.extend({
         initiative: 1,
         actionPoints: 10,
         startAP: 8,
+        dodge: 0,
         maxAP: 12,
         apPerTurn: 5
     },

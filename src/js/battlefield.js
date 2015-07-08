@@ -27,10 +27,14 @@ $(function () {
             $playerParty: '.player_party',
             $monstersParty: '.monsters_party',
             $queue: '.turns_queue',
-            $spells: '.spells',
-            $info: '.info_box'
+            $spells: '.spells'
         },
 
+
+        initialize: function () {
+
+            this.$info = $('.info_box');
+        },
 
         renderCharacter: function (character) {
             var $view = $(ViewModel.tmpl.getRawTemplate('character'));
@@ -54,7 +58,6 @@ $(function () {
                 }
                 //self.updateCharacter(this, )
 
-                //console.log(e);
             });
         },
 
@@ -85,9 +88,7 @@ $(function () {
             var party = character.enemy ? this.monstersParty : this.playerParty;
 
             party.splice(party.indexOf(character), 1);
-            if (party.length == 0) {
-                this.endFight();
-            }
+
 
             /*
              if (character.enemy) {
@@ -118,7 +119,7 @@ $(function () {
         },
 
         fight: function (monstersParty, backgrounds) {
-            var playerParty=Player.party;
+            var playerParty = Player.party;
             if (backgrounds) {
                 this.backgroundClassName = backgrounds[rand(backgrounds.length)];
                 $('body').addClass(this.backgroundClassName);
@@ -166,7 +167,15 @@ $(function () {
             if (self.index >= self.queue.length) {
                 self.index = 0;
             }
-            self.turn();
+
+
+            var party = self.currentCharacter.enemy ? this.playerParty : this.monstersParty;
+            if (party.length == 0) {
+                this.endFight();
+            } else {
+                self.turn();
+            }
+
         },
         turn: function () {
             var self = this;
@@ -294,10 +303,27 @@ $(function () {
             $queueView.addClass('highlight');
 
             var propsToShow = ['res_physical', 'initiative', 'actionPoints'];
-            this.$info.empty().show().css({
-                left: $view.offset().left + 'px',
-                top: $view.offset().top + 'px'
-            });
+
+            this.$info.empty().show().offset($view.offset());
+
+            if (character.enemy && this.activeSpell !== undefined) {
+                var spell = this.currentCharacter.spells[this.activeSpell];
+                var chanceToHit = spell.computeHitChance(this.currentCharacter, character, false);
+
+                var minDamage = _.foldl(spell.getMinDamage(this.currentCharacter, character), function (sum, damage, type) {
+                    return sum + damage;
+                }, 0);
+                var maxDamage = _.foldl(spell.getMaxDamage(this.currentCharacter, character), function (sum, damage, type) {
+                    return sum + damage;
+                }, 0);
+
+                this.$info.append(this.generateInfoRow('Attack', spell.getAttack(this.currentCharacter)));
+                this.$info.append(this.generateInfoRow('Chance to hit', chanceToHit + '%'));
+                this.$info.append(this.generateInfoRow('Damage', minDamage + '-' + maxDamage));
+
+            }
+
+
             this.$info.append(this.generateInfoRow('Health', character.prop('health') + '/' + character.prop('maxHealth')));
             for (var i = 0; i < propsToShow.length; i++) {
                 this.$info.append(this.generateInfoRow(propsToShow[i], character.prop(propsToShow[i])));

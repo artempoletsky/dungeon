@@ -91,6 +91,14 @@ var Map = Class.extend({
         //this.matrix = data.matrix;
         var newMatrix = [];
         var i = 0;
+        var self=this;
+
+        this.location = data.location;
+        this.backgroundClassName = data.backgroundClassName;
+        this.entryX = data.entryX;
+        this.entryY = data.entryY;
+        this.dungeonLevel=data.dungeonLevel;
+
         _.eachMatrix(data.matrix, function (cell, x, y) {
 
             if (!newMatrix[y]) {
@@ -104,7 +112,7 @@ var Map = Class.extend({
                 y: y,
                 type: cell.type,
                 className: cell.className,
-                map: this,
+                map: self,
                 data: cell.data,
                 index: i
             });
@@ -113,10 +121,7 @@ var Map = Class.extend({
         });
         this.width=newMatrix[0].length;
         this.height=newMatrix.length;
-        this.location = data.location;
-        this.backgroundClassName = data.backgroundClassName;
-        this.entryX = data.entryX;
-        this.entryY = data.entryY;
+
 
         var entry = newMatrix[data.entryY][data.entryX];
         entry.className = 'entry';
@@ -186,7 +191,7 @@ Map.fromJSON = function (data) {
         location: data.location,
         //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
         entryX: entryX,
-        entryY: entryY
-        //dungeonLevel: level
+        entryY: entryY,
+        dungeonLevel: data.dungeonLevel
     });
 }

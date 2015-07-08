@@ -3,15 +3,16 @@ MapCellClasses.Monster = MapCell.extend({
         this._super(cell);
 
 
+        var dungeonLevel= this.map.dungeonLevel;
 
         if (this.data.party) {
             var classes = MonsterParties[cell.data.party];
             if (!classes) {
                 throw  'cell.data.party is wrong. "' + cell.data.party + '" expected';
             }
-            this.monstersParty = this.makeParty(classes.party, this.dungeonLevel);
+            this.monstersParty = this.makeParty(classes.party, dungeonLevel);
         } else {
-            this.monstersParty = this.getMonstersParty(this.map.dungeonLevel || 1);
+            this.monstersParty = this.getMonstersParty(dungeonLevel);
         }
         if (this.data.monstersDefeated) {
             this.className = this.type;
