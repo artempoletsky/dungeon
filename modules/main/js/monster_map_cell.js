@@ -3,7 +3,7 @@ MapCellClasses.Monster = MapCell.extend({
         this._super(cell);
 
 
-        var dungeonLevel= this.map.dungeonLevel;
+        var dungeonLevel = this.map.dungeonLevel;
 
         if (this.data.party) {
             var classes = MonsterParties[cell.data.party];
@@ -14,11 +14,9 @@ MapCellClasses.Monster = MapCell.extend({
         } else {
             this.monstersParty = this.getMonstersParty(dungeonLevel);
         }
-        if (this.data.monstersDefeated) {
-            this.className = this.type;
-        } else {
-            this.className = 'monster';
-        }
+
+        this.className = 'monster';
+
 
         //this.monstersParty = dungeon.dungeonLevel;
     },
@@ -47,17 +45,13 @@ MapCellClasses.Monster = MapCell.extend({
         });
     },
     enter: function () {
-        if (this.data.monstersDefeated) {
-            return;
-        }
-
-        this.data.monstersDefeated = true;
         this.className = this.type;
         Dungeon.pauseKeyboardEvents = true;
         Dungeon.$el.hide();
         var className = Dungeon.map.backgroundClassName;
 
         Battlefield.one('endFight', function (e) {
+            Dungeon.clearCell(Dungeon.x, Dungeon.y);
             Dungeon.$el.show();
             Dungeon.pauseKeyboardEvents = false;
         });
