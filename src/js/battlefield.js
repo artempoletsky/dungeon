@@ -89,6 +89,7 @@ $(function () {
 
             party.splice(party.indexOf(character), 1);
 
+            this.$info.hide();
 
             /*
              if (character.enemy) {
