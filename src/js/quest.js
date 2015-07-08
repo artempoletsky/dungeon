@@ -28,6 +28,7 @@ var Quest = Events.extend({
     moveToStage: function (stageID) {
         var stage = this.stages[stageID];
         this.journal.push(stageID);
+        console.log(this.journal);
         stage.action.call(this);
     },
     toJson: function () {

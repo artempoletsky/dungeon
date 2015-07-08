@@ -22,10 +22,26 @@ $(function () {
 
             //console.log(this.answers[this.dialogDepth], answerIndex);
 
+
             if (answerObject.exit) {
-                alert('end');
+                Dungeon.pauseKeyboardEvents = false;
+                this.$el.hide();
+                MainMenu.canSave = true;
+                Player.getSaveData('dialogs')[this.dialogID]={
+                    npc: this.dialog.npc,
+                    answers: this.answers[0]
+                };
+            }
+
+
+            if(answerObject.questID){
+                Quest.moveToStage(answerObject.questID, answerObject.questStage);
+            }
+
+            if(answerObject.exit){
                 return;
             }
+
 
 
             if (!answerObject.dontRemove) {
@@ -54,15 +70,21 @@ $(function () {
             this.render(cue, answers);
         },
 
-        start: function (dialog) {
+        start: function (dialogID) {
+            this.dialogID = dialogID;
+            MainMenu.canSave = false;
+
+            var dialog = this.dialog = Player.getSaveData('dialogs')[dialogID] || Dialogs.list[dialogID];
+
+            Dungeon.pauseKeyboardEvents = true;
+            this.$el.show();
             this.answers = [dialog.answers.slice(0)];
             this.dialogDepth = 0;
             this.render(dialog.npc, this.answers[0]);
         },
 
         render: function (cue, answers) {
-            var self = this;
-            this.$cue.html(self.getText(cue));
+            this.$cue.html(Game.getText(cue)+'');
             this.$answers.empty().append(_.foldl(answers, function (result, answerObject) {
                 result += '<li><a>' + Game.getText(answerObject.player) + '</a></li>';
                 return result;

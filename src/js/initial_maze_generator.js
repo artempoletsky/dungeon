@@ -309,7 +309,7 @@
 
         removeContentAttr: function(){
             _.eachMatrix(this.matrix, function(cell){
-                cell.type=cell.className=cell.content;
+                cell.type=cell.content;
                 delete cell.content;
             });
         },

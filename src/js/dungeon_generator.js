@@ -40,7 +40,7 @@ var DungeonGenerator = Class.create({
 
         _.eachMatrix(matrix, function (cell) {
             var Class;
-            if (cell.className && cell.className != 'door') {
+            if (cell.type && cell.type != 'door') {
                 Class = self.randomMapObject(0, self.mapObjects);
             }
             cell.class = Class;
@@ -51,6 +51,7 @@ var DungeonGenerator = Class.create({
         });
         var entry = roomCells[rand(roomCells.length)];
 
+        entry.class = 'Entry';
         var bgImagesArray = self.backgroundImages[location];
 
 

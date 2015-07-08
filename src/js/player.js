@@ -5,25 +5,28 @@ var Player = Events.create({
     newGame: function () {
         this.fire('newGame');
 
-        this.mainCharacter = new Human('Anonymous', {
-            strength: 5,
-            agility: 5,
-            magic: 0,
-            speed: 5,
-            perception: 5
-        },{
-            weapon: new Weapon(13, 20)
+        this.mainCharacter = Human.create({
+            constructor: function () {
+                this._super('Anonymous', {
+                    strength: 5,
+                    agility: 5,
+                    magic: 0,
+                    speed: 5,
+                    perception: 5
+                }, {
+                    weapon: new Weapon(13, 20)
+                });
+                this.spells = [new Spells.Hit()];
+                this.enemy = false;
+                this.prop({
+                    attributesPoints: 5,
+                    skillPoints: 2
+                });
+            }
         });
-        this.mainCharacter.spells=[new Spells.Hit()];
 
 
-
-
-        this.mainCharacter.enemy = false;
-        this.mainCharacter.prop('attributesPoints', 5);
-        this.mainCharacter.prop('skillPoints', 2);
-        this.party = [];
-        this.party.push(this.mainCharacter);
+        this.party = [this.mainCharacter];
 
         this.currentSave = {
             party: this.party
@@ -44,8 +47,8 @@ var Player = Events.create({
 
         var party = this.party = [];
         _.each(save.party, function (data) {
-            var char=new Human(data.name, data.attributes, data.equipment);
-                char.enemy = false;
+            var char = new Human(data.name, data.attributes, data.equipment);
+            char.enemy = false;
             party.push(char);
         });
         save.party = party;

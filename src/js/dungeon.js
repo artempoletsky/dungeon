@@ -62,6 +62,10 @@ $(function () {
         },
         pauseKeyboardEvents: false,
 
+        clearCell: function (x, y) {
+            this.map.clearCell(x, y);
+            this.markVisible(this.map.matrix[y][x])
+        },
         move: function (x, y) {
             var nextCell = this.map.getMovableCell(x, y);
 
@@ -69,6 +73,9 @@ $(function () {
                 return;
             }
 
+
+            this.x = x;
+            this.y = y;
 
             var context = nextCell.enter();
 
@@ -86,9 +93,6 @@ $(function () {
             this.setContext(context);
 
 
-            this.x = x;
-            this.y = y;
-
             this.markVisible(nextCell);
             //this.trigger('move', nextCell);
 
@@ -97,7 +101,7 @@ $(function () {
 
         },
         onKeyUp: function (e) {
-            if (this.pauseKeyboardEvents)
+            if (Dungeon.pauseKeyboardEvents)
                 return;
             var fnName = Dungeon.keys[e.keyCode];
             if (fnName) {

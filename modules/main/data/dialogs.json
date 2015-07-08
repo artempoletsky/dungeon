@@ -1,9 +1,6 @@
 {
     "example": {
         "npc": "hello",
-        "questID": 0,
-        "questStage": 0,
-        "exit": false,
         "answers": [
             {
                 "player": "answer2",
@@ -40,5 +37,31 @@
                 "exit": true
             }
         ]
+    },
+    "gallican": {
+        "npc": "hello",
+        "answers": [
+            {
+                "player": "who_are_you",
+                "npc": "im_gallican",
+                "answers": [
+                    {
+                        "dontRemove": true,
+                        "exit": true,
+                        "questID": "gallican_join",
+                        "questStage": "gallican_join",
+                        "player": "gallican_join_me"
+                    },
+                    {
+                        "dontRemove": true,
+                        "exit": true,
+                        "questID": "gallican_join",
+                        "questStage": "gallican_not_join",
+                        "player": "no_thanks"
+                    }
+                ]
+            }
+        ],
+        "alternate": "do_you_change_your_mind"
     }
 }

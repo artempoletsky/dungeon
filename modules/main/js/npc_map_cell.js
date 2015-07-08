@@ -1,13 +1,14 @@
 MapCellClasses.NPC = MapCell.extend({
     constructor: function (cell) {
         this._super(cell);
-        this.className = this.npcClassName;
+        _.defaults(this.data, {
+            className: 'npc'
+        });
+        this.className = this.data.className;
     },
     npcClassName: 'npc',
     enter: function () {
-        Dungeon.pauseKeyboardEvents = true;
+        Dialogs.start(this.data.dialog);
     }
 });
-
-var NPCActions = {};
 

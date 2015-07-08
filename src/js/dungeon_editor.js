@@ -14,6 +14,7 @@ $(function () {
                 $cellEditor: '.cell_editor',
                 $width: '#dungeon_width',
                 $height: '#dungeon_height',
+                $level: '#dungeon_level',
                 $json: '#map_json'
             },
             cellSize: 21,
@@ -104,8 +105,8 @@ $(function () {
                     matrix: matrix,
                     //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
                     entryX: 0,
-                    entryY: 0
-                    //dungeonLevel: level
+                    entryY: 0,
+                    dungeonLevel: this.$level
                 });
 
                 this.render();

@@ -131,6 +131,7 @@ $(function () {
         initialize: function () {
             var self = this;
             Game.ready(function () {
+
                 self.render();
                 self.$save = self.$('.save_game');
                 self.$load = self.$('.load_game');

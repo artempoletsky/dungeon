@@ -53,17 +53,27 @@ window.Game = Model.create({
             var load = function () {
                 var obj = self.loadingQueue.shift();
 
-                $.get(obj.file, function (data) {
-                    obj.callback(data);
-                    if (self.loadingQueue.length) {
-                        load();
-                    } else {
-                        self.isLoading = false;
 
-                        if (!self.isReady) {
-                            self.isReady = true;
-                            self.fire('ready');
+                $.ajax({
+                    url: obj.file+'?'+Math.random(),
+
+                    success: function (data) {
+                        obj.callback(data);
+                        if (self.loadingQueue.length) {
+                            load();
+                        } else {
+                            self.isLoading = false;
+
+                            if (!self.isReady) {
+                                self.isReady = true;
+                                self.fire('ready');
+                            }
                         }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        console.log(obj.file);
                     }
                 });
             };

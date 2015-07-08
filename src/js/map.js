@@ -2,7 +2,6 @@ window.MapCell = Class.extend({
     enter: function () {
 
     },
-    dungeonLevel: 0,
     className: '',
     type: '',
     x: 0,
@@ -13,14 +12,14 @@ window.MapCell = Class.extend({
     constructor: function (props) {
         this.x = props.x;
         this.y = props.y;
-        this.className = props.className || 'wall';
-        this.type = props.type;
+        this.className = props.type || 'wall';
+        this.type = props.type || 'wall';
         this.index = props.index;
         this.map = props.map;
-        if(props.data){
+        if (props.data) {
             this.data = _.clone(props.data, true);
-        }else {
-            this.data={};
+        } else {
+            this.data = {};
         }
 
     },
@@ -37,10 +36,20 @@ window.MapCell = Class.extend({
     }
 });
 
-var MapCellClasses = {};
+var MapCellClasses = {
+    Entry: MapCell.extend({
+         constructor: function(props){
+             this._super(props);
+             this.className='entry';
+         }
+    })
+};
 
 
 var Map = Class.extend({
+    clearCell: function (x, y) {
+        this.matrix[y][x] = new MapCell(this.matrix[y][x]);
+    },
     /**
      * Возвращает ячейку которая не является стеной или false
      *
@@ -53,7 +62,7 @@ var Map = Class.extend({
             return false;
         }
         var cell = this.matrix[y][x];
-        if (cell.className == 'wall') {
+        if (cell.type == 'wall') {
             return false;
         }
         return cell;
@@ -91,13 +100,13 @@ var Map = Class.extend({
         //this.matrix = data.matrix;
         var newMatrix = [];
         var i = 0;
-        var self=this;
+        var self = this;
 
         this.location = data.location;
         this.backgroundClassName = data.backgroundClassName;
         this.entryX = data.entryX;
         this.entryY = data.entryY;
-        this.dungeonLevel=data.dungeonLevel;
+        this.dungeonLevel = data.dungeonLevel;
 
         _.eachMatrix(data.matrix, function (cell, x, y) {
 
@@ -111,7 +120,6 @@ var Map = Class.extend({
                 x: x,
                 y: y,
                 type: cell.type,
-                className: cell.className,
                 map: self,
                 data: cell.data,
                 index: i
@@ -119,26 +127,21 @@ var Map = Class.extend({
 
             i++;
         });
-        this.width=newMatrix[0].length;
-        this.height=newMatrix.length;
+        this.width = newMatrix[0].length;
+        this.height = newMatrix.length;
 
-
-        var entry = newMatrix[data.entryY][data.entryX];
-        entry.className = 'entry';
-        newMatrix[entry.y][entry.x] = new MapCell(entry);
 
         this.matrix = newMatrix;
     },
     toJSON: function () {
         var cells = [];
         this.eachCell(function (cell, x, y) {
-            if (cell.className != 'wall') {
+            if (cell.type != 'wall') {
                 var obj = {
                     index: cell.index,
-                    className: cell.className,
                     type: cell.type
                 };
-                var cellClass=cell.getClass();
+                var cellClass = cell.getClass();
                 if (MapCellClasses[cellClass]) {
                     obj.class = cellClass;
                 }
@@ -149,16 +152,19 @@ var Map = Class.extend({
             }
         });
         return {
-            width: this.matrix[0].length,
-            height: this.matrix.length,
+            entryY: this.entryY,
+            entryX: this.entryX,
+            width: this.width,
+            height: this.height,
             location: this.location,
-            cells: cells
+            cells: cells,
+            dungeonLevel: this.dungeonLevel
         }
     }
 });
 
 
-Map.predefined={};
+Map.predefined = {};
 
 Map.createMatrix = function (width, height) {
     var result = [];
@@ -173,25 +179,20 @@ Map.createMatrix = function (width, height) {
 
 Map.fromJSON = function (data) {
     var matrix = Map.createMatrix(data.width, data.height);
-    var entryX, entryY;
+
 
     _.each(data.cells, function (cell) {
         var y = cell.index / data.width | 0;
         var x = cell.index % data.width;
-
         matrix[y][x] = cell;
-        if (cell.className == 'entry') {
-            entryX = x;
-            entryY = y;
-        }
     });
 
     return new Map({
         matrix: matrix,
         location: data.location,
         //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
-        entryX: entryX,
-        entryY: entryY,
+        entryX: data.entryX,
+        entryY: data.entryY,
         dungeonLevel: data.dungeonLevel
     });
 }
