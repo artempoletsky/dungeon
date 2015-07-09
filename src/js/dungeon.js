@@ -1,7 +1,7 @@
 $(function () {
 
     Math.sign = function (val) {
-        if(val==0){
+        if (val == 0) {
             return 0;
         }
         return val / Math.abs(val);
@@ -40,9 +40,9 @@ $(function () {
         pathFindingActive: true,
         pathFindingMoveSpeed: 300,
         mapCellClick: function (e) {
-            var $cell=$(e.currentTarget);
+            var $cell = $(e.currentTarget);
 
-            if($cell.hasClass('no_vision')){
+            if ($cell.hasClass('no_vision')) {
                 return;
             }
             var index = $cell.attr('index') * 1;
@@ -57,31 +57,42 @@ $(function () {
             var sdx = Math.sign(x - self.x);
             var sdy = Math.sign(y - self.y);
 
-            var canMove=function(){
-                if(!self.pathFindingActive){
+            var canMove = function () {
+                if (!self.pathFindingActive) {
                     return false;
                 }
-                var dx=Math.abs(x-self.x);
-                var dy=Math.abs(y-self.y);
-                if(!dx&&!dy){
+                var dx = Math.abs(x - self.x);
+                var dy = Math.abs(y - self.y);
+
+                if (!dx && !dy) {
                     return false;
                 }
 
-                if (dx>dy) {
-                    if (self.map.getMovableCell(self.x + sdx, self.y)) {
-                        return 'x'
+                var canMoveX=self.map.getMovableCell(self.x + sdx, self.y);
+                var canMoveY=self.map.getMovableCell(self.x, self.y + sdy);
+
+                if(!canMoveX){
+                    if(canMoveY){
+                        return 'y';
+                    }
+                }else if(!canMoveY){
+                    if(canMoveX){
+                        return 'x';
                     }
                 }else {
-                    if (self.map.getMovableCell(self.x, self.y + sdy)) {
+                    if(dx>dy){
+                        return 'x';
+                    }else {
                         return 'y';
                     }
                 }
+
                 return false;
             }
-            _.whileAsync(canMove, function(callback, axis){
-                if(axis=='x'){
+            _.whileAsync(canMove, function (callback, axis) {
+                if (axis == 'x') {
                     self.move(self.x + sdx, self.y);
-                }else {
+                } else {
                     self.move(self.x, self.y + sdy);
                 }
                 setTimeout(callback, self.pathFindingMoveSpeed);
