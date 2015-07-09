@@ -3,12 +3,12 @@ var Quest = Events.extend({
         this._super();
         if (data) {
             this.journal = data.journal;
+        }else {
+            this.journal=[];
         }
-    },
-    prepareMap: function (map) {
 
     },
-    prepareDialog: function (npc, dialog) {
+    prepareMap: function (map) {
 
     },
     name: '',
@@ -28,7 +28,6 @@ var Quest = Events.extend({
     moveToStage: function (stageID) {
         var stage = this.stages[stageID];
         this.journal.push(stageID);
-        console.log(this.journal);
         stage.action.call(this);
     },
     toJson: function () {

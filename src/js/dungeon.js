@@ -86,9 +86,6 @@ $(function () {
             }
 
 
-            if (nextCell.className == 'entry') {
-                context = this.entryContext;
-            }
 
             this.setContext(context);
 
@@ -198,11 +195,7 @@ $(function () {
         y: 0,
         matrix: undefined,
 
-        entryContext: {
-            exit_from_dungeon: function () {
-                this.finish();
-            }
-        },
+
         onContextClick: function (e) {
             var name = $(e.currentTarget).data('name');
             this.contextAction[name].call(this);

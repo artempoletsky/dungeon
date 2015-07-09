@@ -41,7 +41,15 @@ var MapCellClasses = {
          constructor: function(props){
              this._super(props);
              this.className='entry';
-         }
+         },
+        context: {
+            exit_from_dungeon: function () {
+                Dungeon.finish();
+            }
+        },
+        enter: function(){
+            return this.context;
+        }
     })
 };
 
