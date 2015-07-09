@@ -37,10 +37,19 @@ $(function () {
             //'key:d': 'right',
             'key:arrowright': 'right'
         },
-        pathFindingActive: true,
+        pathFindingActive: false,
+        pathFindingPause: false,
         pathFindingMoveSpeed: 300,
         mapCellClick: function (e) {
+            if(this.pathFindingPause){
+                return;
+            }
+            if(this.pathFindingActive){
+                return;
+            }
+
             var $cell = $(e.currentTarget);
+
 
             if ($cell.hasClass('no_vision')) {
                 return;
@@ -89,13 +98,18 @@ $(function () {
 
                 return false;
             }
+            this.pathFindingActive=true;
             _.whileAsync(canMove, function (callback, axis) {
                 if (axis == 'x') {
                     self.move(self.x + sdx, self.y);
                 } else {
                     self.move(self.x, self.y + sdy);
                 }
+                //callback();
                 setTimeout(callback, self.pathFindingMoveSpeed);
+            }, function(){
+                //console.log('finish');
+                self.pathFindingActive=false;
             });
 
         },
