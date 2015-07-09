@@ -1,5 +1,11 @@
 $(function () {
 
+    Math.sign = function (val) {
+        if(val==0){
+            return 0;
+        }
+        return val / Math.abs(val);
+    }
     window.Dungeon = ViewModel.create({
         el: '.dungeon',
         shortcuts: {
@@ -20,6 +26,7 @@ $(function () {
         },
         events: {
             'click .context button': 'onContextClick',
+            'click .map_cell': 'mapCellClick',
             //'key:w': 'up',
             'key:arrowup': 'up',
             'key:shift+s': 'quickSave',
@@ -30,10 +37,61 @@ $(function () {
             //'key:d': 'right',
             'key:arrowright': 'right'
         },
-        quickSave: function(){
+        pathFindingActive: true,
+        pathFindingMoveSpeed: 300,
+        mapCellClick: function (e) {
+            var $cell=$(e.currentTarget);
+
+            if($cell.hasClass('no_vision')){
+                return;
+            }
+            var index = $cell.attr('index') * 1;
+            var w = this.map.width;
+            var x = index % w;
+            var y = index / w | 0;
+
+            if (!this.map.getMovableCell(x, y)) {
+                return;
+            }
+            var self = this;
+            var sdx = Math.sign(x - self.x);
+            var sdy = Math.sign(y - self.y);
+
+            var canMove=function(){
+                if(!self.pathFindingActive){
+                    return false;
+                }
+                var dx=Math.abs(x-self.x);
+                var dy=Math.abs(y-self.y);
+                if(!dx&&!dy){
+                    return false;
+                }
+
+                if (dx>dy) {
+                    if (self.map.getMovableCell(self.x + sdx, self.y)) {
+                        return 'x'
+                    }
+                }else {
+                    if (self.map.getMovableCell(self.x, self.y + sdy)) {
+                        return 'y';
+                    }
+                }
+                return false;
+            }
+            _.whileAsync(canMove, function(callback, axis){
+                if(axis=='x'){
+                    self.move(self.x + sdx, self.y);
+                }else {
+                    self.move(self.x, self.y + sdy);
+                }
+                setTimeout(callback, self.pathFindingMoveSpeed);
+            });
+
+        },
+        quickSave: function () {
             Player.quickSave();
         },
-        quickLoad: function(){
+        quickLoad: function () {
             Player.quickLoad();
         },
         hotkeys: 'shift+s shift+l',
@@ -98,7 +156,6 @@ $(function () {
             }
 
 
-
             this.setContext(context);
 
 
@@ -117,7 +174,7 @@ $(function () {
             }
 
             Player.currentDungeon = undefined;
-           // $('body').off('keyup', this.onKeyUp);
+            // $('body').off('keyup', this.onKeyUp);
             WorldMap.$el.show();
 
             this.fire('finish');

@@ -25,6 +25,7 @@ $(function () {
 
             if (answerObject.exit) {
                 HotKeys.focus(Dungeon);
+                Dungeon.pathFindingActive=true;
                 this.$el.hide();
                 MainMenu.canSave = true;
                 Player.getSaveData('dialogs')[this.dialogID]={
@@ -73,6 +74,7 @@ $(function () {
         start: function (dialogID) {
             this.dialogID = dialogID;
             MainMenu.canSave = false;
+            Dungeon.pathFindingActive=false;
 
             var dialog = this.dialog = Player.getSaveData('dialogs')[dialogID] || Dialogs.list[dialogID];
 
