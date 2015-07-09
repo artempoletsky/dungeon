@@ -46,14 +46,14 @@ MapCellClasses.Monster = MapCell.extend({
     },
     enter: function () {
         this.className = this.type;
-        Dungeon.pauseKeyboardEvents = true;
+
         Dungeon.$el.hide();
         var className = Dungeon.map.backgroundClassName;
-
+        HotKeys.focus(Battlefield);
         Battlefield.one('endFight', function (e) {
             Dungeon.clearCell(Dungeon.x, Dungeon.y);
             Dungeon.$el.show();
-            Dungeon.pauseKeyboardEvents = false;
+            HotKeys.focus(Dungeon);
         });
 
         Battlefield.fight(this.monstersParty, className);

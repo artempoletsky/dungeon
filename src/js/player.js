@@ -41,6 +41,10 @@ var Player = Events.create({
 
 
         var save = this.getSaves()[index];
+        if(!save){
+            return;
+        }
+
         this.currentSave = save;
 
         this.fire('load');
@@ -86,22 +90,42 @@ var Player = Events.create({
         this.saves = saves;
         return saves;
     },
-    saveGame: function (index, name) {
-        var saves = this.getSaves();
+    quickSave: function () {
+        var save = this.prepareSave();
+        save.name = 'Quick save';
+        save.isQuickSave = true;
+        var index = _.findIndex(this.getSaves(), 'isQuickSave', true);
+        this.saveObject(save, index);
+    },
+    quickLoad: function () {
+        this.loadGame(_.findIndex(this.getSaves(), 'isQuickSave', true));
+    },
 
+    prepareSave: function () {
         var save = JSON.parse(JSON.stringify(this.currentSave));
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
+        return save;
+    },
+    saveObject: function (object, index) {
 
-        save.name = name;
+        var saves = this.getSaves();
+
+        if(index==-1){
+            index=undefined;
+        }
 
         if (index !== undefined) {
-            saves[index] = save;
+            saves[index] = object;
         } else {
-            saves.push(save);
+            saves.push(object);
         }
         localStorage.saves = JSON.stringify(saves);
-
+    },
+    saveGame: function (index, name) {
+        var save = this.prepareSave();
+        save.name = name;
+        this.saveObject(save, index);
     }
 });

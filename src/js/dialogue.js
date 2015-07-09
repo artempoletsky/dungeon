@@ -24,7 +24,7 @@ $(function () {
 
 
             if (answerObject.exit) {
-                Dungeon.pauseKeyboardEvents = false;
+                HotKeys.focus(Dungeon);
                 this.$el.hide();
                 MainMenu.canSave = true;
                 Player.getSaveData('dialogs')[this.dialogID]={
@@ -76,7 +76,7 @@ $(function () {
 
             var dialog = this.dialog = Player.getSaveData('dialogs')[dialogID] || Dialogs.list[dialogID];
 
-            Dungeon.pauseKeyboardEvents = true;
+            HotKeys.focus(this);
             this.$el.show();
             this.answers = [dialog.answers.slice(0)];
             this.dialogDepth = 0;

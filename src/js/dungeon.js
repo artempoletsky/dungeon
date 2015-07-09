@@ -19,13 +19,26 @@ $(function () {
             39: 'right'
         },
         events: {
-            'click .context button': 'onContextClick'
+            'click .context button': 'onContextClick',
+            //'key:w': 'up',
+            'key:arrowup': 'up',
+            'key:shift+s': 'quickSave',
+            'key:shift+l': 'quickLoad',
+            'key:arrowdown': 'down',
+            //'key:a': 'left',
+            'key:arrowleft': 'left',
+            //'key:d': 'right',
+            'key:arrowright': 'right'
         },
+        quickSave: function(){
+            Player.quickSave();
+        },
+        quickLoad: function(){
+            Player.quickLoad();
+        },
+        hotkeys: 'shift+s shift+l',
         initialize: function () {
-            var self = this;
-            Player.on('load newGame', function () {
-                $('body').off('keyup', this.onKeyUp);
-            });
+
         },
         cellSize: 50,
         cellsVisible: 4,
@@ -60,7 +73,6 @@ $(function () {
         markVisible: function (cell) {
             this.get$Cell(cell).attr('class', 'map_cell ' + cell.className);
         },
-        pauseKeyboardEvents: false,
 
         clearCell: function (x, y) {
             this.map.clearCell(x, y);
@@ -97,15 +109,7 @@ $(function () {
             this.render();
 
         },
-        onKeyUp: function (e) {
-            if (Dungeon.pauseKeyboardEvents)
-                return;
-            var fnName = Dungeon.keys[e.keyCode];
-            if (fnName) {
-                //console.log(fnName);
-                Dungeon[fnName]();
-            }
-        },
+
         finish: function () {
             this.$el.hide();
             if (this.saveOnExit) {
@@ -113,7 +117,7 @@ $(function () {
             }
 
             Player.currentDungeon = undefined;
-            $('body').off('keyup', this.onKeyUp);
+           // $('body').off('keyup', this.onKeyUp);
             WorldMap.$el.show();
 
             this.fire('finish');
@@ -145,11 +149,14 @@ $(function () {
         start: function (map) {
             this.startFrom(map, map.entryX, map.entryY);
         },
+
         startFrom: function (map, x, y) {
+
+            HotKeys.focus(this);
             this.$el.show();
             Player.currentDungeon = this;
             this.map = map;
-            $('body').on('keyup', this.onKeyUp);
+            //$('body').on('keyup', this.onKeyUp);
 
             this.playerParty = Player.party;
 
