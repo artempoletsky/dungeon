@@ -94,14 +94,6 @@ $(function () {
                 }
             }
         ],
-        onKeyUp: function (e) {
-
-            if (e.key == "F4") {
-                if (this.$el.css('display') != 'block') {
-                    this.show(true);
-                }
-            }
-        },
         show: function (isPause) {
             this.isPause = isPause;
             if (isPause) {
@@ -137,9 +129,7 @@ $(function () {
                 self.$load = self.$('.load_game');
                 self.$continue = self.$('.continue_game');
                 self.show();
-                $('body').on('keyup', function (e) {
-                    self.onKeyUp(e);
-                });
+
             });
         }
     });

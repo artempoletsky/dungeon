@@ -187,11 +187,12 @@ $(function () {
                     ctx.fillRect(cellSize * x, cellSize * y, cellSize, cellSize);
                 }
             });
-            this.automapSave = data.automap;
+
+            this.automapSave = _.clone(data.automap);
         },
         save: function () {
             return {
-                automap: this.automapSave,
+                automap: _.clone(this.automapSave),
                 map: this.map.toJSON(),
                 x: this.x,
                 y: this.y

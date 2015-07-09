@@ -57,8 +57,7 @@ var Player = Events.create({
         });
         save.party = party;
 
-        WorldMap.$el.hide();
-        Dungeon.$el.hide();
+        $('.scene').hide();
 
         if (save.dungeon) {
             Dungeon.load(save.dungeon);
