@@ -565,4 +565,12 @@ path:hover {
     cursor: pointer;
     margin-bottom: 10px;
     border-bottom: 1px solid #fff;
+    position: relative;
+}
+
+.saves .date{
+    position: absolute;
+    right: 5px;
+    top: 3px;
+    font-size: 14px;
 }

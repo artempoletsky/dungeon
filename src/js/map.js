@@ -1,3 +1,14 @@
+Class.getClass = function (self, hash, defaultValue) {
+    var result = defaultValue;
+    _.each(hash, function (constructor, name) {
+        if (self instanceof constructor) {
+            result = name;
+            return false;
+        }
+    });
+    return result;
+};
+
 window.MapCell = Class.extend({
     enter: function () {
 
@@ -24,30 +35,22 @@ window.MapCell = Class.extend({
 
     },
     getClass: function () {
-        var result = 'MapCell';
-        var self = this;
-        _.each(MapCellClasses, function (constructor, name) {
-            if (self instanceof constructor) {
-                result = name;
-                return false;
-            }
-        });
-        return result;
+        return Class.getClass(this, MapCellClasses, 'MapCell');
     }
 });
 
 var MapCellClasses = {
     Entry: MapCell.extend({
-         constructor: function(props){
-             this._super(props);
-             this.className='entry';
-         },
+        constructor: function (props) {
+            this._super(props);
+            this.className = 'entry';
+        },
         context: {
             exit_from_dungeon: function () {
                 Dungeon.finish();
             }
         },
-        enter: function(){
+        enter: function () {
             return this.context;
         }
     })

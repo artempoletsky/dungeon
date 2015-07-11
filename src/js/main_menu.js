@@ -44,8 +44,18 @@ $(function () {
             }
 
             var $list = this.$savesList.empty();
+            var add0 = function (val) {
+                return (val < 10) ? '0' + val : val;
+            };
             _.each(Player.getSaves(), function (save, index) {
-                $list.append('<li>' + save.name + '</li>')
+                var date = save.date;
+                var dateStr = add0(date.getHours()) + ':'
+                    + add0(date.getMinutes()) + ':'
+                    + add0(date.getSeconds()) + ' '
+                    + add0(date.getDate()) + '/'
+                    + add0(date.getMonth()) + '/'
+                    + date.getFullYear();
+                $list.append('<li>' + save.name + ' <span class="date">' + dateStr + '</span></li>')
             });
         },
         runAction: function (e) {
@@ -57,6 +67,9 @@ $(function () {
                 text: 'continue_game',
                 action: function () {
                     if (this.isPause) {
+                        this.$el.hide();
+                    }else {
+                        Player.loadGame(0);
                         this.$el.hide();
                     }
                 }

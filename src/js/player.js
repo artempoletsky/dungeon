@@ -41,7 +41,7 @@ var Player = Events.create({
 
 
         var save = this.getSaves()[index];
-        if(!save){
+        if (!save) {
             return;
         }
 
@@ -80,14 +80,22 @@ var Player = Events.create({
     getSaves: function () {
         var saves = this.saves;
         if (!saves) {
-            if (localStorage.saves)
+            if (localStorage.saves) {
                 saves = JSON.parse(localStorage.saves);
+
+            }
+
         }
         if (!saves) {
             saves = [];
         }
-        this.saves = saves;
-        return saves;
+        this.saves = _.sortBy(saves, function (save) {
+            if(!save.date.getTime){
+                save.date = new Date(save.date);
+            }
+            return -save.date.getTime();
+        });;
+        return this.saves;
     },
     quickSave: function () {
         var save = this.prepareSave();
@@ -102,6 +110,7 @@ var Player = Events.create({
 
     prepareSave: function () {
         var save = JSON.parse(JSON.stringify(this.currentSave));
+        save.date = new Date();
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
@@ -111,14 +120,15 @@ var Player = Events.create({
 
         var saves = this.getSaves();
 
-        if(index==-1){
-            index=undefined;
+
+        if (index == -1) {
+            index = undefined;
         }
 
         if (index !== undefined) {
             saves[index] = object;
         } else {
-            saves.push(object);
+            saves.unshift(object);
         }
         localStorage.saves = JSON.stringify(saves);
     },
