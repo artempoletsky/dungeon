@@ -1,7 +1,7 @@
 Class.getClass = function (self, hash, defaultValue) {
     var result = defaultValue;
     _.each(hash, function (constructor, name) {
-        if (self instanceof constructor) {
+        if (self.constructor === constructor) {
             result = name;
             return false;
         }

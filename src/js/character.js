@@ -80,7 +80,7 @@ var Character = Model.extend({
         });
         return Math.round(totalDamage);
     },
-    dealDamage: function (damageMin, damageMax, caster, critChance) {
+    receiveDamage: function (damageMin, damageMax, caster, critChance) {
 
         var self = this;
 

@@ -17,31 +17,57 @@ var Spell = Class.extend({
     canBeBlocked: true,
     availableForPlayer: true,
 
-    getAttack: function (caster_character) {
-        var spell = (10 + this.level) / 15;
-        return Math.round(caster_character.getBaseAttack()*spell);
+    character: undefined,
+
+    constructor: function (character) {
+        this.character = character;
+        this.exp = 0;
+        this.level = 1;
     },
-    getMinDamage: function (caster_character, target_character) {
+
+    levelUp: function () {
+        this.level++;
+    },
+
+    getAttack: function () {
+        var spell = (10 + this.level) / 15;
+        return Math.round(this.character.getBaseAttack() * spell);
+    },
+    getMinDamage: function (target_character) {
+        var caster_character = this.character;
         return caster_character.equipment.prop('weapon').getMinDamage(caster_character, target_character);
     },
-    getMaxDamage: function (caster_character, target_character) {
+    getMaxDamage: function (target_character) {
+        var caster_character = this.character;
         return caster_character.equipment.prop('weapon').getMaxDamage(caster_character, target_character);
     },
-    computeHitChance: function (caster_character, target_character, isFinal) {
+    computeHitChance: function (target_character, isFinal) {
+
         var dodge = 0;
+        var defSkill = 'dodge';
+
         if (this.canBeDodged) {
             dodge = target_character.prop('dodge') || 0;
         }
-        var isParry = false;
-        if (this.canParry) {
+
+        if (this.canBeParried) {
             var parry = target_character.prop('parry') || 0;
             if (parry > dodge) {
                 dodge = parry;
-                isParry = true;
+                defSkill = 'parry';
             }
         }
 
-        var attack = this.getAttack(caster_character);
+        if(this.canBeBlocked){
+            var block = target_character.prop('block') || 0;
+            if (block > dodge) {
+                dodge = block;
+                defSkill = 'block';
+            }
+        }
+
+
+        var attack = this.getAttack();
 
 
         if (!isFinal) {
@@ -54,7 +80,7 @@ var Spell = Class.extend({
                 if (rand(100) < attack) {
                     if (dodge > rand(100)) {
 
-                        return isParry ? 'parry' : 'dodge';
+                        return defSkill;
                     }
                     return 'hit';
                 } else {
@@ -64,25 +90,30 @@ var Spell = Class.extend({
                 if (rand(100) < attack - dodge) {
                     return 'hit';
                 } else {
-                    return isParry ? 'parry' : 'dodge';
+                    return defSkill;
                 }
             }
         }
 
 
     },
-    invoke: function (caster_character, target_character, callback) {
-        var hitResult = this.computeHitChance(caster_character, target_character, true);
-        var damage;
+    invoke: function (target_characters, callback) {
 
-        if (hitResult == 'hit') {
-            damage = target_character.dealDamage(this.getMinDamage(caster_character, target_character), this.getMaxDamage(caster_character, target_character), caster_character, this.critChance);
-        } else {
-            damage = hitResult;
-        }
-        this.animate(caster_character, target_character, damage, callback);
+        var self=this;
+        var damages=[];
+        _.each(target_characters, function(char){
+            var hitResult = this.computeHitChance(char, true);
+
+            if (hitResult == 'hit') {
+                damages.push(char.receiveDamage(this.getMinDamage(char), this.getMaxDamage(char), self.character, self.critChance));
+            } else {
+                damages.push(hitResult);
+            }
+        });
+
+        this.animate(target_characters, damage, callback);
     },
-    animate: function (caster_character, target_character, damage, callback) {
+    animate: function (target_characters, damages, callback) {
         var $view = $('.hit_animation');
         $view.show();
 
@@ -99,9 +130,17 @@ var Spell = Class.extend({
             $view.hide();
             setTimeout(callback, 500);
         }, 1000);
+    },
+    getClass: function () {
+        return Class.getClass(this, Spells, 'Spell');
+    },
+    toJSON: function () {
+        return {
+            class: this.getClass()
+
+        }
     }
 });
-
 
 
 var Spells = {

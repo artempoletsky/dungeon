@@ -311,12 +311,8 @@ $(function () {
                 var spell = this.currentCharacter.spells[this.activeSpell];
                 var chanceToHit = spell.computeHitChance(this.currentCharacter, character, false);
 
-                var minDamage = _.foldl(spell.getMinDamage(this.currentCharacter, character), function (sum, damage, type) {
-                    return sum + damage;
-                }, 0);
-                var maxDamage = _.foldl(spell.getMaxDamage(this.currentCharacter, character), function (sum, damage, type) {
-                    return sum + damage;
-                }, 0);
+                var minDamage =  character.computeDamage(spell.getMinDamage(character), this.currentCharacter);
+                var maxDamage = character.computeDamage(spell.getMaxDamage(character), this.currentCharacter);
 
                 this.$info.append(this.generateInfoRow('Attack', spell.getAttack(this.currentCharacter)));
                 this.$info.append(this.generateInfoRow('Chance to hit', chanceToHit + '%'));
