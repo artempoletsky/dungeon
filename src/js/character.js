@@ -58,8 +58,7 @@ var Character = Model.extend({
         return Math.round(Character.ATTACK_CAP * agility * perception * weaponModifier);
     },
     invokeSpell: function (spell_id, target_character, callback) {
-        this.propAdd('actionPoints', -this.spells[spell_id].cost);
-        this.spells[spell_id].invoke(this, target_character, callback);
+
     },
     reset: function () {
         this.prop('health', this.prop('maxHealth'));

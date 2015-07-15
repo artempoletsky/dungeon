@@ -16,7 +16,7 @@ var Player = Events.create({
                 }, {
                     weapon: new Weapon(13, 20)
                 });
-                this.spells = [new Spells.Hit()];
+                this.spells = [new Spells.Hit(this)];
                 this.enemy = false;
                 this.prop({
                     attributesPoints: 5,

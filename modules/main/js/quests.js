@@ -24,7 +24,7 @@ Quest.hash.gallican_join = Quest.extend({
             }, {
                 weapon: new Weapon(13, 20)
             });
-            this.spells = [new Spells.Hit()];
+            this.spells = [new Spells.Hit(this)];
             this.enemy = false;
             /*
              this.prop({

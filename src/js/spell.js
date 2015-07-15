@@ -20,6 +20,9 @@ var Spell = Class.extend({
     character: undefined,
 
     constructor: function (character) {
+        if(!(character instanceof Character)){
+            throw new TypeError('Character for spell is not defined');
+        }
         this.character = character;
         this.exp = 0;
         this.level = 1;
@@ -97,31 +100,44 @@ var Spell = Class.extend({
 
 
     },
+
+    subtractAP: function(){
+        this.character.propAdd('actionPoints', -this.cost);
+    },
     invoke: function (target_characters, callback) {
 
+        if(!target_characters.length){
+            throw  new TypeError('target_characters must be an array');
+        }
+        this.subtractAP();
         var self=this;
         var damages=[];
         _.each(target_characters, function(char){
-            var hitResult = this.computeHitChance(char, true);
+            var hitResult = self.computeHitChance(char, true);
 
             if (hitResult == 'hit') {
-                damages.push(char.receiveDamage(this.getMinDamage(char), this.getMaxDamage(char), self.character, self.critChance));
+                damages.push(char.receiveDamage(self.getMinDamage(char), self.getMaxDamage(char), self.character, self.critChance));
             } else {
                 damages.push(hitResult);
             }
         });
 
-        this.animate(target_characters, damage, callback);
+
+
+        this.animate(target_characters, damages, callback);
     },
     animate: function (target_characters, damages, callback) {
         var $view = $('.hit_animation');
         $view.show();
 
+        ///todo implement
+
+        /*
         if (damage.damage) {
             damage = damage.damage.physical;
         }
 
-        $view.find('.damage').html(damage);
+        $view.find('.damage').html(damage);*/
 
 
         setTimeout(function () {
@@ -147,7 +163,8 @@ var Spells = {
     Hit: Spell.extend({}),
     Bite: Spell.extend({
         availableForPlayer: false,
-        constructor: function (minDamage, maxDamage) {
+        constructor: function (character, minDamage, maxDamage) {
+            this._super(character);
             this.minDamage = minDamage;
             this.maxDamage = maxDamage;
         },

@@ -24,7 +24,7 @@ var CharacterAI = Class.extend({
         }, function (callback) {
             var target = Battlefield.playerParty[0];
             if (target) {
-                self.invokeSpell(i, target, callback);
+                self.spells[i].invoke([target], callback);
             }
         }, callback);
     }

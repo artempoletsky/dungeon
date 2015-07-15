@@ -282,7 +282,8 @@ $(function () {
         onSpellInvoke: function (e) {
             var target = this.getCharacter($(e.currentTarget));
             var self = this;
-            this.playerCharacter.invokeSpell(this.activeSpell, target, function () {
+            //TODO implement aoe
+            this.playerCharacter.spells[this.activeSpell].invoke([target], function () {
                 if (self.playerCharacter.prop('actionPoints') == 0) {
                     self.endTurn();
                 }
@@ -309,7 +310,7 @@ $(function () {
 
             if (character.enemy && this.activeSpell !== undefined) {
                 var spell = this.currentCharacter.spells[this.activeSpell];
-                var chanceToHit = spell.computeHitChance(this.currentCharacter, character, false);
+                var chanceToHit = spell.computeHitChance(character, false);
 
                 var minDamage =  character.computeDamage(spell.getMinDamage(character), this.currentCharacter);
                 var maxDamage = character.computeDamage(spell.getMaxDamage(character), this.currentCharacter);
