@@ -1,4 +1,14 @@
 var Equipment = Model.extend({
+    constructor: function(data){
+        this._super(_.mapValues(data, function(itemData){
+            if(itemData.id){
+                return Equipment.get(itemData.id, itemData.mod);
+            }else {
+                return Equipment.get(itemData);
+            }
+
+        }))
+    },
     defaults: {
         armor: undefined,
         weapon: undefined

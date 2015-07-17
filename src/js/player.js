@@ -14,7 +14,7 @@ var Player = Events.create({
                     speed: 5,
                     perception: 5
                 }, {
-                    weapon: Equipment.get('rusty_sword')
+                    weapon: 'rusty_sword'
                 });
                 this.spells = [new Spells.Hit(this)];
                 this.enemy = false;
@@ -42,12 +42,13 @@ var Player = Events.create({
 
         var save = this.getSaves()[index];
         if (!save) {
-            return;
+            throw new Error('can not find save with index');
         }
 
-        this.currentSave = save;
+        this.currentSave = _.cloneDeep(save);
 
         this.fire('load');
+
 
         var party = this.party = [];
         _.each(save.party, function (data) {
@@ -57,7 +58,8 @@ var Player = Events.create({
 
             party.push(char);
         });
-        save.party = party;
+
+        //save.party = party;
 
         $('.scene').hide();
 
@@ -97,7 +99,6 @@ var Player = Events.create({
             }
             return -save.date.getTime();
         });
-        ;
         return this.saves;
     },
     quickSave: function () {
@@ -112,6 +113,7 @@ var Player = Events.create({
     },
 
     prepareSave: function () {
+        this.currentSave.party = this.party;
         var save = JSON.parse(JSON.stringify(this.currentSave));
         save.date = new Date();
         if (this.currentDungeon) {

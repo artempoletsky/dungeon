@@ -22,7 +22,7 @@ Quest.hash.gallican_join = Quest.extend({
                 speed: 5,
                 perception: 5
             }, {
-                weapon: Equipment.get('rusty_sword')
+                weapon: 'rusty_sword'
             });
             this.spells = [new Spells.Hit(this)];
             this.enemy = false;
