@@ -1,0 +1,13 @@
+{
+    "rusty_sword": {
+        "class": "Weapon",
+        "minDamage": {
+            "physical": 30
+        },
+        "maxDamage": {
+            "physical": 45
+        },
+        "attackModifier": 1,
+        "strengthNeeded": 5
+    }
+}

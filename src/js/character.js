@@ -1,7 +1,6 @@
 var Character = Model.extend({
     size: 1,
     statsBase: undefined,
-    equipment: undefined,
     statuses: undefined,
     spells: undefined,
     name: undefined,
@@ -43,23 +42,7 @@ var Character = Model.extend({
         this.name = name;
         this.reset();
     },
-    getBaseAttack: function () {
-        var attrCap = Character.ATTRIBUTE_CAP;
-        var agility = (this.prop('agility') / attrCap) * 0.6+ 0.4;
-        var perception = (this.prop('perception') / attrCap) * 0.25 + 0.75;
-        var weapon = this.equipment.prop('weapon');
-        var weaponModifier;
-        if (weapon) {
-            weaponModifier = weapon.getAttackModifier(this);
-        } else {
-            weaponModifier = 1;
-        }
 
-        return Math.round(Character.ATTACK_CAP * agility * perception * weaponModifier);
-    },
-    invokeSpell: function (spell_id, target_character, callback) {
-
-    },
     reset: function () {
         this.prop('health', this.prop('maxHealth'));
     },
@@ -88,7 +71,7 @@ var Character = Model.extend({
             critMult = 2;
         }
 
-        var damageRandomMod= Math.random();
+        var damageRandomMod = Math.random();
 
 
         var totalDamage = {};
@@ -136,21 +119,49 @@ Model.prototype.propMult = function (name, value) {
 };
 
 var Human = Character.extend({
+    getBaseAttack: function () {
+        var attrCap = Character.ATTRIBUTE_CAP;
+        var agility = (this.prop('agility') / attrCap) * 0.6 + 0.4;
+        var perception = (this.prop('perception') / attrCap) * 0.25 + 0.75;
+        var weapon = this.equipment.prop('weapon');
+        var weaponModifier;
+        if (weapon) {
+            weaponModifier = weapon.getAttackModifier(this);
+        } else {
+            weaponModifier = 1;
+        }
+
+        return Math.round(Character.ATTACK_CAP * agility * perception * weaponModifier);
+    },
+    equipment: undefined,
     constructor: function (name, base_stats, equipment) {
         this._super(name, base_stats);
         this.equipment = new Equipment(equipment);
     },
     reset: function () {
         this.prop('maxHealth', this.prop('strength') * 5 + 10);
-        this.prop('dodge',  this.prop('agility') * 2);
+        this.prop('dodge', this.prop('agility') * 2);
         this._super();
     },
-    toJSON: function(){
+    toJSON: function () {
         return {
             name: this.name,
             attributes: this._super(),
-            equipment: this.equipment.toJSON()
+            equipment: this.equipment.toJSON(),
+            spells: this.spells
         }
     }
 });
+
+Human.fromJSON = function (data) {
+
+
+    var result = new Human(data.name, data.attributes, data.equipment);
+
+    result.spells = _.map(data.spells, function (obj) {
+        return Spell.fromJSON(obj, result);
+    });
+
+    return result;
+};
 

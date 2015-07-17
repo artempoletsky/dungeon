@@ -158,6 +158,11 @@ var Spell = Class.extend({
     }
 });
 
+Spell.fromJSON=function(data, characrer){
+    var spell= new Spells[data.class](characrer);
+    return spell;
+};
+
 
 var Spells = {
     Hit: Spell.extend({}),

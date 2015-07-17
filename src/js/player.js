@@ -14,7 +14,7 @@ var Player = Events.create({
                     speed: 5,
                     perception: 5
                 }, {
-                    weapon: new Weapon(13, 20)
+                    weapon: Equipment.get('rusty_sword')
                 });
                 this.spells = [new Spells.Hit(this)];
                 this.enemy = false;
@@ -51,8 +51,10 @@ var Player = Events.create({
 
         var party = this.party = [];
         _.each(save.party, function (data) {
-            var char = new Human(data.name, data.attributes, data.equipment);
+
+            var char = Human.fromJSON(data);
             char.enemy = false;
+
             party.push(char);
         });
         save.party = party;
@@ -90,11 +92,12 @@ var Player = Events.create({
             saves = [];
         }
         this.saves = _.sortBy(saves, function (save) {
-            if(!save.date.getTime){
+            if (!save.date.getTime) {
                 save.date = new Date(save.date);
             }
             return -save.date.getTime();
-        });;
+        });
+        ;
         return this.saves;
     },
     quickSave: function () {
@@ -114,6 +117,7 @@ var Player = Events.create({
         if (this.currentDungeon) {
             save.dungeon = this.currentDungeon.save();
         }
+        save.mainCharacter = this.party.indexOf(this.mainCharacter);
         return save;
     },
     saveObject: function (object, index) {
@@ -130,6 +134,7 @@ var Player = Events.create({
         } else {
             saves.unshift(object);
         }
+
         localStorage.saves = JSON.stringify(saves);
     },
     saveGame: function (index, name) {

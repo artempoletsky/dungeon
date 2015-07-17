@@ -2,6 +2,7 @@
     "js": ["monster_map_cell", "monster_classes", "npc_map_cell", "quests"],
     "css": ["main"],
     "dialogs": ["dialogs"],
+    "misc": ["misc"],
     "maps": ["start"],
     "worldMap": ["main"],
     "language": {

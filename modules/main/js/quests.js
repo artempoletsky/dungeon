@@ -13,7 +13,7 @@ Quest.hash.toFreedom = Quest.extend({
 });
 
 Quest.hash.gallican_join = Quest.extend({
-    character: Human.create({
+    Character: Human.extend({
         constructor: function () {
             this._super('Anonymous', {
                 strength: 7,
@@ -22,7 +22,7 @@ Quest.hash.gallican_join = Quest.extend({
                 speed: 5,
                 perception: 5
             }, {
-                weapon: new Weapon(13, 20)
+                weapon: Equipment.get('rusty_sword')
             });
             this.spells = [new Spells.Hit(this)];
             this.enemy = false;
@@ -40,7 +40,7 @@ Quest.hash.gallican_join = Quest.extend({
             action: function () {
                 _.pull(this.journal, 'gallican_not_join');
                 Dungeon.clearCell(Dungeon.x, Dungeon.y);
-                Player.party.push(this.character);
+                Player.party.push(new this.Character());
             }
         },
         "gallican_not_join": {

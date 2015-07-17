@@ -5,60 +5,54 @@ var Equipment = Model.extend({
     }
 });
 
-var Item = Model.extend({
-    width: 1,
-    height: 1,
-    applyStats: function (character) {
 
+Equipment.get = function (id, mod) {
+    var data = _.clone(Misc[id]);
+    _.extend(data, mod);
+    var item = new MiscClasses[data.class](data);
+    item.id=id;
+    return item;
+};
+
+var MiscClasses = {};
+
+MiscClasses.Item = Class.extend({
+    constructor: function (data) {
+        this.data = data;
+    },
+    id: undefined,
+    toJSON: function () {
+        return {
+            id: this.id
+        }
     }
 });
 
-
-var Armor = Item.extend({
-
-});
-
-var Weapon = Item.extend({
-    constructor: function (minDamage, maxDamage) {
-        if (typeof  minDamage == 'number') {
-            minDamage = {
-                physical: minDamage
-            }
-        }
-        if (minDamage) {
-            this.minDamage = minDamage;
-        }
-        if (typeof  maxDamage == 'number') {
-            maxDamage = {
-                physical: maxDamage
-            }
-        }
-        if (maxDamage) {
-            this.maxDamage = maxDamage;
-        }
-    },
-    minDamage: {
-        physical: 30
-    },
-    maxDamage: {
-        physical: 45
-    },
-    attackModifier: 1,
-    strengthNeeded: 5,
+MiscClasses.Weapon = MiscClasses.Item.extend({
     getAttackModifier: function (caster_character) {
         var strength = caster_character.prop('strength');
-        if (strength >= this.strengthNeeded) {
-            return this.attackModifier;
+        var sn = this.data.strengthNeeded;
+        var aMod = this.data.attackModifier;
+        if (strength >= sn) {
+            return aMod;
         }
         var result;
         var penaltyPerPoint = 0.1;
-        result = this.attackModifier - penaltyPerPoint * (this.strengthNeeded - strength);
+        result = aMod - penaltyPerPoint * (sn - strength);
         return result;
     },
+    onHitEffects: {},
+    computeHitEffects: function () {
+
+    },
     getMinDamage: function (caster_character, target_character) {
-        return this.minDamage;
+        return this.data.minDamage;
     },
     getMaxDamage: function (caster_character, target_character) {
-        return this.maxDamage;
+        return this.data.maxDamage;
     }
 });
+
+MiscClasses.Weapon.OnHit = {};
+
+var Misc = {};

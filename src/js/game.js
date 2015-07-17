@@ -17,9 +17,9 @@ window.Game = Model.create({
             Map.predefined[file] = data;
         });
     },
-    loadDialogs: function (moduleName, file) {
+    loadAndExtend: function (moduleName, file, hash) {
         this.loadJson(moduleName, file, function (data) {
-            _.extend(Dialogs.list, data);
+            _.extend(hash, data);
         });
     },
     loadLang: function (moduleName, file, language) {
@@ -104,7 +104,11 @@ window.Game = Model.create({
             });
 
             _.each(data.dialogs, function (file) {
-                self.loadDialogs(name, file);
+                self.loadAndExtend(name, file, Dialogs.list);
+            });
+
+            _.each(data.misc, function (file) {
+                self.loadAndExtend(name, file, Misc);
             });
 
             _.each(data.language, function (language, file) {

@@ -6,7 +6,7 @@ MonsterClasses.Brigand = Human.extend({
             res_physical: 20 * level,
             res_fire: 10 * level - 10
         }, {
-            weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
+            weapon: Equipment.get('rusty_sword')
         });
         this.spells = [new Spells.Bite(this, 20, 30), new Spells.MagicSpell(this, 20, 30)];
     }
@@ -20,7 +20,7 @@ MonsterClasses.BrigandScout = Character.extend({
             res_physical: 20 * level - 20,
             res_fire: 10 * level - 10
         }, {
-            weapon: new Weapon(10 + level * 3, 15 + Math.round(level * 5))
+            weapon: Equipment.get('rusty_sword')
         });
         this.spells = [new Spells.Projectile(this)];
     }
