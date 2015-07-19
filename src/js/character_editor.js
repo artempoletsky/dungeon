@@ -7,6 +7,7 @@ $(function () {
             $expPoints: '.ce-exp_points',
             $attack: '.ce-attack',
             $dodge: '.ce-dodge',
+            $actionPoints: '.ce-actionPoints',
             $health: '.ce-health'
         },
         events: {
@@ -56,10 +57,11 @@ $(function () {
             this.recalculateDerivedStats();
         },
         recalculateDerivedStats: function(){
-            this.character.reset();
             this.$attack.html(this.character.getBaseAttack());
-            this.$health.html(this.character.prop('maxHealth'));
-            this.$dodge.html(this.character.prop('dodge'));
+            _.each(['maxHealth', 'dodge', 'apPerTurn', 'maxAP', 'startAP'], function(key){
+                this.prop(key, this.character.prop(key));
+            },this);
+
         },
         onIncClick: function (e) {
             this.changeAttribute($(e.currentTarget).prev(), 1);
@@ -81,12 +83,15 @@ $(function () {
             self.character.prop('attributesPoints', this.attributesPoints);
         },
         attributesList: ['strength', 'agility', 'perception', 'speed'],
-        show: function (isInitial) {
-            this.character = Player.mainCharacter;
+        autoParseBinds: true,
+        show: function (character, isInitial) {
+            this.character =  character||Player.mainCharacter;
             this.$el.show();
             //console.log(Spells);
             this.renderAttributes();
+            this.prop('isNotInitial', !isInitial);
             this.$name.val(this.character.name);
+
             this.revert();
         },
         savedProps: {},

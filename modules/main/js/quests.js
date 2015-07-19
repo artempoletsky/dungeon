@@ -5,6 +5,32 @@ Quest.hash.toFreedom = Quest.extend({
             description: 'quest_desc_to_freedom',
             action: function () {
                 WorldMap.setLocation('first_town_neighborhood');
+
+
+                Player.mainCharacter = Human.create({
+                    constructor: function () {
+                        this._super('Anonymous', {
+                            strength: 5,
+                            agility: 5,
+                            magic: 0,
+                            speed: 5,
+                            perception: 5
+                        }, {
+                            weapon: 'rusty_sword'
+                        });
+                        this.spells = [new Spells.Hit(this)];
+                        this.enemy = false;
+                        this.prop({
+                            attributesPoints: 5,
+                            skillPoints: 2
+                        });
+                    }
+                });
+
+                Player.party.push(Player.mainCharacter);
+
+                CharacterEditor.show(Player.mainCharacter, true);
+
                 Dungeon.startPredefined('start', 4, 16);
                 Dungeon.saveOnExit = false;
             }
@@ -15,7 +41,7 @@ Quest.hash.toFreedom = Quest.extend({
 Quest.hash.gallican_join = Quest.extend({
     Character: Human.extend({
         constructor: function () {
-            this._super('Anonymous', {
+            this._super('Gallican', {
                 strength: 7,
                 agility: 8,
                 magic: 0,

@@ -88,7 +88,7 @@
     <div class="character_editor scene">
         <div class="ce-wrap">
             <div class="ce-name">
-                <label>Имя</label> <input type="text" value="Anonymous" name="name"/>
+                <label>Имя</label> <input type="text" value="Anonymous" name="name" data-bind="attr: {disabled: isNotInitial}"/>
             </div>
             <div class="ce-attributes-wrap">
                 <h1>
@@ -105,10 +105,19 @@
                     <label>Базовая атака</label> <span class="ce-attack"></span>
                 </div>
                 <div class="ce-derived">
-                    <label>Максимум здоровья</label> <span class="ce-health"></span>
+                    <label>Максимум здоровья</label> <span nk="html: maxHealth"></span>
                 </div>
                 <div class="ce-derived">
-                    <label>Уворот</label> <span class="ce-dodge"></span>
+                    <label>Уворот</label> <span nk="html: dodge"></span>
+                </div>
+                <div class="ce-derived">
+                    <label>Очки действия за ход</label> <span nk="html: apPerTurn"></span>
+                </div>
+                <div class="ce-derived">
+                    <label>Максимум очков действия</label> <span nk="html: maxAP"></span>
+                </div>
+                <div class="ce-derived">
+                    <label>Стартовые очки действия</label> <span nk="html: startAP"></span>
                 </div>
             </div>
 

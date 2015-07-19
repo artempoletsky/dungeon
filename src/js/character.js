@@ -40,12 +40,9 @@ var Character = Model.extend({
         this.spells = [];
         this.statuses = [];
         this.name = name;
-        this.reset();
-    },
-
-    reset: function () {
         this.prop('health', this.prop('maxHealth'));
     },
+
     enoughAP: function (spell_id) {
         return this.spells[spell_id].cost <= this.prop('actionPoints');
     },
@@ -61,6 +58,24 @@ var Character = Model.extend({
             totalDamage += self._computeDamageOneType(value, self.prop('res_' + damage_type), caster.prop('pen_' + damage_type));
         });
         return Math.round(totalDamage);
+    },
+    propMods: {},
+    addMod: function (key, fn) {
+        if (!this.propMods[key]) {
+            this.propMods[key] = [];
+        }
+        this.propMods[key].push(fn);
+    },
+    prop: function (key, value) {
+        if (arguments.length === 1 && typeof key === 'string' && this.propMods[key]) {
+            var self = this;
+            return _.foldl(this.propMods[key], function (result, fn) {
+                return fn.call(self, result);
+            }, this._super(key))
+        } else {
+            return Model.prototype.prop.apply(this, arguments);
+        }
+
     },
     heal: function (value) {
         var health = this.prop('health');
@@ -145,13 +160,45 @@ var Human = Character.extend({
     },
     equipment: undefined,
     constructor: function (name, base_stats, equipment) {
+        this.computeds = _.extend({}, this.computeds, {
+            maxHealth: {
+                deps: ['strength'],
+                get: function (strength) {
+                    return  strength * 5 + 10;
+                }
+            },
+            dodge: {
+                deps: ['agility'],
+                get: function (agility) {
+                    return  agility * 2;
+                }
+            },
+            //'apPerTurn', 'maxAP', 'startAP'
+            startAP: {
+                deps: ['speed', 'perception'],
+                get: function (speed, perception) {
+                    return  Math.round((speed + perception) / 2);
+                }
+            },
+            apPerTurn: {
+                deps: ['speed'],
+                get: function (speed) {
+                    return  speed;
+                }
+            },
+            maxAP: {
+                deps: ['strength'],
+                get: function (strength) {
+                    return  strength * 2;
+                }
+            }
+        });
+        _.each(this.computeds, function(obj, name){
+            delete  base_stats[name];
+        });
+        //console.log(base_stats);
         this._super(name, base_stats);
         this.equipment = new Equipment(equipment);
-    },
-    reset: function () {
-        this.prop('maxHealth', this.prop('strength') * 5 + 10);
-        this.prop('dodge', this.prop('agility') * 2);
-        this._super();
     },
     toJSON: function () {
         return {

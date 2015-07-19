@@ -400,7 +400,7 @@ a, button {
 
 .character_editor label {
     display: inline-block;
-    width: 150px;
+    width: 200px;
 }
 
 .ce-attributes-wrap {
@@ -567,4 +567,10 @@ path:hover {
     right: 5px;
     top: 3px;
     font-size: 14px;
+}
+
+.ce-name input[disabled]{
+    border-color: transparent;
+    background: transparent;
+    color: #fff;
 }

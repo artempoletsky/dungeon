@@ -5,33 +5,8 @@ var Player = Events.create({
     newGame: function () {
         this.fire('newGame');
 
-        this.mainCharacter = Human.create({
-            constructor: function () {
-                this._super('Anonymous', {
-                    strength: 5,
-                    agility: 5,
-                    magic: 0,
-                    speed: 5,
-                    perception: 5
-                }, {
-                    weapon: 'rusty_sword'
-                });
-                this.spells = [new Spells.Hit(this)];
-                this.enemy = false;
-                this.prop({
-                    attributesPoints: 5,
-                    skillPoints: 2
-                });
-            }
-        });
-
-
-        this.party = [this.mainCharacter];
-
-        this.currentSave = {
-            party: this.party
-        };
-
+        this.party = [];
+        this.currentSave = {};
         Quest.moveToStage(Game.config.startQuest, 'start');
     },
 
