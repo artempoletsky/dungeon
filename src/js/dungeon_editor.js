@@ -105,7 +105,6 @@ $(function () {
             createMap: function (matrix) {
                 this.map = new Map({
                     matrix: matrix,
-                    //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
                     entryX: 0,
                     entryY: 0,
                     dungeonLevel: this.$level

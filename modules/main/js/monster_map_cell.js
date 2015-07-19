@@ -50,7 +50,7 @@ MapCellClasses.Monster = MapCell.extend({
         this.className = this.type;
 
         Dungeon.$el.hide();
-        var className = Dungeon.map.backgroundClassName;
+
         HotKeys.focus(Battlefield);
         Battlefield.one('endFight', function (e) {
             Dungeon.clearCell(Dungeon.x, Dungeon.y);
@@ -58,12 +58,15 @@ MapCellClasses.Monster = MapCell.extend({
             HotKeys.focus(Dungeon);
         });
 
-        Battlefield.fight(this.monstersParty, className);
+        Battlefield.fight(this.monstersParty);
     }
 });
 
 
-DungeonGenerator.mapObjects['1'].push('Monster');
+DungeonTypes.default.mapObjects.push({
+    rarity: 10,
+    object: 'Monster'
+});
 
 var MonsterClasses = {};
 

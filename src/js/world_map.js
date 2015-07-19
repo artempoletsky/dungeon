@@ -22,10 +22,11 @@ $(function () {
                 this.setLocation(id, true);
             } else {
                 var data = this.regions[id];
+                this.$el.hide();
                 if (data.map) {
-                    var self = this;
-                    this.$el.hide();
                     Dungeon.startPredefined(data.map);
+                }else {
+                    Dungeon.start(DungeonGenerator.generate(data.dungeonSize, data.locationType ,data.dungeonLevel));
                 }
             }
 

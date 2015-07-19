@@ -80,7 +80,6 @@ var Map = Class.extend({
     },
     matrix: undefined,
     location: undefined,
-    backgroundClassName: undefined,
     entryX: 0,
     entryY: 0,
     dungeonLevel: 0,
@@ -114,7 +113,6 @@ var Map = Class.extend({
         var self = this;
 
         this.location = data.location;
-        this.backgroundClassName = data.backgroundClassName;
         this.entryX = data.entryX;
         this.entryY = data.entryY;
         this.dungeonLevel = data.dungeonLevel;
@@ -201,7 +199,6 @@ Map.fromJSON = function (data) {
     return new Map({
         matrix: matrix,
         location: data.location,
-        //backgroundClassName: this.backgroundImages[rand(this.backgroundImages.length)],
         entryX: data.entryX,
         entryY: data.entryY,
         dungeonLevel: data.dungeonLevel

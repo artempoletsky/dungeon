@@ -3,7 +3,7 @@
     "css": ["main"],
     "dialogs": ["dialogs"],
     "misc": ["misc"],
-    "maps": ["start"],
+    "maps": ["start", "first_town"],
     "worldMap": ["main"],
     "language": {
         "ru_main": "ru"

@@ -4,7 +4,7 @@ Quest.hash.toFreedom = Quest.extend({
             name: 'to_freedom',
             description: 'quest_desc_to_freedom',
             action: function () {
-                WorldMap.setLocation('whiterun_neighborhood');
+                WorldMap.setLocation('first_town_neighborhood');
                 Dungeon.startPredefined('start', 4, 16);
                 Dungeon.saveOnExit = false;
             }

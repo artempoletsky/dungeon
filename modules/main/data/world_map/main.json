@@ -4,8 +4,8 @@
             "x": 120,
             "y": 100
         },
-        "id": "whiterun",
-        "map": "start",
+        "id": "first_town",
+        "map": "first_town",
         "locationType": "default"
     },
     {
@@ -13,7 +13,9 @@
             "x": 177,
             "y": 340
         },
-        "id": "whiterun_neighborhood",
+        "id": "first_town_neighborhood",
+        "dungeonSize": "Small",
+        "dungeonLevel": 1,
         "locationType": "default"
     }
 ]
