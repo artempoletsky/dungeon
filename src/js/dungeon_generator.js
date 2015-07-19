@@ -1,15 +1,14 @@
 _.rarity = function (objects, a) {
     a = a || 1;
-    var random = Math.random() * a;
-    objects = _.sortBy(objects, 'rarity');
-
-    var result = _.find(objects, function (obj) {
-        return obj.rarity > random;
+    var result;
+    _.each(_.shuffle(objects), function (obj) {
+        if (obj.rarity > Math.random() * a) {
+            result = obj.object;
+            return false;
+        }
     });
 
-    if(result){
-        return result.object;
-    }
+    return result;
 };
 
 var DungeonTypes = {
@@ -38,7 +37,7 @@ var DungeonGenerator = Class.create({
         _.eachMatrix(matrix, function (cell) {
             var Class;
             if (cell.type && cell.type != 'door') {
-                Class = _.rarity(dungeonSettings.mapObjects, 100);
+                Class = _.rarity(dungeonSettings.mapObjects, 120);
             }
             cell.class = Class;
             if (cell.type == 'room') {

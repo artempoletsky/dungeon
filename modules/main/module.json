@@ -1,5 +1,9 @@
 {
-    "js": ["monster_map_cell", "monster_classes", "npc_map_cell", "quests"],
+    "js": ["monster_map_cell",
+        "monster_classes",
+        "npc_map_cell",
+        "heal_fountain",
+        "quests"],
     "css": ["main"],
     "dialogs": ["dialogs"],
     "misc": ["misc"],

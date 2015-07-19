@@ -62,6 +62,16 @@ var Character = Model.extend({
         });
         return Math.round(totalDamage);
     },
+    heal: function (value) {
+        var health = this.prop('health');
+        var maxHealth = this.prop('maxHealth');
+        if (!value) {
+            value = maxHealth - health;
+        }
+
+        this.prop('health', Math.min(health + value, maxHealth));
+        this.fire('heal', value);
+    },
     receiveDamage: function (damageMin, damageMax, caster, critChance) {
 
         var self = this;

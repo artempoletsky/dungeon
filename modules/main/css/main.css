@@ -21,3 +21,19 @@
 .queue_item.spider{
     background: url("monsters/spider_small.png");
 }
+
+.map_cell.monster {
+    background: url("img/monster.png");
+}
+
+.map_cell.npc {
+    background: url("img/npc.png");
+}
+
+.map_cell.heal_fountain {
+    background: url("img/npc.png");
+}
+
+.map_cell.no_vision{
+    background: #000000;
+}
