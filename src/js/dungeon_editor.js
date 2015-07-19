@@ -15,6 +15,7 @@ $(function () {
                 $width: '#dungeon_width',
                 $height: '#dungeon_height',
                 $level: '#dungeon_level',
+                $cellPosition: '.cell_position',
                 $json: '#map_json'
             },
             cellSize: 21,
@@ -53,7 +54,7 @@ $(function () {
 
                 cell.data = data;
                 if (newClassName != cell.getClass()) {
-                    var newClass = MapCellClasses[newClassName]||MapCell;
+                    var newClass = MapCellClasses[newClassName] || MapCell;
                     cell = this.map.matrix[cell.y][cell.x] = new newClass(cell);
                 }
 
@@ -75,6 +76,7 @@ $(function () {
                 var x = index % w;
                 var cell = this.selectedCell = this.map.matrix[y][x];
 
+                this.$cellPosition.html('x: ' + x + ' y:' + y);
                 if (this.$brushMode[0].checked) {
                     this.saveCell();
                     return;
@@ -117,7 +119,7 @@ $(function () {
             },
             generate: function () {
                 var matrix = InitalMazeGenerator.generate(this.$width.val() * 1, this.$height.val() * 1)
-                this.map=DungeonGenerator.generateFromMatrix(matrix, 'default', 1);
+                this.map = DungeonGenerator.generateFromMatrix(matrix, 'default', 1);
                 this.render();
             },
             newDungeon: function () {
