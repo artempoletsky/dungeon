@@ -73,7 +73,7 @@
         <ul class="main_menu_list">
 
         </ul>
-        <div class="saves_menu save_mode">
+        <div class="saves_menu all_center save_mode">
             <div class="save_name">
                 <label>Название</label> <input type="text"/>
             </div>
@@ -88,7 +88,8 @@
     <div class="character_editor scene">
         <div class="ce-wrap">
             <div class="ce-name">
-                <label>Имя</label> <input type="text" value="Anonymous" name="name" data-bind="attr: {disabled: isNotInitial}"/>
+                <label>Имя</label> <input type="text" value="Anonymous" name="name"
+                                          data-bind="attr: {disabled: isNotInitial}"/>
             </div>
             <div class="ce-attributes-wrap">
                 <h1>
@@ -133,9 +134,12 @@
 
     <div class="dungeon scene">
         <canvas id="auto_map"></canvas>
-        <div class="team"></div>
-        <div class="map">
-            <div class="map_passage"></div>
+
+        <div class="map_wrap all_center">
+            <div class="team"></div>
+            <div class="map">
+                <div class="map_passage"></div>
+            </div>
         </div>
         <div class="context"></div>
     </div>

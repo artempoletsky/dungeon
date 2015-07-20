@@ -1,7 +1,8 @@
 body {
     font-family: sans-serif;
     font-size: 14px;
-    color: #333;
+    color: #fff;
+    background: #000000;
 }
 
 body, html, ul, ol, li, dd, dt, dl, td, div, p, h1, h2, h3, h4, h5, h6, blockquote {
@@ -193,15 +194,11 @@ h1, h2, h3, h4, h5, h6 {
 .character_image {
     width: 130px;
     height: 300px;
-    background: url("img/coolface.png") -44px 0px;
     position: absolute;
     left: 0;
     top: 0;
 }
 
-.brigand_scout {
-    background: url("img/frog.png") -58px 0;
-}
 
 .hit_animation {
     position: absolute;
@@ -298,9 +295,6 @@ h1, h2, h3, h4, h5, h6 {
     background: url("img/team.png") no-repeat 15px 0;
 }
 
-.dungeon {
-    position: relative;
-}
 
 .dialogs {
     position: absolute;
@@ -517,18 +511,24 @@ path:hover {
 
 .world_map {
     display: none;
+    background: #fff;
 }
 
 .saves_menu{
-    position: absolute;
+
     padding: 20px;
     background: #000000;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
+
     display: none;
     font-size: 20px;
     color: #fff;
+}
+
+.all_center {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
 }
 
 .saves {
@@ -573,4 +573,9 @@ path:hover {
     border-color: transparent;
     background: transparent;
     color: #fff;
+}
+
+.map_wrap {
+    width: 450px;
+    height: 450px;
 }

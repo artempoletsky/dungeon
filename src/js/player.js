@@ -91,9 +91,9 @@ var Player = Events.create({
         this.currentSave.party = this.party;
         var save = JSON.parse(JSON.stringify(this.currentSave));
         save.date = new Date();
-        if (this.currentDungeon) {
-            save.dungeon = this.currentDungeon.save();
-        }
+
+        save.dungeon = this.currentDungeon ? this.currentDungeon.save() : undefined;
+
         save.mainCharacter = this.party.indexOf(this.mainCharacter);
         return save;
     },
