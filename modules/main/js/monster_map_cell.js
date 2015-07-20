@@ -45,10 +45,8 @@ MapCellClasses.Monster = MapCell.extend({
         });
     },
     enter: function () {
+        //stop moving on map
         Dungeon.pathFindingActive=false;
-
-        this.className = this.type;
-
         Dungeon.$el.hide();
 
         HotKeys.focus(Battlefield);
@@ -58,7 +56,9 @@ MapCellClasses.Monster = MapCell.extend({
             HotKeys.focus(Dungeon);
         });
 
-        Battlefield.fight(this.monstersParty);
+        var location=this.map.location;
+        var backGrounds=DungeonTypes[location].backgrounds;
+        Battlefield.fight(this.monstersParty, backGrounds);
     }
 });
 
