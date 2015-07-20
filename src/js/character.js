@@ -14,6 +14,12 @@ var Character = Model.extend({
             get: function (maxHealth, health) {
                 return  Math.round(health * 100 / maxHealth) + '%';
             }
+        },
+        expProgress: {
+            deps: ['exp'],
+            get: function (exp) {
+                return (exp * 10) + '%'
+            }
         }
     },
     defaults: {
@@ -31,6 +37,20 @@ var Character = Model.extend({
         dodge: 0,
         maxAP: 12,
         apPerTurn: 5
+    },
+
+
+    addExp: function (value) {
+        var exp = this.prop('exp');
+        exp+=value;
+        if(exp>=10){
+            exp-=10;
+            this.propAdd('level', 1);
+            this.propAdd('attributesPoints', 1);
+            this.propAdd('skillPoints', 1);
+        }
+
+        this.prop('exp', exp);
     },
 
     constructor: function (name, base_stats) {
@@ -191,9 +211,15 @@ var Human = Character.extend({
                 get: function (strength) {
                     return  strength * 2;
                 }
+            },
+            initiative: {
+                deps: ['speed', 'perception'],
+                get: function (speed, perception) {
+                    return  Math.round((speed + perception) / 2);
+                }
             }
         });
-        _.each(this.computeds, function(obj, name){
+        _.each(this.computeds, function (obj, name) {
             delete  base_stats[name];
         });
         //console.log(base_stats);

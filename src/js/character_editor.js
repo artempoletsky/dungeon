@@ -58,7 +58,7 @@ $(function () {
         },
         recalculateDerivedStats: function(){
             this.$attack.html(this.character.getBaseAttack());
-            _.each(['maxHealth', 'dodge', 'apPerTurn', 'maxAP', 'startAP'], function(key){
+            _.each(['maxHealth', 'dodge', 'apPerTurn', 'maxAP', 'startAP', 'initiative'], function(key){
                 this.prop(key, this.character.prop(key));
             },this);
 

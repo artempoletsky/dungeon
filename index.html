@@ -85,8 +85,8 @@
         </div>
     </div>
 
-    <div class="character_editor all_center scene">
-        <div class="ce-wrap">
+    <div class="character_editor  scene">
+        <div class="ce-wrap all_center clearfix">
             <div class="ce-name">
                 <label>Имя</label> <input type="text" value="Anonymous" name="name"
                                           data-bind="attr: {disabled: isNotInitial}"/>
@@ -119,6 +119,9 @@
                 </div>
                 <div class="ce-derived">
                     <label>Стартовые очки действия</label> <span nk="html: startAP"></span>
+                </div>
+                <div class="ce-derived">
+                    <label>Инициатива</label> <span nk="html: initiative"></span>
                 </div>
             </div>
 

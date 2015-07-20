@@ -64,6 +64,8 @@ $(function () {
         addRegion: function (element, data) {
             element.removeAttribute('style');
             element.id = data.id;
+           // console.log(data);
+            element.setAttribute('title', data.id);
             this.regions[data.id] = data;
             data.index = this.regionsLength;
             this.$svg.append(element);

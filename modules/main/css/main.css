@@ -6,10 +6,18 @@
     background: url("background/bg2.jpg");
 }
 
+
+.character_image {
+    background: url("img/stick_man.png");
+}
+.queue_item{
+    background: url("img/stick_man_small.png");
+}
+
+
 .character_image.beast{
     background: url("monsters/beast.png");
 }
-
 .queue_item.beast{
     background: url("monsters/beast_small.png");
 }
