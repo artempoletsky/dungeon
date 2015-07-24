@@ -22,7 +22,7 @@ var Skill = Model.extend({
         expBar: {
             deps: ['exp'],
             get: function (exp) {
-                return exp + '%';
+                return Math.round(exp) + '%';
             }
         }
     },

@@ -204,7 +204,10 @@ $(function () {
                 var $spells = self.$spells.empty();
                 _.each(character.spells, function (spell, index) {
                     var inactive = self.canUseSpell(character, index) ? '' : ' inactive';
-                    $spells.append('<div class="spell character_spell' + inactive + '">' + spell.name + '</div>');
+                    $spells.append('<div class="spell '+spell.name+' character_spell' + inactive + '">' +
+                        '<div class="spell_exp" style="width: '+spell.prop('expBar')+';"></div>'+
+                        '<div class="spell_level">'+spell.prop('level')+'</div>'+
+                        '</div>');
                 });
                 $spells.append('<div class="spell switch_position">switch</div>');
                 $spells.append('<div class="spell end_turn">end</div>');
@@ -282,8 +285,13 @@ $(function () {
         onSpellInvoke: function (e) {
             var target = this.getCharacter($(e.currentTarget));
             var self = this;
+            var spell= this.playerCharacter.spells[this.activeSpell];
             //TODO implement aoe
-            this.playerCharacter.spells[this.activeSpell].invoke([target], function () {
+            spell.invoke([target], function () {
+                //self.activeSpell
+                var $spell=self.$spells.children().eq(self.activeSpell);
+                $spell.find('.spell_exp').css('width',spell.prop('expBar'));
+                $spell.find('.spell_level').html(spell.prop('level'));
                 if (self.playerCharacter.prop('actionPoints') == 0) {
                     self.endTurn();
                 }

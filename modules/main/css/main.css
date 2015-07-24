@@ -14,6 +14,12 @@
     background: url("img/stick_man_small.png");
 }
 
+.spell.hit {
+    background: url("img/hit.png") no-repeat;
+}
+
+
+
 
 .character_image.beast{
     background: url("monsters/beast.png");
