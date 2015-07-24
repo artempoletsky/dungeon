@@ -42,15 +42,43 @@ var Character = Model.extend({
 
     addExp: function (value) {
         var exp = this.prop('exp');
-        exp+=value;
-        if(exp>=10){
-            exp-=10;
+        exp += value;
+        if (exp >= 10) {
+            exp -= 10;
             this.propAdd('level', 1);
             this.propAdd('attributesPoints', 1);
             this.propAdd('skillPoints', 1);
         }
 
         this.prop('exp', exp);
+    },
+
+    getDefence: function (spell) {
+        var result = 0;
+        var defSkill = 'dodge';
+        if (!spell||spell.canBeDodged) {
+            result = this.prop('dodge') || 0;
+        }
+
+        if (!spell||spell.canBeParried) {
+            var parry = this.prop('parry') || 0;
+            if (parry > result) {
+                result = parry;
+                defSkill = 'parry';
+            }
+        }
+
+        if (!spell||spell.canBeBlocked) {
+            var block = this.prop('block') || 0;
+            if (block > result) {
+                result = block;
+                defSkill = 'block';
+            }
+        }
+        return {
+            defSkill: defSkill,
+            result: result
+        }
     },
 
     constructor: function (name, base_stats) {
@@ -152,7 +180,7 @@ var Character = Model.extend({
     }
 });
 
-Character.ATTACK_CAP = 150;
+Character.ATTACK_CAP = 100;
 Character.ATTRIBUTE_CAP = 15;
 
 Model.prototype.propAdd = function (name, value) {
@@ -165,9 +193,11 @@ Model.prototype.propMult = function (name, value) {
 
 var Human = Character.extend({
     getBaseAttack: function () {
+        var agWeight = 0.5;
+        var perceptionWeight = 0.25;
         var attrCap = Character.ATTRIBUTE_CAP;
-        var agility = (this.prop('agility') / attrCap) * 0.6 + 0.4;
-        var perception = (this.prop('perception') / attrCap) * 0.25 + 0.75;
+        var agility = (this.prop('agility') / attrCap) * agWeight + (1 - agWeight);
+        var perception = (this.prop('perception') / attrCap) * perceptionWeight + (1 - perceptionWeight);
         var weapon = this.equipment.prop('weapon');
         var weaponModifier;
         if (weapon) {

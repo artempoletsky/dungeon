@@ -1,4 +1,4 @@
-var Spell = Class.extend({
+var Spell = Model.extend({
     accuracyMod: 0,
     critChance: 0,
     range: 1,
@@ -10,8 +10,8 @@ var Spell = Class.extend({
     aoe: false,
     posFrom: [1, 2],
     posTo: [1, 2],
-    level: 1,
-    maxLevel: 5,
+
+    maxLevel: 100,
     canBeDodged: true,
     canBeParried: true,
     canBeBlocked: true,
@@ -19,22 +19,74 @@ var Spell = Class.extend({
 
     character: undefined,
 
+    computeds: {
+        expBar: {
+            deps: ['exp'],
+            get: function (exp) {
+                return exp + '%';
+            }
+        }
+    },
+
     constructor: function (character) {
-        if(!(character instanceof Character)){
+        this._super();
+
+        if (!(character instanceof Character)) {
             throw new TypeError('Character for spell is not defined');
         }
         this.character = character;
-        this.exp = 0;
-        this.level = 1;
+
+
+        this.prop({
+            exp: 0,
+            level: 1
+        });
     },
 
-    levelUp: function () {
-        this.level++;
+    addExp: function (chance, isSuccess, value) {
+        if (chance >= 1) {
+            return;
+        }
+
+        var defaultExp = 20;
+        var mult = 2;
+        var failMult = 0.1;
+        if (!value) {
+            value = defaultExp;
+        }
+
+        value = (1 - chance) * value * mult;
+
+        if (!isSuccess) {
+            value = value * failMult;
+        }
+
+        var exp = this.prop('exp');
+        var level = this.prop('level');
+        exp += value;
+
+        if (exp >= 100) {
+            if (level < this.maxLevel) {
+                exp -= 100;
+                this.prop('level', ++level);
+                this.character.addExp(1);
+            } else {
+                exp = 100;
+            }
+        }
+        console.log('exp: '+value+' '+exp);
+        this.prop('exp', exp);
+
+    },
+
+    getAttackMod: function () {
+        var min = 0.9;
+        var max = 1.5;
+        return (this.prop('level') / this.maxLevel) * (max - min) + min;
     },
 
     getAttack: function () {
-        var spell = (10 + this.level) / 15;
-        return Math.round(this.character.getBaseAttack() * spell);
+        return Math.round(this.character.getBaseAttack() * this.getAttackMod());
     },
     getMinDamage: function (target_character) {
         var caster_character = this.character;
@@ -46,28 +98,11 @@ var Spell = Class.extend({
     },
     computeHitChance: function (target_character, isFinal) {
 
-        var dodge = 0;
-        var defSkill = 'dodge';
 
-        if (this.canBeDodged) {
-            dodge = target_character.prop('dodge') || 0;
-        }
+        var d = target_character.getDefence(this);
 
-        if (this.canBeParried) {
-            var parry = target_character.prop('parry') || 0;
-            if (parry > dodge) {
-                dodge = parry;
-                defSkill = 'parry';
-            }
-        }
-
-        if(this.canBeBlocked){
-            var block = target_character.prop('block') || 0;
-            if (block > dodge) {
-                dodge = block;
-                defSkill = 'block';
-            }
-        }
+        var defence = d.result;
+        var defSkill = d.defSkill;
 
 
         var attack = this.getAttack();
@@ -75,14 +110,13 @@ var Spell = Class.extend({
 
         if (!isFinal) {
             if (attack > 100) {
-                return  attack - dodge;
+                return  attack - defence;
             }
-            return attack * (100 - dodge) / 100;
+            return attack * (100 - defence) / 100;
         } else {
             if (attack < 100) {
                 if (rand(100) < attack) {
-                    if (dodge > rand(100)) {
-
+                    if (defence > rand(100)) {
                         return defSkill;
                     }
                     return 'hit';
@@ -90,7 +124,7 @@ var Spell = Class.extend({
                     return 'miss';
                 }
             } else {
-                if (rand(100) < attack - dodge) {
+                if (rand(100) < attack - defence) {
                     return 'hit';
                 } else {
                     return defSkill;
@@ -101,27 +135,27 @@ var Spell = Class.extend({
 
     },
 
-    subtractAP: function(){
+    subtractAP: function () {
         this.character.propAdd('actionPoints', -this.cost);
     },
     invoke: function (target_characters, callback) {
 
-        if(!target_characters.length){
+        if (!target_characters.length) {
             throw  new TypeError('target_characters must be an array');
         }
         this.subtractAP();
-        var self=this;
-        var damages=[];
-        _.each(target_characters, function(char){
-            var hitResult = self.computeHitChance(char, true);
+        var self = this;
+        var damages = [];
 
+        _.each(target_characters, function (char) {
+            var hitResult = self.computeHitChance(char, true);
             if (hitResult == 'hit') {
                 damages.push(char.receiveDamage(self.getMinDamage(char), self.getMaxDamage(char), self.character, self.critChance));
             } else {
                 damages.push(hitResult);
             }
+            self.addExp(self.computeHitChance(char, false)/100, hitResult == 'hit');
         });
-
 
 
         this.animate(target_characters, damages, callback);
@@ -133,11 +167,11 @@ var Spell = Class.extend({
         ///todo implement
 
         /*
-        if (damage.damage) {
-            damage = damage.damage.physical;
-        }
+         if (damage.damage) {
+         damage = damage.damage.physical;
+         }
 
-        $view.find('.damage').html(damage);*/
+         $view.find('.damage').html(damage);*/
 
 
         setTimeout(function () {
@@ -158,8 +192,8 @@ var Spell = Class.extend({
     }
 });
 
-Spell.fromJSON=function(data, characrer){
-    var spell= new Spells[data.class](characrer);
+Spell.fromJSON = function (data, characrer) {
+    var spell = new Spells[data.class](characrer);
     return spell;
 };
 
@@ -175,7 +209,7 @@ var Spells = {
         },
         minDamage: 0,
         maxDamage: 0,
-        attack: 90,
+        attack: 70,
         getAttack: function () {
             return this.attack;
         },

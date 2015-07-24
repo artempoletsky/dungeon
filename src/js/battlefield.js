@@ -308,17 +308,24 @@ $(function () {
 
             this.$info.empty().show().offset($view.offset());
 
+            var defence;
             if (character.enemy && this.activeSpell !== undefined) {
                 var spell = this.currentCharacter.spells[this.activeSpell];
                 var chanceToHit = spell.computeHitChance(character, false);
+
+                defence=character.getDefence(spell);
 
                 var minDamage =  character.computeDamage(spell.getMinDamage(character), this.currentCharacter);
                 var maxDamage = character.computeDamage(spell.getMaxDamage(character), this.currentCharacter);
 
                 this.$info.append(this.generateInfoRow('Attack', spell.getAttack(this.currentCharacter)));
+                this.$info.append(this.generateInfoRow('Defence', defence.result+' ('+ defence.defSkill+')'));
                 this.$info.append(this.generateInfoRow('Chance to hit', chanceToHit + '%'));
                 this.$info.append(this.generateInfoRow('Damage', minDamage + '-' + maxDamage));
 
+            }else {
+                defence=character.getDefence();
+                this.$info.append(this.generateInfoRow('Defence', defence.result+' ('+ defence.defSkill+')'));
             }
 
 
