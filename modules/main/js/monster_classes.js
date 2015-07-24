@@ -8,7 +8,7 @@ MonsterClasses.Brigand = Human.extend({
         }, {
             weapon: 'rusty_sword'
         });
-        this.spells = [new Spells.Bite(this, 20, 30), new Spells.MagicSpell(this, 20, 30)];
+        this.spells = [new Skills.Bite(this, 20, 30), new Skills.MagicSpell(this, 20, 30)];
     }
 });
 
@@ -22,7 +22,7 @@ MonsterClasses.BrigandScout = Character.extend({
         }, {
             weapon: 'rusty_sword'
         });
-        this.spells = [new Spells.Projectile(this)];
+        this.spells = [new Skills.Projectile(this)];
     }
 });
 
@@ -34,7 +34,7 @@ MonsterClasses.Beast = Character.extend({
             res_physical: 20 * level - 20,
             res_fire: 10 * level - 10
         }, {});
-        this.spells = [new Spells.Bite(this, 5, 10)];
+        this.spells = [new Skills.Bite(this, 5, 10)];
     }
 });
 
@@ -45,7 +45,7 @@ MonsterClasses.Spider = Character.extend({
             res_physical: 20 * level - 20,
             res_fire: 10 * level - 10
         }, {});
-        this.spells = [new Spells.Bite(this, 5, 10)];
+        this.spells = [new Skills.Bite(this, 5, 10)];
     }
 });
 

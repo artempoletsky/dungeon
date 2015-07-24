@@ -1,4 +1,4 @@
-var Spell = Model.extend({
+var Skill = Model.extend({
     accuracyMod: 0,
     critChance: 0,
     range: 1,
@@ -11,7 +11,6 @@ var Spell = Model.extend({
     posFrom: [1, 2],
     posTo: [1, 2],
 
-    maxLevel: 100,
     canBeDodged: true,
     canBeParried: true,
     canBeBlocked: true,
@@ -66,7 +65,7 @@ var Spell = Model.extend({
         exp += value;
 
         if (exp >= 100) {
-            if (level < this.maxLevel) {
+            if (level < Game.config.SKILL_LEVEL_CAP) {
                 exp -= 100;
                 this.prop('level', ++level);
                 this.character.addExp(1);
@@ -82,7 +81,7 @@ var Spell = Model.extend({
     getAttackMod: function () {
         var min = 0.9;
         var max = 1.5;
-        return (this.prop('level') / this.maxLevel) * (max - min) + min;
+        return (this.prop('level') / Game.config.SKILL_LEVEL_CAP) * (max - min) + min;
     },
 
     getAttack: function () {
@@ -182,7 +181,7 @@ var Spell = Model.extend({
         }, 1000);
     },
     getClass: function () {
-        return Class.getClass(this, Spells, 'Spell');
+        return Class.getClass(this, Skills, 'Skill');
     },
     toJSON: function () {
         return {
@@ -192,15 +191,15 @@ var Spell = Model.extend({
     }
 });
 
-Spell.fromJSON = function (data, characrer) {
-    var spell = new Spells[data.class](characrer);
+Skill.fromJSON = function (data, characrer) {
+    var spell = new Skills[data.class](characrer);
     return spell;
 };
 
 
-var Spells = {
-    Hit: Spell.extend({}),
-    Bite: Spell.extend({
+var Skills = {
+    Hit: Skill.extend({}),
+    Bite: Skill.extend({
         availableForPlayer: false,
         constructor: function (character, minDamage, maxDamage) {
             this._super(character);
@@ -221,7 +220,7 @@ var Spells = {
         },
         canParry: false
     }),
-    Projectile: Spell.extend({
+    Projectile: Skill.extend({
         cost: 4,
         posFrom: [3, 4],
         posTo: [2, 3, 4],
@@ -231,7 +230,7 @@ var Spells = {
 };
 
 
-Spells.MagicSpell = Spells.Bite.extend({
+Skills.MagicSpell = Skills.Bite.extend({
     posFrom: [3, 4],
     posTo: [1, 2],
     name: 'fireball'

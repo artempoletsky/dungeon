@@ -87,7 +87,7 @@ $(function () {
         show: function (character, isInitial) {
             this.character =  character||Player.mainCharacter;
             this.$el.show();
-            //console.log(Spells);
+
             this.renderAttributes();
             this.prop('isNotInitial', !isInitial);
             this.$name.val(this.character.name);

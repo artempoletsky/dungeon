@@ -18,7 +18,7 @@ Quest.hash.toFreedom = Quest.extend({
                         }, {
                             weapon: 'rusty_sword'
                         });
-                        this.spells = [new Spells.Hit(this)];
+                        this.spells = [new Skills.Hit(this)];
                         this.enemy = false;
                         this.prop({
                             attributesPoints: 5,
@@ -50,7 +50,7 @@ Quest.hash.gallican_join = Quest.extend({
             }, {
                 weapon: 'rusty_sword'
             });
-            this.spells = [new Spells.Hit(this)];
+            this.spells = [new Skills.Hit(this)];
             this.enemy = false;
             /*
              this.prop({

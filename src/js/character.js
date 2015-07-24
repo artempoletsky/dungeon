@@ -180,8 +180,6 @@ var Character = Model.extend({
     }
 });
 
-Character.ATTACK_CAP = 100;
-Character.ATTRIBUTE_CAP = 15;
 
 Model.prototype.propAdd = function (name, value) {
     this.prop(name, this.prop(name) + value);
@@ -195,7 +193,7 @@ var Human = Character.extend({
     getBaseAttack: function () {
         var agWeight = 0.5;
         var perceptionWeight = 0.25;
-        var attrCap = Character.ATTRIBUTE_CAP;
+        var attrCap = Game.config.ATTRIBUTE_CAP;
         var agility = (this.prop('agility') / attrCap) * agWeight + (1 - agWeight);
         var perception = (this.prop('perception') / attrCap) * perceptionWeight + (1 - perceptionWeight);
         var weapon = this.equipment.prop('weapon');
@@ -206,7 +204,7 @@ var Human = Character.extend({
             weaponModifier = 1;
         }
 
-        return Math.round(Character.ATTACK_CAP * agility * perception * weaponModifier);
+        return Math.round(Game.config.ATTACK_CAP * agility * perception * weaponModifier);
     },
     equipment: undefined,
     constructor: function (name, base_stats, equipment) {
@@ -272,7 +270,7 @@ Human.fromJSON = function (data) {
     var result = new Human(data.name, data.attributes, data.equipment);
 
     result.spells = _.map(data.spells, function (obj) {
-        return Spell.fromJSON(obj, result);
+        return Skill.fromJSON(obj, result);
     });
 
     return result;
