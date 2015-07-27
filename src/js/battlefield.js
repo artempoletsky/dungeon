@@ -99,6 +99,7 @@ $(function () {
 
         endFight: function () {
             this.$el.hide();
+            PartyView.render();
             this.fire('endFight', {
                 loot: this.loot
             });
@@ -113,6 +114,7 @@ $(function () {
             }
 
 
+            PartyView.$el.hide();
             this.$el.show();
             this.loot = [];
 
@@ -381,6 +383,7 @@ $(function () {
             }
 
 
+            //fixme doesn't work change to collection
             party.splice(oldIndex, 1);
             party.splice(newIndex, 0, character);
         },

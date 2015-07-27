@@ -90,6 +90,7 @@ var Character = Model.extend({
         this.spells = [];
         this.statuses = [];
         this.name = name;
+        this.prop('name', name);
         this.prop('health', this.prop('maxHealth'));
     },
 

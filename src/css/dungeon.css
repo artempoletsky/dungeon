@@ -599,3 +599,20 @@ path:hover {
     width: 450px;
     height: 450px;
 }
+
+.party_view {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 3;
+}
+
+.pv-item {
+    background: #eee;
+    border: 5px solid #fff;
+    float: right;
+    margin-right: 5px;
+    width: 70px;
+    height: 70px;
+}
+

@@ -6,6 +6,8 @@ var Player = Events.create({
         this.fire('newGame');
 
         this.party = new Collection();
+
+        PartyView.render();
         this.currentSave = {};
         Quest.moveToStage(Game.config.startQuest, 'start');
     },
@@ -26,6 +28,8 @@ var Player = Events.create({
 
 
         var party = this.party = new Collection();
+
+        PartyView.render(party);
         _.each(save.party, function (data) {
 
             var char = Human.fromJSON(data);
@@ -119,4 +123,21 @@ var Player = Events.create({
         save.name = name;
         this.saveObject(save, index);
     }
+});
+
+$(function () {
+    window.PartyView = ViewModel.create({
+        el: '.party_view',
+        events: {
+            'click .pv-item': 'onItemClick'
+        },
+        onItemClick: function (e) {
+            CharacterEditor.show(Player.party.at($(e.currentTarget).index()), false);
+        },
+        autoParseBinds: true,
+        render: function () {
+            this.$el.show();
+            this.prop('party', Player.party);
+        }
+    })
 });
