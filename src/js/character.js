@@ -24,6 +24,8 @@ var Character = Model.extend({
     },
     defaults: {
         speedBack: 1,
+        level: 1,
+        exp: 0,
         speedForward: 2,
         maxHealth: 100,
         health: 100,
