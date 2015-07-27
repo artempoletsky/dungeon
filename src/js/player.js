@@ -1,11 +1,11 @@
 var Player = Events.create({
     mainCharacter: undefined,
     currentDungeon: undefined,
-    party: [],
+    party: undefined,
     newGame: function () {
         this.fire('newGame');
 
-        this.party = [];
+        this.party = new Collection();
         this.currentSave = {};
         Quest.moveToStage(Game.config.startQuest, 'start');
     },
@@ -25,7 +25,7 @@ var Player = Events.create({
         this.fire('load');
 
 
-        var party = this.party = [];
+        var party = this.party = new Collection();
         _.each(save.party, function (data) {
 
             var char = Human.fromJSON(data);

@@ -40,9 +40,9 @@ MapCellClasses.Monster = MapCell.extend({
     },
     monstersParty: undefined,
     makeParty: function (namesArray, level) {
-        return _.map(namesArray, function (ClassName) {
+        return new Collection(_.map(namesArray, function (ClassName) {
             return new MonsterClasses[ClassName](level);
-        });
+        }));
     },
     enter: function () {
         //stop moving on map

@@ -22,7 +22,7 @@ var CharacterAI = Class.extend({
             }
             return false;
         }, function (callback) {
-            var target = Battlefield.playerParty[0];
+            var target = Player.party.at(0);
             if (target) {
                 self.spells[i].invoke([target], callback);
             }

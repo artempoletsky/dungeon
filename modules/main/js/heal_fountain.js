@@ -4,7 +4,7 @@ MapCellClasses.HealFountain = MapCell.extend({
         this.className = 'heal_fountain';
     },
     enter: function () {
-        _.each(Player.party, function(char){
+        Player.party.each(function(char){
             char.heal();
         });
     }
