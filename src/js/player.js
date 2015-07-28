@@ -126,13 +126,41 @@ var Player = Events.create({
 });
 
 $(function () {
+
     window.PartyView = ViewModel.create({
         el: '.party_view',
+        initialize: function () {
+            this.$el.sortableContainer('.pv-item', 200);
+        },
         events: {
+            'startDrag': 'onStartDrag',
+            'stopDrag': 'onStopDrag',
+            'sort': 'onSort',
             'click .pv-item': 'onItemClick'
         },
+        dragStarted: false,
+        onSort: function(e){
+            var models=Player.party.models;
+            var char=models[e.oldIndex];
+
+            models.splice(e.oldIndex, 1);
+            models.splice(e.newIndex, 0, char);
+        },
+        onStartDrag: function () {
+            this.dragStarted = true;
+        },
+
+        onStopDrag: function () {
+            var self=this;
+            _.defer(function(){
+                self.dragStarted = false;
+            });
+        },
+
         onItemClick: function (e) {
-            CharacterEditor.show(Player.party.at($(e.currentTarget).index()), false);
+            if (!this.dragStarted) {
+                CharacterEditor.show(Player.party.at($(e.currentTarget).index()), false);
+            }
         },
         autoParseBinds: true,
         render: function () {

@@ -10,6 +10,7 @@
 
 
     <script type="text/javascript" src="src/js/hotkeys.js"></script>
+    <script type="text/javascript" src="src/js/drag.js"></script>
     <script type="text/javascript" src="src/js/character_ai.js"></script>
     <script type="text/javascript" src="src/js/character.js"></script>
     <script type="text/javascript" src="src/js/skill.js"></script>
@@ -187,6 +188,7 @@
     <div class="party_view" data-bind="eachModel: party">
         <div class="pv-item">
             <div class="pv-image" data-bind="className: name"></div>
+            <div class="pv-health" data-bind="style: {width:healthBar}"></div>
         </div>
     </div>
 </div>

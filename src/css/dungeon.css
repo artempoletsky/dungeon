@@ -3,6 +3,7 @@ body {
     font-size: 14px;
     color: #fff;
     background: #000000;
+    overflow: hidden;
 }
 
 body, html, ul, ol, li, dd, dt, dl, td, div, p, h1, h2, h3, h4, h5, h6, blockquote {
@@ -613,6 +614,23 @@ path:hover {
     float: right;
     margin-right: 5px;
     width: 70px;
-    height: 70px;
+    height: 80px;
+    position: relative;
 }
 
+.pv-image {
+    width: 70px;
+    height: 70px;
+}
+.pv-health {
+    height: 10px;
+    background: red;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+
+.dragged{
+    z-index: 1;
+}
