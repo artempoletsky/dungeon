@@ -9,6 +9,7 @@
     <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
 
 
+    <script type="text/javascript" src="src/js/binds.js"></script>
     <script type="text/javascript" src="src/js/hotkeys.js"></script>
     <script type="text/javascript" src="src/js/drag.js"></script>
     <script type="text/javascript" src="src/js/character_ai.js"></script>
@@ -87,42 +88,55 @@
 
     <div class="character_editor  scene">
         <div class="ce-wrap all_center clearfix">
-            <div class="ce-name">
-                <label>Имя</label> <input type="text" value="Anonymous" name="name"
-                                          data-bind="attr: {disabled: isNotInitial}"/>
+            <div class="ce-tabs" data-bind="tabsHead: characterEditor, button">
+                <button>Характеристики</button>
+                <button>Навыки</button>
+                <button>Инвентарь</button>
             </div>
-            <div class="ce-attributes-wrap">
-                <h1>
-                    Очков характеристик доступно: <span class="ce-exp_points"></span>
-                </h1>
+            <div class="ce-tabs_wrap" data-bind="tabsBody: characterEditor">
+                <div class="ce-tab_content">
+                    <div class="ce-name">
+                        <label>Имя</label> <input type="text" value="Anonymous" name="name"
+                                                  data-bind="attr: {disabled: isNotInitial}"/>
+                    </div>
+                    <div class="ce-attributes-wrap">
+                        <h1>
+                            Очков характеристик доступно: <span class="ce-exp_points"></span>
+                        </h1>
 
-                <div class="ce-attributes">
+                        <div class="ce-attributes">
+
+                        </div>
+
+                        <h1>Производные величины</h1>
+
+                        <div class="ce-derived">
+                            <label>Базовая атака</label> <span class="ce-attack"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Максимум здоровья</label> <span nk="html: maxHealth"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Уворот</label> <span nk="html: dodge"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Очки действия за ход</label> <span nk="html: apPerTurn"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Максимум очков действия</label> <span nk="html: maxAP"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Стартовые очки действия</label> <span nk="html: startAP"></span>
+                        </div>
+                        <div class="ce-derived">
+                            <label>Инициатива</label> <span nk="html: initiative"></span>
+                        </div>
+                    </div>
+
 
                 </div>
-
-                <h1>Производные величины</h1>
-
-                <div class="ce-derived">
-                    <label>Базовая атака</label> <span class="ce-attack"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Максимум здоровья</label> <span nk="html: maxHealth"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Уворот</label> <span nk="html: dodge"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Очки действия за ход</label> <span nk="html: apPerTurn"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Максимум очков действия</label> <span nk="html: maxAP"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Стартовые очки действия</label> <span nk="html: startAP"></span>
-                </div>
-                <div class="ce-derived">
-                    <label>Инициатива</label> <span nk="html: initiative"></span>
-                </div>
+                <div class="ce-tab_content"></div>
+                <div class="ce-tab_content"></div>
             </div>
 
 
