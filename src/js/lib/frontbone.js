@@ -1731,6 +1731,9 @@
 
 
     var getCompiledRow = function (templateName, model, index) {
+        //fixme remove
+        return false;
+
         if (!bufferViews[templateName]) {
             return false;
         }
@@ -1742,7 +1745,8 @@
 
         var $row = bufferViews[templateName].pop();
 
-
+        $row.data('nkModel').fire('replace', model);
+        $row.data('nkModel', model);
 
         return $row;
     };
@@ -1751,7 +1755,7 @@
 
         _.each(bufferViews, function (arr, key) {
             _.each(arr, function ($view) {
-                $view.clearBinds();
+                //$view.clearBinds();
                 $view.data('nkModel', '');
             });
             bufferViews[key] = [];
@@ -1887,7 +1891,9 @@
 
                     $slice = $children.slice(index, index + tempChildrenLen);
 
+                    $slice.data('nkModel', model);
                     bufferViews[compiledTemplateName].push($slice);
+
 
                     $slice.detach();
 
