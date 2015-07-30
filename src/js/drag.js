@@ -47,17 +47,21 @@ $.fn.stopDrag = function (resetPosition) {
     return this;
 };
 
-$.fn.sortableContainer = function (selector, delay) {
+$.fn.sortableContainer = function (options) {
     var $self = this;
 
+    if (!options.selector) {
+        options = { selector: options};
+    }
 
     var targetIndex;
 
     var dragCanceled = false;
     var $el;
     var oldIndex;
-    $self.on('mousedown.sortable', selector, function (e) {
+    $self.on('mousedown.sortable', options.selector, function (e) {
 
+        e.preventDefault();
         dragCanceled = false;
 
         setTimeout(function () {
@@ -65,20 +69,31 @@ $.fn.sortableContainer = function (selector, delay) {
                 return;
             }
 
+
+
             $el = $(e.currentTarget);
-            oldIndex=$el.index();
+            oldIndex = $el.index();
             var width = $el.outerWidth();
             var height = $el.outerHeight();
-            var $children = $self.children();
 
-            var offsets = _.map($children, function (element) {
-                return $(element).offset();
-            });
 
 
             $el.before('<div id="sortable_helper" style="float: ' + $el.css('float') + ';width:' + $el.outerWidth(true) + 'px; height: ' + $el.outerHeight(true) + 'px;"></div>');
 
+
+
             var $helper = $('#sortable_helper');
+
+            if(options.container){
+                var helperHtml=$helper.clone().removeAttr('id').addClass('sortable_empty_helper')[0].outerHTML;
+                $self.find(options.container+':empty').append(helperHtml);
+            }
+
+            var $children = $self.find(options.selector).add($self.find('.sortable_empty_helper'));
+
+            var offsets = _.map($children, function (element) {
+                return $(element).offset();
+            });
 
             var helperIndex = $helper.index();
 
@@ -107,7 +122,7 @@ $.fn.sortableContainer = function (selector, delay) {
                     targetIndex = minIndex;
                 }
             });
-        }, delay)
+        }, options.delay);
 
     });
 
@@ -122,7 +137,7 @@ $.fn.sortableContainer = function (selector, delay) {
             $helper.after($el);
             $helper.remove();
 
-
+            $('.sortable_empty_helper').remove();
 
             $el.stopDrag(true);
 
