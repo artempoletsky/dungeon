@@ -8,16 +8,14 @@
         return hash[key];
     };
 
-    var getHash = function (key) {
-        return _.getOrCreate(tabsHash, key, {heads: [], bodies: []});
-    };
+    var defaultHash = {heads: [], bodies: []};
 
 
     ViewModel.binds.tabsHead = function ($el, value) {
         var split = value.split(/\s*,\s*/);
         var key = split[0];
         var selector = split[1];
-        var hash = getHash(key);
+        var hash = _.getOrCreate(tabsHash, key, defaultHash);
         hash.heads.push($el);
         $el.on('click', selector, function (e) {
             var index = $(e.currentTarget).index();
@@ -28,7 +26,7 @@
     };
 
     ViewModel.binds.tabsBody = function ($el, value) {
-        getHash(value).bodies.push($el);
+        _.getOrCreate(tabsHash, value, defaultHash).bodies.push($el);
         $el.children().hide().eq(0).show();
     };
 
