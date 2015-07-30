@@ -1775,6 +1775,7 @@
 
 
         values = value.split(/\s*,\s*/);
+
         collectionName = values[0];
         templateName = values[1];
 
@@ -1787,7 +1788,7 @@
         bufferViews[compiledTemplateName] = [];
 
 
-        this.applyFilters(value, model, function(collection){
+        this.applyFilters(collectionName, model, function(collection){
             $el.empty();
             var tempChildrenLen,
                 templateConstructor,
