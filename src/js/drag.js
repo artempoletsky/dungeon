@@ -54,7 +54,6 @@ $.fn.sortableContainer = function (options) {
         options = { selector: options};
     }
 
-    var targetIndex;
 
     var dragCanceled = false;
     var $el;
@@ -119,7 +118,6 @@ $.fn.sortableContainer = function (options) {
                     } else {
                         $children.eq(minIndex).before($helper);
                     }
-                    targetIndex = minIndex;
                 }
             });
         }, options.delay);
@@ -131,20 +129,23 @@ $.fn.sortableContainer = function (options) {
 
 
         if ($el) {
+            $('.sortable_empty_helper').remove();
             var $helper = $('#sortable_helper')
 
 
             $helper.after($el);
+            var newIndex=$helper.index();
             $helper.remove();
 
-            $('.sortable_empty_helper').remove();
+
 
             $el.stopDrag(true);
 
             $self.trigger($.Event('sort', {
                 oldIndex: oldIndex,
-                newIndex: targetIndex
+                newIndex: newIndex
             }));
+
             $el = undefined;
         }
 
