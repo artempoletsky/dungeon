@@ -22,7 +22,7 @@ Quest.hash.toFreedom = Quest.extend({
                         this.enemy = false;
                         this.prop({
                             attributesPoints: 5,
-                            skillPoints: 2
+                            skillPoints: 1
                         });
                     }
                 });

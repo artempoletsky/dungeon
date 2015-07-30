@@ -383,9 +383,8 @@ $(function () {
             }
 
 
-            //fixme doesn't work change to collection
-            party.splice(oldIndex, 1);
-            party.splice(newIndex, 0, character);
+
+            _.move(party.models, oldIndex, newIndex);
         },
         onMove: function (e) {
             this.$playerParty.find('.move_highlight').removeClass('move_highlight');

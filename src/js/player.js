@@ -29,7 +29,7 @@ var Player = Events.create({
 
         var party = this.party = new Collection();
 
-        PartyView.render(party);
+        PartyView.render();
         _.each(save.party, function (data) {
 
             var char = Human.fromJSON(data);
@@ -125,6 +125,12 @@ var Player = Events.create({
     }
 });
 
+
+_.move=function(array, from, to){
+    array.splice(to, 0, array.splice(from, 1)[0]);
+}
+
+
 $(function () {
 
     window.PartyView = ViewModel.create({
@@ -134,6 +140,7 @@ $(function () {
             var oldIndex, newIndex;
             this.$el.sortable({
                 items: '.pv-item',
+                tolerance: 'pointer',
                 start: function (e, ui) {
                     oldIndex = ui.item.index();
                     self.dragStarted = true;
@@ -145,11 +152,8 @@ $(function () {
 
                     newIndex = ui.item.index();
 
-                    var models = Player.party.models;
-                    var char = models[oldIndex];
 
-                    models.splice(oldIndex, 1);
-                    models.splice(newIndex, 0, char);
+                    _.move(Player.party.models,oldIndex, newIndex);
                 }
             });
         },

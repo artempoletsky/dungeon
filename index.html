@@ -139,6 +139,10 @@
                     <div data-bind="template: ce_skill">
                         <div class="ce-skill" data-bind="html: class; css: {own: own}"></div>
                     </div>
+
+                    <div class="skill_points">
+                        <label>Навыков доступно:</label> <span nk="html: skillPoints"></span>
+                    </div>
                     <div class="ce-own_skills ce-skills_list" data-bind="eachModel: ownSkills, ce_skill"></div>
                     <div class="ce-available_skills ce-skills_list" data-bind="eachModel: availableSkills, ce_skill"></div>
                 </div>

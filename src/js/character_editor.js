@@ -1,3 +1,9 @@
+Collection.prototype.map2 = function (prop) {
+    return this.map(function (model) {
+        return model.prop(prop);
+    });
+};
+
 $(function () {
     window.CharacterEditor = ViewModel.create({
         el: '.character_editor',
@@ -8,6 +14,7 @@ $(function () {
             $attack: '.ce-attack',
             $dodge: '.ce-dodge',
             $actionPoints: '.ce-actionPoints',
+            //$skillLists: '.ce-skills_list',
             $health: '.ce-health'
         },
         events: {
@@ -16,15 +23,10 @@ $(function () {
             'click .ce-inc': 'onIncClick',
             'click .ce-dec': 'onDecClick',
             'click .ce-close': 'hide',
-            'sort .ce-skill': 'onSort',
             'mousedown .ce-inc': 'disableSelect',
             'mousedown .ce-dec': 'disableSelect'
         },
-        onSort: function (e) {
-            var $el = $(e.currentTarget);
-            var $parent = $el.parent();
 
-        },
         hide: function () {
             this.$el.hide();
         },
@@ -32,10 +34,59 @@ $(function () {
             e.preventDefault();
         },
         initialize: function () {
-            this.$('.ce-skills_container').sortable({
+            var self = this;
+
+            var startCollection, endCollection, startParent, endParent, startIndex, endIndex;
+            this.$('.ce-skills_list').sortable({
                 items: '.ce-skill',
-                cancel: '.own',
-                container: '.ce-skills_list'
+                stop: function (e, ui) {
+                    endParent = ui.item.parent();
+                    endIndex = ui.item.index();
+
+                    var isAdd = false;
+
+                    if (endParent.hasClass('ce-own_skills')) {
+                        endCollection = self.prop('ownSkills');
+                        if (startCollection != endCollection) {
+                            isAdd = true;
+                        }
+                    } else {
+                        endCollection = self.prop('availableSkills');
+                    }
+
+
+                    if (ui.item.hasClass('own') && startCollection != endCollection) {
+                        self.$('.ce-own_skills').sortable('cancel');
+                        return;
+                    }
+
+                    var skillPoints = self.prop('skillPoints');
+                    if (isAdd && skillPoints == 0) {
+                        self.$('.ce-available_skills').sortable('cancel');
+                        return;
+                    }
+
+                    if (startCollection != endCollection) {
+                        self.propAdd('skillPoints', isAdd ? -1 : 1);
+                    }
+
+
+                    var model = startCollection.models.splice(startIndex, 1)[0];
+                    endCollection.models.splice(endIndex, 0, model);
+
+                    //console.log(startCollection.map2('class'), endCollection.map2('class'));
+
+                },
+                start: function (e, ui) {
+                    startParent = ui.item.parent();
+                    startIndex = ui.item.index();
+                    if (startParent.hasClass('ce-own_skills')) {
+                        startCollection = self.prop('ownSkills');
+                    } else {
+                        startCollection = self.prop('availableSkills');
+                    }
+                },
+                connectWith: '.ce-skills_list'
             });
         },
         revert: function (e) {
@@ -44,6 +95,8 @@ $(function () {
             }
             var self = this;
             this.attributesPoints = this.character.prop('attributesPoints');
+            this.prop('skillPoints', this.character.prop('skillPoints'));
+
             this.$expPoints.html(this.attributesPoints);
             this.$attributes.find('input').each(function (index, input) {
                 self.character.prop(input.name, self.savedProps[input.name]);
@@ -58,6 +111,7 @@ $(function () {
                     class: spell.getClass()
                 }
             });
+
 
             this.prop('ownSkills').reset(ownSkills);
 
