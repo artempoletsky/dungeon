@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="src/css/dungeon.css"/>
     <script type="text/javascript" src="src/js/lib/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="src/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
     <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
 
 
     <script type="text/javascript" src="src/js/binds.js"></script>
     <script type="text/javascript" src="src/js/hotkeys.js"></script>
-    <script type="text/javascript" src="src/js/drag.js"></script>
     <script type="text/javascript" src="src/js/character_ai.js"></script>
     <script type="text/javascript" src="src/js/character.js"></script>
     <script type="text/javascript" src="src/js/skill.js"></script>
@@ -135,7 +135,13 @@
 
 
                 </div>
-                <div class="ce-tab_content"></div>
+                <div class="ce-tab_content ce-skills_container">
+                    <div data-bind="template: ce_skill">
+                        <div class="ce-skill" data-bind="html: class; css: {own: own}"></div>
+                    </div>
+                    <div class="ce-own_skills ce-skills_list" data-bind="eachModel: ownSkills, ce_skill"></div>
+                    <div class="ce-available_skills ce-skills_list" data-bind="eachModel: availableSkills, ce_skill"></div>
+                </div>
                 <div class="ce-tab_content"></div>
             </div>
 

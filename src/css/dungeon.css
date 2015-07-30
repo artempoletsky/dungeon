@@ -634,3 +634,21 @@ path:hover {
 .dragged{
     z-index: 1;
 }
+
+.ce-tab_content{
+    height: 450px;
+}
+
+.ce-skill {
+    cursor: default;
+}
+
+.ce-skills_list{
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+#sortable_helper,.sortable_empty_helper {
+    background: green;
+}

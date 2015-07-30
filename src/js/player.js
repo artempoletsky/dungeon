@@ -130,33 +130,33 @@ $(function () {
     window.PartyView = ViewModel.create({
         el: '.party_view',
         initialize: function () {
-            this.$el.sortableContainer('.pv-item', 200);
+            var self = this;
+            var oldIndex, newIndex;
+            this.$el.sortable({
+                items: '.pv-item',
+                start: function (e, ui) {
+                    oldIndex = ui.item.index();
+                    self.dragStarted = true;
+                },
+                stop: function (e, ui) {
+                    _.defer(function () {
+                        self.dragStarted = false;
+                    });
+
+                    newIndex = ui.item.index();
+
+                    var models = Player.party.models;
+                    var char = models[oldIndex];
+
+                    models.splice(oldIndex, 1);
+                    models.splice(newIndex, 0, char);
+                }
+            });
         },
         events: {
-            'startDrag': 'onStartDrag',
-            'stopDrag': 'onStopDrag',
-            'sort': 'onSort',
             'click .pv-item': 'onItemClick'
         },
         dragStarted: false,
-        onSort: function(e){
-            var models=Player.party.models;
-            var char=models[e.oldIndex];
-
-            models.splice(e.oldIndex, 1);
-            models.splice(e.newIndex, 0, char);
-        },
-        onStartDrag: function () {
-            this.dragStarted = true;
-        },
-
-        onStopDrag: function () {
-            var self=this;
-            _.defer(function(){
-                self.dragStarted = false;
-            });
-        },
-
         onItemClick: function (e) {
             if (!this.dragStarted) {
                 CharacterEditor.show(Player.party.at($(e.currentTarget).index()), false);

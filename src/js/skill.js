@@ -37,6 +37,7 @@ var Skill = Model.extend({
 
 
         this.prop({
+            name: this.name,
             exp: 0,
             level: 1
         });
@@ -200,6 +201,7 @@ Skill.fromJSON = function (data, characrer) {
 var Skills = {
     Hit: Skill.extend({}),
     Bite: Skill.extend({
+        name: 'bite',
         availableForPlayer: false,
         constructor: function (character, minDamage, maxDamage) {
             this._super(character);
@@ -233,6 +235,7 @@ var Skills = {
 Skills.MagicSpell = Skills.Bite.extend({
     posFrom: [3, 4],
     posTo: [1, 2],
+    availableForPlayer: true,
     name: 'fireball'
 });
 
