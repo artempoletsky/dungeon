@@ -1,6 +1,9 @@
-Collection.prototype.map2 = function (prop) {
+Collection.prototype.map2 = function (prop, callback) {
     return this.map(function (model) {
-        return model.prop(prop);
+        if (!callback) {
+            return model.prop(prop);
+        }
+        return callback(model.prop(prop), model);
     });
 };
 
@@ -181,6 +184,18 @@ $(function () {
                 }
             });
             self.character.prop('attributesPoints', this.attributesPoints);
+            self.character.prop('skillPoints', this.prop('skillPoints'));
+            var newSkills = _.map(this.prop('ownSkills').filter(function (model) {
+                return !model.prop('own');
+            }),function(model){
+                model.prop('own', true);
+                return model.prop('class');
+            });
+
+            _.each(newSkills, function(Class){
+                self.character.spells.push(new Skills[Class](self.character, 1));
+            });
+
         },
         attributesList: ['strength', 'agility', 'perception', 'speed'],
         autoParseBinds: true,
