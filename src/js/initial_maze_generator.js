@@ -41,7 +41,7 @@
         roomSize: 2,
         roomIntersectionPadding: 1,
         roomPlacingAttempts: 10,
-        randomDoorChance: 0.1,
+        randomDoorChance: 0.01,
 
 
         placeRoom: function () {
@@ -49,7 +49,7 @@
             var height = 3 + rand(this.roomSize) * 2;
             var self = this;
             var matrix = this.matrix;
-            this.addRegion();
+
 
             var checkIntersects = function (width, height, x, y) {
                 if (x < 0) {
@@ -85,6 +85,7 @@
                 var x = 1 + rand((matrix[0].length - width - 2) / 2) * 2;
                 var y = 1 + rand((matrix.length - height - 2) / 2) * 2;
                 if (!checkIntersects(width + padding * 2, height + padding * 2, x - padding, y - padding)) {
+                    this.addRegion();
                     room(width, height, x, y);
                     break;
                 }
@@ -155,36 +156,25 @@
         placeDoors: function () {
             var self = this;
             var matrix = this.matrix;
-            var merged = ["2"];
+
 
             var canPlaceDoor = function (cell) {
                 if (!cell.content) {
                     var x = cell.x;
                     var y = cell.y;
-
-                    var notMerged = function (reg1, reg2) {
-                        if (reg1 && reg2 && reg1 != reg2) {
-                            if (merged.indexOf(reg1) == -1 || merged.indexOf(reg2) == -1) {
-                                if (merged.indexOf(reg1) == -1) {
-                                    cell.merge = reg1;
-                                } else {
-                                    cell.merge = reg2;
-                                }
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
                     //checks if neighbors not empty and different regions
-                    if (matrix[y][x - 1] && matrix[y][x + 1]) {
-                        if (notMerged(matrix[y][x - 1].regionID, matrix[y][x + 1].regionID)) {
+                    var left = matrix[y][x - 1], right = matrix[y][x + 1];
+                    if (left && right) {
+                        if (left.regionID && right.regionID && left.regionID != right.regionID) {
+                            cell.data = left.regionID + ' ' + right.regionID;
                             return true;
                         }
                     }
 
                     if (matrix[y - 1] && matrix[y + 1]) {
-                        if (notMerged(matrix[y - 1][x].regionID, matrix[y + 1][x].regionID)) {
+                        var top = matrix[y - 1][x], bottom = matrix[y + 1][x];
+                        if (top.regionID && bottom.regionID && top.regionID != bottom.regionID) {
+                            cell.data = top.regionID + ' ' + bottom.regionID;
                             return true;
                         }
                     }
@@ -192,42 +182,51 @@
                 return false;
             }
 
+            var doors = [];
 
-            _.each(this.regions, function (cells, index) {
+            _.eachMatrix(matrix, function (cell) {
+                if (canPlaceDoor(cell)) {
+                    doors.push(cell);
+                }
+            });
 
 
-                if (merged.indexOf(index) != -1 && index != 1) {
+            var merged = {};
+
+            _.each(this.regions, function (region, id) {
+                if (region)
+                    merged[id] = [];
+            });
+
+
+            var isConnected = function (region1, region2) {
+                return merged[region1].indexOf(region2) != -1
+            };
+
+            var connect = function (region1, region2) {
+                if (region1 == region2 || isConnected(region1, region2)) {
                     return;
                 }
 
+                merged[region1].push(region2);
+                merged[region2].push(region1);
 
-                var doors = {};
-                _.each(cells, function (cell) {
-
-                    _.each(self.neighbors(cell.x, cell.y), function (cell) {
-                        if (canPlaceDoor(cell)) {
-                            if (!doors[cell.merge]) {
-                                doors[cell.merge] = [];
-                            }
-                            doors[cell.merge].push(cell);
-                            //cell.content = 'door';
-                        }
-                    });
-
-
+                _.each(merged[region1], function (region) {
+                    connect(region, region2);
                 });
 
-
-                _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1 && Math.random() > self.randomDoorChance) {
-                        return;
-                    }
-
-                    merged.push(region);
-                    var door = doors[rand(doors.length)];
-                    door.data = region;
-                    door.content = 'door';
+                _.each(merged[region2], function (region) {
+                    connect(region, region1);
                 });
+            }
+
+
+            _.eachRandom(doors, function (cell) {
+                var regions = cell.data.split(' ');
+                if (!isConnected(regions[0], regions[1]) || Math.random() < self.randomDoorChance) {
+                    connect(regions[0], regions[1]);
+                    cell.content = 'door';
+                }
             });
         },
 
@@ -273,7 +272,7 @@
 
             var checkSiblings = function (x, y) {
                 var found = false;
-                if(matrix[y][x].content){
+                if (matrix[y][x].content) {
                     return true;
                 }
                 _.each(self.neighbors(x, y), function (cell) {
@@ -301,6 +300,7 @@
             var cell = this.matrix[y][x];
             cell.content = content;
             cell.regionID = this.regionID;
+            //cell.data = this.regionID;
             this.regions[this.regionID].push(cell);
         },
 
@@ -345,7 +345,6 @@
 
             var rooms = Math.floor(width * height / 100);
             for (var i = 0; i < rooms + 3; i++) {
-                this.addRegion();
                 this.placeRoom();
             }
 
@@ -353,7 +352,7 @@
             var cell;
             var i = 100;
             while ((cell = this.findEmptySpace()) && i-- > 0) {
-                if(i==0){
+                if (i == 0) {
                     debugger;
                 }
                 this.addRegion();
