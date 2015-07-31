@@ -4,6 +4,7 @@
     <title>Memes dungeon</title>
     <link rel="stylesheet" href="src/css/dungeon.css"/>
     <script type="text/javascript" src="src/js/lib/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="src/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
     <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
 
@@ -48,8 +49,8 @@
     <textarea name="map_json" id="map_json" cols="30" rows="10" style="vertical-align: top;"></textarea>
     <br/>
     <label>Width</label> <input id="dungeon_width" name="width" type="text" value="20"/> <br/>
-    <label>Height</label> <input id="dungeon_height" name="height" type="text" value="20"/>    <br/>
-    <label>Dungeon level</label> <input id="dungeon_level" name="level" type="text" value="20"/>    <br/>
+    <label>Height</label> <input id="dungeon_height" name="height" type="text" value="20"/> <br/>
+    <label>Dungeon level</label> <input id="dungeon_level" name="level" type="text" value="20"/> <br/>
 </div>
 <hr/>
 <div class="cell_editor" style="float: left; margin-right: 20px;">
@@ -96,6 +97,7 @@
             </div>
 
             <h1>Производные величины</h1>
+
             <div class="ce-derived">
                 <label>Базовая атака</label> <span class="ce-attack"></span>
             </div>
@@ -176,5 +178,18 @@
         </div>
     </div>
 </div>
+<div class="party_view" data-bind="eachModel: party">
+    <div class="pv-item">
+        <div class="pv-image" data-bind="className: name"></div>
+        <div class="pv-health" data-bind="style: {width:healthBar}"></div>
+    </div>
+</div>
+<style type="text/css">
+    .dungeon {
+        position: absolute;
+        left: 320px;
+        top: 320px;;
+    }
+</style>
 </body>
 </html>

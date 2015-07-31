@@ -489,7 +489,7 @@ path:hover {
 }
 
 .view_port {
-    position: absolute;
+
     max-width: 1200px;
     left: 0;
     right: 0;

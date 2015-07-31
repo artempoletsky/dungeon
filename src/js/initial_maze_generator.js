@@ -219,13 +219,13 @@
 
 
                 _.each(doors, function (doors, region) {
-                    if (merged.indexOf(region) != -1&&Math.random()>self.randomDoorChance) {
+                    if (merged.indexOf(region) != -1 && Math.random() > self.randomDoorChance) {
                         return;
                     }
 
                     merged.push(region);
                     var door = doors[rand(doors.length)];
-                    door.data=region;
+                    door.data = region;
                     door.content = 'door';
                 });
             });
@@ -273,6 +273,9 @@
 
             var checkSiblings = function (x, y) {
                 var found = false;
+                if(matrix[y][x].content){
+                    return true;
+                }
                 _.each(self.neighbors(x, y), function (cell) {
                     if (cell.content) {
                         found = true;
@@ -307,9 +310,9 @@
             this.regions[this.regionID] = [];
         },
 
-        removeContentAttr: function(){
-            _.eachMatrix(this.matrix, function(cell){
-                cell.type=cell.content;
+        removeContentAttr: function () {
+            _.eachMatrix(this.matrix, function (cell) {
+                cell.type = cell.content;
                 delete cell.content;
             });
         },
@@ -348,7 +351,11 @@
 
 
             var cell;
-            while (cell = this.findEmptySpace()) {
+            var i = 100;
+            while ((cell = this.findEmptySpace()) && i-- > 0) {
+                if(i==0){
+                    debugger;
+                }
                 this.addRegion();
                 this.maze(cell.x, cell.y);
             }
