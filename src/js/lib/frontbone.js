@@ -967,6 +967,7 @@
                 options = options || {};
 
 
+
                 this.options = options;
                 if (options.collection) {
                     this.collection = options.collection;
@@ -1360,7 +1361,7 @@
                 });
             });
         },
-        css: function ($el, value, context) {
+        css: function ($el, value, context, addArgs) {
             _.each(this.parseOptionsObject(value), function (condition, className) {
                 ViewModel.applyFilters(condition, context, function (val) {
                     if (val) {
@@ -1635,7 +1636,7 @@
                     });
 
                     newModel.on('change:' + name, insertFunction);
-                    insertFunction(context.prop(name));
+                    insertFunction(newModel.prop(name));
                 }, function (oldModel) {
                     oldModel.removeComputed(name);
                     oldModel.off('change:' + name, insertFunction);
@@ -1731,9 +1732,7 @@
 
 
     var getCompiledRow = function (templateName, model, index) {
-        //fixme remove
         return false;
-
         if (!bufferViews[templateName]) {
             return false;
         }
@@ -1745,8 +1744,7 @@
 
         var $row = bufferViews[templateName].pop();
 
-        $row.data('nkModel').fire('replace', model);
-        $row.data('nkModel', model);
+
 
         return $row;
     };
@@ -1755,7 +1753,7 @@
 
         _.each(bufferViews, function (arr, key) {
             _.each(arr, function ($view) {
-                //$view.clearBinds();
+                $view.clearBinds();
                 $view.data('nkModel', '');
             });
             bufferViews[key] = [];
@@ -1779,7 +1777,6 @@
 
 
         values = value.split(/\s*,\s*/);
-
         collectionName = values[0];
         templateName = values[1];
 
@@ -1891,9 +1888,7 @@
 
                     $slice = $children.slice(index, index + tempChildrenLen);
 
-                    $slice.data('nkModel', model);
                     bufferViews[compiledTemplateName].push($slice);
-
 
                     $slice.detach();
 
