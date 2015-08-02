@@ -62,7 +62,7 @@
                     for (var h = 0; h < height; h++) {
 
                         var el = matrix[h + y][w + x];
-                        if (el.content) {
+                        if (el.type) {
                             return true;
                         }
                     }
@@ -113,7 +113,7 @@
             var self = this;
 
             var current = self.matrix[y][x];
-            if (current.content) {
+            if (current.type) {
                 return;
             }
             self.fill(x, y, 'passage');
@@ -128,7 +128,7 @@
 
             _.eachRandom(walls, function (el) {
                 var cell = el.cell;
-                if (!cell.content) {
+                if (!cell.type) {
 
                     var x = el.parent.x;
                     var y = el.parent.y;
@@ -140,7 +140,7 @@
                     current = cell;
 
                     _.each(self.neighbors(cell.x, cell.y, 2), function (cell) {
-                        if (!cell.content) {
+                        if (!cell.type) {
                             walls.push({
                                 cell: cell,
                                 parent: current
@@ -159,7 +159,7 @@
 
 
             var canPlaceDoor = function (cell) {
-                if (!cell.content) {
+                if (!cell.type) {
                     var x = cell.x;
                     var y = cell.y;
                     //checks if neighbors not empty and different regions
@@ -225,7 +225,7 @@
                 var regions = cell.data.split(' ');
                 if (!isConnected(regions[0], regions[1]) || Math.random() < self.randomDoorChance) {
                     connect(regions[0], regions[1]);
-                    cell.content = 'door';
+                    cell.type = 'door';
                 }
             });
         },
@@ -234,21 +234,21 @@
             var self = this;
             var matrix = self.matrix;
             var isDeadEnd = function (cell) {
-                if (!cell.content) {
+                if (!cell.type) {
                     return false;
                 }
                 var x = cell.x, y = cell.y;
                 var walls = 0;
-                if (!matrix[y - 1] || !matrix[y - 1][x].content)
+                if (!matrix[y - 1] || !matrix[y - 1][x].type)
                     walls++;
 
-                if (!matrix[y + 1] || !matrix[y + 1][x].content)
+                if (!matrix[y + 1] || !matrix[y + 1][x].type)
                     walls++;
 
-                if (!matrix[y][x + 1] || !matrix[y][x + 1].content)
+                if (!matrix[y][x + 1] || !matrix[y][x + 1].type)
                     walls++;
 
-                if (!matrix[y][x - 1] || !matrix[y][x - 1].content)
+                if (!matrix[y][x - 1] || !matrix[y][x - 1].type)
                     walls++;
 
                 return walls > 2;
@@ -259,7 +259,7 @@
                 _.eachMatrix(matrix, function (cell, x, y) {
                     if (isDeadEnd(cell)) {
                         found = true;
-                        cell.content = undefined;
+                        cell.type = undefined;
                     }
                 });
             } while (found)
@@ -272,11 +272,11 @@
 
             var checkSiblings = function (x, y) {
                 var found = false;
-                if (matrix[y][x].content) {
+                if (matrix[y][x].type) {
                     return true;
                 }
                 _.each(self.neighbors(x, y), function (cell) {
-                    if (cell.content) {
+                    if (cell.type) {
                         found = true;
                         return false;
                     }
@@ -298,7 +298,7 @@
 
         fill: function (x, y, content) {
             var cell = this.matrix[y][x];
-            cell.content = content;
+            cell.type = content;
             cell.regionID = this.regionID;
             //cell.data = this.regionID;
             this.regions[this.regionID].push(cell);
@@ -310,12 +310,7 @@
             this.regions[this.regionID] = [];
         },
 
-        removeContentAttr: function () {
-            _.eachMatrix(this.matrix, function (cell) {
-                cell.type = cell.content;
-                delete cell.content;
-            });
-        },
+
 
         generate: function (width, height) {
             this.width = width;
@@ -341,7 +336,7 @@
             //var startX = Math.floor(Math.random() * width);
             //var startY = Math.floor(Math.random() * height);
 
-            //matrix[startY][startX].content = 'start';
+            //matrix[startY][startX].type = 'start';
 
             var rooms = Math.floor(width * height / 100);
             for (var i = 0; i < rooms + 3; i++) {
@@ -362,7 +357,6 @@
             this.placeDoors();
 
             this.removeDeadEnds();
-            this.removeContentAttr();
 
 
             return this.matrix;
