@@ -8,7 +8,7 @@
     <script type="text/javascript" src="src/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="src/js/lib/lodash.min.js"></script>
     <script type="text/javascript" src="src/js/lib/frontbone.js"></script>
-
+    <script type="text/javascript">Model.prototype.useDefineProperty = true;</script>
 
     <script type="text/javascript" src="src/js/binds.js"></script>
     <script type="text/javascript" src="src/js/hotkeys.js"></script>
@@ -144,9 +144,26 @@
                         <label>Навыков доступно:</label> <span nk="html: skillPoints"></span>
                     </div>
                     <div class="ce-own_skills ce-skills_list" data-bind="eachModel: ownSkills, ce_skill"></div>
-                    <div class="ce-available_skills ce-skills_list" data-bind="eachModel: availableSkills, ce_skill"></div>
+                    <div class="ce-available_skills ce-skills_list"
+                         data-bind="eachModel: availableSkills, ce_skill"></div>
                 </div>
-                <div class="ce-tab_content"></div>
+                <div class="ce-tab_content ce-inventory">
+                    <div class="inventory-worn">
+                        <div class="i-slot head"></div>
+                        <div class="i-slot body"></div>
+                        <div class="i-slot leg"></div>
+                        <div class="i-slot boots"></div>
+                        <div class="i-slot left_hand"></div>
+                        <div class="i-slot right_hand"></div>
+                    </div>
+                    <div class="inventory-backpacks">
+                        <div class="backpack"></div>
+                        <div class="backpack"></div>
+                        <div class="backpack"></div>
+                        <div class="backpack"></div>
+                    </div>
+
+                </div>
             </div>
 
 

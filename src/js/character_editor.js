@@ -70,7 +70,7 @@ $(function () {
                     }
 
                     if (startCollection != endCollection) {
-                        self.propAdd('skillPoints', isAdd ? -1 : 1);
+                        self.skillPoints += isAdd ? -1 : 1;
                     }
 
 
@@ -187,12 +187,12 @@ $(function () {
             self.character.prop('skillPoints', this.prop('skillPoints'));
             var newSkills = _.map(this.prop('ownSkills').filter(function (model) {
                 return !model.prop('own');
-            }),function(model){
+            }), function (model) {
                 model.prop('own', true);
                 return model.prop('class');
             });
 
-            _.each(newSkills, function(Class){
+            _.each(newSkills, function (Class) {
                 self.character.spells.push(new Skills[Class](self.character, 1));
             });
 

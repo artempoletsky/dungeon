@@ -135,15 +135,13 @@ var Skill = Model.extend({
 
     },
 
-    subtractAP: function () {
-        this.character.propAdd('actionPoints', -this.cost);
-    },
     invoke: function (target_characters, callback) {
 
         if (!target_characters.length) {
             throw  new TypeError('target_characters must be an array');
         }
-        this.subtractAP();
+        this.character.actionPoints-=this.cost;
+        //console.log(this.character.actionPoints, this.character.prop('actionPoints'));
         var self = this;
         var damages = [];
 

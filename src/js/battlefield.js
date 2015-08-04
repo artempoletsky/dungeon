@@ -146,6 +146,7 @@ $(function () {
             if (ap > maxAP) {
                 ap = maxAP;
             }
+
             self.currentCharacter.prop('actionPoints', ap);
 
 
@@ -190,9 +191,9 @@ $(function () {
                 var $spells = self.$spells.empty();
                 _.each(character.spells, function (spell, index) {
                     var inactive = self.canUseSpell(character, index) ? '' : ' inactive';
-                    $spells.append('<div class="spell '+spell.name+' character_spell' + inactive + '">' +
-                        '<div class="spell_exp" style="width: '+spell.prop('expBar')+';"></div>'+
-                        '<div class="spell_level">'+spell.prop('level')+'</div>'+
+                    $spells.append('<div class="spell ' + spell.name + ' character_spell' + inactive + '">' +
+                        '<div class="spell_exp" style="width: ' + spell.prop('expBar') + ';"></div>' +
+                        '<div class="spell_level">' + spell.prop('level') + '</div>' +
                         '</div>');
                 });
                 $spells.append('<div class="spell switch_position">switch</div>');
@@ -271,12 +272,12 @@ $(function () {
         onSpellInvoke: function (e) {
             var target = this.getCharacter($(e.currentTarget));
             var self = this;
-            var spell= this.playerCharacter.spells[this.activeSpell];
+            var spell = this.playerCharacter.spells[this.activeSpell];
             //TODO implement aoe
             spell.invoke([target], function () {
                 //self.activeSpell
-                var $spell=self.$spells.children().eq(self.activeSpell);
-                $spell.find('.spell_exp').css('width',spell.prop('expBar'));
+                var $spell = self.$spells.children().eq(self.activeSpell);
+                $spell.find('.spell_exp').css('width', spell.prop('expBar'));
                 $spell.find('.spell_level').html(spell.prop('level'));
                 if (self.playerCharacter.prop('actionPoints') == 0) {
                     self.endTurn();
@@ -307,19 +308,19 @@ $(function () {
                 var spell = this.currentCharacter.spells[this.activeSpell];
                 var chanceToHit = spell.computeHitChance(character, false);
 
-                defence=character.getDefence(spell);
+                defence = character.getDefence(spell);
 
-                var minDamage =  character.computeDamage(spell.getMinDamage(character), this.currentCharacter);
+                var minDamage = character.computeDamage(spell.getMinDamage(character), this.currentCharacter);
                 var maxDamage = character.computeDamage(spell.getMaxDamage(character), this.currentCharacter);
 
                 this.$info.append(this.generateInfoRow('Attack', spell.getAttack(this.currentCharacter)));
-                this.$info.append(this.generateInfoRow('Defence', defence.result+' ('+ defence.defSkill+')'));
+                this.$info.append(this.generateInfoRow('Defence', defence.result + ' (' + defence.defSkill + ')'));
                 this.$info.append(this.generateInfoRow('Chance to hit', chanceToHit + '%'));
                 this.$info.append(this.generateInfoRow('Damage', minDamage + '-' + maxDamage));
 
-            }else {
-                defence=character.getDefence();
-                this.$info.append(this.generateInfoRow('Defence', defence.result+' ('+ defence.defSkill+')'));
+            } else {
+                defence = character.getDefence();
+                this.$info.append(this.generateInfoRow('Defence', defence.result + ' (' + defence.defSkill + ')'));
             }
 
 
@@ -366,7 +367,7 @@ $(function () {
                 this.endTurn();
                 return;
             }
-            character.propAdd('actionPoints', -1);
+            character.actionPoints -= 1;
 
             var party = character.enemy ? this.monstersParty : Player.party;
             var $cont = character.enemy ? this.$monstersParty : this.$playerParty;
@@ -381,7 +382,6 @@ $(function () {
             } else {
                 $target.after($view);
             }
-
 
 
             _.move(party.models, oldIndex, newIndex);

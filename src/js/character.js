@@ -38,7 +38,9 @@ var Character = Model.extend({
         startAP: 8,
         dodge: 0,
         maxAP: 12,
-        apPerTurn: 5
+        apPerTurn: 5,
+        attributesPoints: 0,
+        skillPoints: 0
     },
 
 
@@ -47,9 +49,9 @@ var Character = Model.extend({
         exp += value;
         if (exp >= 10) {
             exp -= 10;
-            this.propAdd('level', 1);
-            this.propAdd('attributesPoints', 1);
-            this.propAdd('skillPoints', 1);
+            this.level++;
+            this.attributesPoints++;
+            this.skillPoints++;
         }
 
         this.prop('exp', exp);
@@ -184,13 +186,6 @@ var Character = Model.extend({
 });
 
 
-Model.prototype.propAdd = function (name, value) {
-    this.prop(name, this.prop(name) + value);
-};
-
-Model.prototype.propMult = function (name, value) {
-    this.prop(name, this.prop(name) * value);
-};
 
 var Human = Character.extend({
     getBaseAttack: function () {
