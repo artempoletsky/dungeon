@@ -59,7 +59,7 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
 }
 
-.character_view.highlight, .character_view.move_highlight{
+.character_view.highlight, .character_view.move_highlight {
     border-color: #5cff46;
     cursor: pointer;
 }
@@ -115,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .spell_exp {
     background: #fff832;
-    background: linear-gradient(to bottom,  #fff832 15%,#46490a 81%);
+    background: linear-gradient(to bottom, #fff832 15%, #46490a 81%);
     position: absolute;
     height: 10px;
     bottom: 0;
@@ -125,7 +125,7 @@ h1, h2, h3, h4, h5, h6 {
 .spell_level {
     color: #fff;
     font-weight: bold;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: inline-block;
     border-radius: 0 0 5px 0;
     padding: 2px 4px;
@@ -155,7 +155,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 200px;
 }
 
-.player_party .character_view{
+.player_party .character_view {
     float: right;
 }
 
@@ -220,7 +220,6 @@ h1, h2, h3, h4, h5, h6 {
     top: 0;
 }
 
-
 .hit_animation {
     position: absolute;
     top: 195px;
@@ -260,8 +259,7 @@ h1, h2, h3, h4, h5, h6 {
     top: -140px;
 }
 
-
-.map_passage{
+.map_passage {
     width: 20px;
     height: 20px;
     float: left;
@@ -271,23 +269,23 @@ h1, h2, h3, h4, h5, h6 {
     background: #eee;
 }
 
-.map_passage.room{
+.map_passage.room {
     background: dodgerblue;
 }
 
-.map_passage.passage{
+.map_passage.passage {
     background: magenta;
 }
 
-.map_passage.wall{
+.map_passage.wall {
     background: #484848;
 }
 
-.map_passage.door{
+.map_passage.door {
     background: #ff7b36;
 }
 
-.map_passage.entry{
+.map_passage.entry {
     background: green;
 }
 
@@ -307,7 +305,7 @@ h1, h2, h3, h4, h5, h6 {
     background: gold;
 }
 
-.team{
+.team {
     position: absolute;
 
     z-index: 2;
@@ -315,7 +313,6 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
     background: url("img/team.png") no-repeat 15px 0;
 }
-
 
 .dialogs {
     position: absolute;
@@ -345,13 +342,11 @@ a, button {
     cursor: pointer;
 }
 
-
-.dungeon, .dialogs{
+.dungeon, .dialogs {
     display: none;
 }
 
-
-.character_editor{
+.character_editor {
     background: #000000;
     color: #fff;
     display: none;
@@ -368,7 +363,7 @@ a, button {
     min-width: 600px;
 }
 
-.ce-buttons{
+.ce-buttons {
     position: absolute;
     left: 20px;
     bottom: 20px;
@@ -384,7 +379,7 @@ a, button {
     vertical-align: middle;
 }
 
-.ce-dec, .ce-inc{
+.ce-dec, .ce-inc {
     position: absolute;
     display: block;
     width: 20px;
@@ -394,12 +389,15 @@ a, button {
     line-height: 20px;
     top: 3px;
 }
-.ce-dec{
+
+.ce-dec {
     left: 0;
 }
-.ce-inc{
+
+.ce-inc {
     right: 0;
 }
+
 .ce-num {
     position: relative;
     height: 26px;
@@ -423,7 +421,7 @@ a, button {
     width: 500px;
 }
 
-.ce-derived span{
+.ce-derived span {
     font-size: 20px;
     vertical-align: middle;
 }
@@ -449,11 +447,10 @@ a, button {
 .map_cell.wall {
     background: url("img/wall.png");
 }
+
 .map_cell.entry {
     background: url("img/entry.png");
 }
-
-
 
 .map_cell.door {
     background: url("img/door.png") 0 -50px;
@@ -463,10 +460,11 @@ a, button {
     background-position: 0 0;
 }
 
-.map_cell.no_vision{
+.map_cell.no_vision {
     background: #000000;
 }
-#auto_map{
+
+#auto_map {
     position: absolute;
     right: 0;
     top: 0;
@@ -475,14 +473,15 @@ a, button {
 
 path {
     cursor: pointer;
-    fill:rgba(0,0,0,0);
+    fill: rgba(0, 0, 0, 0);
     /*fill-rule:evenodd;*/
-    stroke:#000000;
-    stroke-width:3px;
+    stroke: #000000;
+    stroke-width: 3px;
     /*stroke-linecap:butt;
     stroke-linejoin:miter;*/
-    stroke-opacity:1;
+    stroke-opacity: 1;
 }
+
 path:hover {
     /*stroke-opacity:1;*/
     stroke: #ffa500;
@@ -505,7 +504,7 @@ path:hover {
     display: none;
 }
 
-.main_menu_list{
+.main_menu_list {
     font-size: 30px;
     text-align: center;
 
@@ -515,14 +514,16 @@ path:hover {
 
     transform: translateY(-50%);
 }
-.main_menu_list li{
+
+.main_menu_list li {
     margin-bottom: 10px;
 }
+
 .main_menu_list a {
     color: #fff;
 }
 
-.main_menu_list .exit{
+.main_menu_list .exit {
     display: none;
 }
 
@@ -531,7 +532,7 @@ path:hover {
     background: #fff;
 }
 
-.saves_menu{
+.saves_menu {
 
     padding: 20px;
     background: #000000;
@@ -560,15 +561,15 @@ path:hover {
     display: none;
 }
 
-.save_mode .sm-save_game{
+.save_mode .sm-save_game {
     display: inline-block;
 }
 
-.save_mode .save_name{
+.save_mode .save_name {
     display: block;
 }
 
-.save_name label{
+.save_name label {
 
 }
 
@@ -579,14 +580,14 @@ path:hover {
     position: relative;
 }
 
-.saves .date{
+.saves .date {
     position: absolute;
     right: 5px;
     top: 3px;
     font-size: 14px;
 }
 
-.ce-name input[disabled]{
+.ce-name input[disabled] {
     border-color: transparent;
     background: transparent;
     color: #fff;
@@ -618,6 +619,7 @@ path:hover {
     width: 70px;
     height: 70px;
 }
+
 .pv-health {
     height: 10px;
     background: red;
@@ -626,12 +628,11 @@ path:hover {
     left: 0;
 }
 
-
-.dragged{
+.dragged {
     z-index: 1;
 }
 
-.ce-tab_content{
+.ce-tab_content {
     height: 450px;
 }
 
@@ -639,12 +640,87 @@ path:hover {
     cursor: default;
 }
 
-.ce-skills_list{
+.ce-skills_list {
     float: left;
     width: 50%;
     height: 100%;
 }
 
-#sortable_helper,.sortable_empty_helper {
+#sortable_helper, .sortable_empty_helper {
     background: green;
+}
+
+.inventory-worn {
+    position: absolute;
+    border: 1px solid #959794;
+    width: 240px;
+    height: 330px;
+}
+
+.i-slot {
+    width: 60px;
+    height: 90px;
+    border: 1px solid #959794;
+    position: absolute;
+    background: url("img/inventory_grid.png");
+}
+
+.i-slot.head,
+.i-slot.boots,
+.i-slot.legs {
+    height: 60px;
+}
+
+.i-slot.head,
+.i-slot.boots,
+.i-slot.body,
+.i-slot.legs {
+    left: 90px;
+}
+
+.i-slot.head {
+    top: 10px;
+}
+
+.i-slot.left_hand,
+.i-slot.right_hand,
+.i-slot.body {
+    top: 80px;
+}
+
+.i-slot.left_hand {
+    left: 20px;
+}
+
+.i-slot.right_hand {
+    left: 160px;
+}
+
+.i-slot.legs {
+    top: 180px;
+}
+
+.i-slot.boots {
+    top: 250px;
+}
+
+.ce-inventory {
+    position: relative;
+    width: 1000px;
+}
+
+.backpack {
+    float: left;
+    width: 150px;
+    height: 300px;
+    border: 1px solid #959794;
+    background: url("img/inventory_grid.png");
+    float: left;
+    margin-right: 10px;
+}
+
+.inventory-backpacks {
+    position: absolute;
+    left: 260px;
+    top: 10px;
 }
